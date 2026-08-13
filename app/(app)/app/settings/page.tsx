@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { CheckCircle2, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { UpgradeButton } from "@/components/settings/upgrade-button";
+import { DeleteAccountButton } from "@/components/settings/delete-account-button";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -46,7 +47,7 @@ export default async function SettingsPage() {
         {profile.is_premium ? (
           <div className="mt-3">
             <p className="flex items-center gap-2 text-sm font-medium text-primary-900">
-              <CheckCircle2 className="h-4 w-4 text-primary-600" /> Farata Premium actif
+              <CheckCircle2 className="h-4 w-4 text-primary-600" /> FarataNikah Premium actif
             </p>
             {profile.premium_until && (
               <p className="mt-1 text-sm text-primary-900/60">
@@ -68,6 +69,15 @@ export default async function SettingsPage() {
             </div>
           </div>
         )}
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-red-100 bg-cream-50 p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-red-700/80">
+          Zone de danger
+        </h2>
+        <div className="mt-3">
+          <DeleteAccountButton />
+        </div>
       </section>
     </div>
   );

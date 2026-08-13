@@ -34,7 +34,7 @@ export function Steps() {
             4 étapes
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-            Comment fonctionne Farata
+            Comment fonctionne FarataNikah
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
             Un parcours clair, du premier profil à la première conversation.

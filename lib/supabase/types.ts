@@ -17,6 +17,7 @@ export type AdminRole = "admin" | "moderator" | "support";
 export type ContactRequestStatus = "pending" | "accepted" | "declined";
 export type ConversationStatus = "active" | "blocked" | "archived";
 export type MessageModerationStatus = "approved" | "flagged" | "blocked";
+export type MessageType = "text" | "voice";
 export type ModerationFlagType =
   | "inappropriate_content"
   | "contact_info_exchange"
@@ -189,7 +190,10 @@ export interface Database {
           id: string;
           conversation_id: string;
           sender_profile_id: string;
-          content: string;
+          content: string | null;
+          message_type: MessageType;
+          voice_storage_path: string | null;
+          voice_duration_seconds: number | null;
           moderation_status: MessageModerationStatus;
           is_read: boolean;
           created_at: string;
@@ -197,7 +201,6 @@ export interface Database {
         Insert: Partial<Database["public"]["Tables"]["messages"]["Row"]> & {
           conversation_id: string;
           sender_profile_id: string;
-          content: string;
         };
         Update: Partial<Database["public"]["Tables"]["messages"]["Row"]>;
         Relationships: [];
@@ -323,6 +326,23 @@ export interface Database {
           amount_fcfa: number;
         };
         Update: Partial<Database["public"]["Tables"]["payment_transactions"]["Row"]>;
+        Relationships: [];
+      };
+      compatibility_scores: {
+        Row: {
+          id: string;
+          profile_id: string;
+          candidate_id: string;
+          score: number;
+          reasoning: string | null;
+          computed_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["compatibility_scores"]["Row"]> & {
+          profile_id: string;
+          candidate_id: string;
+          score: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["compatibility_scores"]["Row"]>;
         Relationships: [];
       };
     };

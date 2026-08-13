@@ -15,7 +15,15 @@ export function FiltersBar({
   defaultValues,
 }: {
   isPremium: boolean;
-  defaultValues: { country?: string; minAge?: string; maxAge?: string; madhhab?: string };
+  defaultValues: {
+    country?: string;
+    minAge?: string;
+    maxAge?: string;
+    madhhab?: string;
+    profession?: string;
+    education?: string;
+    practiceLevel?: string;
+  };
 }) {
   return (
     <form className="flex flex-wrap items-end gap-4 rounded-2xl border border-primary-100 bg-cream-50 p-5">
@@ -91,6 +99,66 @@ export function FiltersBar({
             </option>
           ))}
         </select>
+      </div>
+
+      <div>
+        <label htmlFor="profession" className="flex items-center gap-1.5 text-xs font-medium text-primary-900/70">
+          Profession
+          {!isPremium && (
+            <span className="rounded-full bg-gold-400/30 px-1.5 py-0.5 text-[10px] font-semibold text-gold-600">
+              Premium
+            </span>
+          )}
+        </label>
+        <input
+          id="profession"
+          name="profession"
+          type="text"
+          disabled={!isPremium}
+          defaultValue={defaultValues.profession ?? ""}
+          placeholder="Ex : ingénieure"
+          className="mt-1 w-36 rounded-lg border border-primary-200 bg-cream-50 px-3 py-2 text-sm text-primary-900 outline-none focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="education" className="flex items-center gap-1.5 text-xs font-medium text-primary-900/70">
+          Niveau d&apos;études
+          {!isPremium && (
+            <span className="rounded-full bg-gold-400/30 px-1.5 py-0.5 text-[10px] font-semibold text-gold-600">
+              Premium
+            </span>
+          )}
+        </label>
+        <input
+          id="education"
+          name="education"
+          type="text"
+          disabled={!isPremium}
+          defaultValue={defaultValues.education ?? ""}
+          placeholder="Ex : master"
+          className="mt-1 w-36 rounded-lg border border-primary-200 bg-cream-50 px-3 py-2 text-sm text-primary-900 outline-none focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="practiceLevel" className="flex items-center gap-1.5 text-xs font-medium text-primary-900/70">
+          Pratique religieuse
+          {!isPremium && (
+            <span className="rounded-full bg-gold-400/30 px-1.5 py-0.5 text-[10px] font-semibold text-gold-600">
+              Premium
+            </span>
+          )}
+        </label>
+        <input
+          id="practiceLevel"
+          name="practiceLevel"
+          type="text"
+          disabled={!isPremium}
+          defaultValue={defaultValues.practiceLevel ?? ""}
+          placeholder="Ex : 5 prières"
+          className="mt-1 w-36 rounded-lg border border-primary-200 bg-cream-50 px-3 py-2 text-sm text-primary-900 outline-none focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50"
+        />
       </div>
 
       <button

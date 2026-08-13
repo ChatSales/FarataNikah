@@ -45,3 +45,6 @@ next-env.d.ts
 
 # claude code local state
 .claude/
+
+# scratch scripts/data used to manually verify a milestone against Supabase
+.tmp-verify/

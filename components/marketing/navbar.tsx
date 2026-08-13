@@ -18,7 +18,7 @@ export function Navbar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-cream-50">
             <HeartHandshake className="h-4.5 w-4.5" />
           </span>
-          <span className="text-lg tracking-tight">Farata</span>
+          <span className="text-lg tracking-tight">FarataNikah</span>
         </Link>
 
         <div className="hidden items-center gap-7 lg:flex">

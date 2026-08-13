@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,11 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Farata — La plateforme de mariage halal pour musulmans d'Afrique",
-    template: "%s | Farata",
+    default: "FarataNikah — La plateforme de mariage halal pour musulmans d'Afrique",
+    template: "%s | FarataNikah",
   },
   description:
-    "Farata connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Amina.",
+    "FarataNikah connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Amina.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -27,7 +28,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

@@ -11,7 +11,7 @@ const commitments = [
     icon: HeartHandshake,
     title: "Une seule intention encouragée",
     description:
-      "Farata s'adresse aux personnes qui recherchent sincèrement un mariage conforme à leurs valeurs.",
+      "FarataNikah s'adresse aux personnes qui recherchent sincèrement un mariage conforme à leurs valeurs.",
   },
   {
     icon: Users2,
@@ -30,7 +30,7 @@ export function Testimonials() {
             Nos engagements
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-            Ce que tu peux attendre de Farata
+            Ce que tu peux attendre de FarataNikah
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
             Une plateforme jeune, construite avec des règles claires dès le

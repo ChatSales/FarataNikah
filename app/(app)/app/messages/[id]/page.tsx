@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { MessageForm } from "@/components/messages/message-form";
 
 export default async function ConversationPage({
@@ -18,7 +19,7 @@ export default async function ConversationPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id")
+    .select("id, is_premium")
     .eq("user_id", user.id)
     .single();
   if (!profile) redirect("/onboarding/basic-info");
@@ -50,10 +51,28 @@ export default async function ConversationPage({
 
   const { data: messages } = await supabase
     .from("messages")
-    .select("id, sender_profile_id, content, created_at")
+    .select(
+      "id, sender_profile_id, content, message_type, voice_storage_path, voice_duration_seconds, created_at"
+    )
     .eq("conversation_id", id)
     .neq("moderation_status", "blocked")
     .order("created_at", { ascending: true });
+
+  // Voice clips live under the sender's own storage folder (owner-only RLS,
+  // see 0009_voice_messages.sql), so the recipient's signed URL has to be
+  // minted with the service-role client after the participant check above.
+  const admin = createAdminClient();
+  const messagesWithVoiceUrls = await Promise.all(
+    (messages ?? []).map(async (m) => {
+      if (m.message_type !== "voice" || !m.voice_storage_path) {
+        return { ...m, voiceUrl: null as string | null };
+      }
+      const { data: signed } = await admin.storage
+        .from("voice-messages")
+        .createSignedUrl(m.voice_storage_path, 60 * 30);
+      return { ...m, voiceUrl: signed?.signedUrl ?? null };
+    })
+  );
 
   return (
     <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-2xl flex-col px-4 sm:px-6 lg:px-8">
@@ -72,7 +91,7 @@ export default async function ConversationPage({
             Dis salam pour démarrer la conversation.
           </p>
         ) : (
-          messages.map((m) => {
+          messagesWithVoiceUrls.map((m) => {
             const isMine = m.sender_profile_id === profile.id;
             return (
               <div
@@ -86,7 +105,19 @@ export default async function ConversationPage({
                       : "bg-primary-100 text-primary-900"
                   }`}
                 >
-                  <p className="whitespace-pre-wrap">{m.content}</p>
+                  {m.message_type === "voice" ? (
+                    m.voiceUrl ? (
+                      <audio
+                        controls
+                        src={m.voiceUrl}
+                        className="h-8 max-w-[220px]"
+                      />
+                    ) : (
+                      <p className="italic opacity-70">Message vocal indisponible</p>
+                    )
+                  ) : (
+                    <p className="whitespace-pre-wrap">{m.content}</p>
+                  )}
                   <p
                     className={`mt-1 text-[10px] ${
                       isMine ? "text-primary-100" : "text-primary-900/50"
@@ -104,7 +135,7 @@ export default async function ConversationPage({
         )}
       </div>
 
-      <MessageForm conversationId={conversation.id} />
+      <MessageForm conversationId={conversation.id} isPremium={profile.is_premium} />
     </div>
   );
 }

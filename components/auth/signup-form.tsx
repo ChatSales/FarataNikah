@@ -46,6 +46,26 @@ export function SignupForm() {
         </p>
       )}
 
+      <label className="flex items-start gap-2.5 text-xs leading-relaxed text-primary-900/55">
+        <input
+          type="checkbox"
+          name="acceptTerms"
+          required
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-primary-300 text-primary-600 focus:ring-primary-500/40"
+        />
+        <span>
+          J&apos;ai lu et j&apos;accepte le{" "}
+          <Link href="/legal/reglement" className="underline">
+            règlement
+          </Link>{" "}
+          et la{" "}
+          <Link href="/legal/confidentialite" className="underline">
+            politique de confidentialité
+          </Link>
+          .
+        </span>
+      </label>
+
       <button
         type="submit"
         disabled={pending}
@@ -53,18 +73,6 @@ export function SignupForm() {
       >
         {pending ? "Création du compte..." : "Créer mon compte"}
       </button>
-
-      <p className="text-center text-xs leading-relaxed text-primary-900/55">
-        En t&apos;inscrivant, tu acceptes notre{" "}
-        <Link href="/legal/reglement" className="underline">
-          règlement
-        </Link>{" "}
-        et notre{" "}
-        <Link href="/legal/confidentialite" className="underline">
-          politique de confidentialité
-        </Link>
-        .
-      </p>
 
       <p className="text-center text-sm text-primary-900/70">
         Déjà inscrit·e ?{" "}

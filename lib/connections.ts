@@ -1,4 +1,5 @@
 import type { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 type SupabaseServerClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -46,8 +47,12 @@ export async function getGatedPrimaryPhotoUrl(
 
   if (!photo) return null;
 
-  const { data: signed } = await supabase.storage
-    .from("profile-photos")
+  // storage.objects only grants owner-level RLS access (see
+  // supabase/migrations/0002_storage.sql), so signing another member's
+  // photo has to go through the service-role client — the gating check
+  // above is what stands in for storage RLS on cross-user reads.
+  const { data: signed } = await createAdminClient()
+    .storage.from("profile-photos")
     .createSignedUrl(photo.storage_path, 60 * 30);
 
   return signed?.signedUrl ?? null;

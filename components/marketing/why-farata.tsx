@@ -11,7 +11,7 @@ const features = [
     icon: HandHeart,
     title: "Une intention claire : le mariage",
     description:
-      "Pas de drague ni de contenu déplacé — Farata s'adresse à celles et ceux qui cherchent un époux ou une épouse.",
+      "Pas de drague ni de contenu déplacé — FarataNikah s'adresse à celles et ceux qui cherchent un époux ou une épouse.",
   },
   {
     icon: EyeOff,
@@ -33,13 +33,13 @@ export function WhyFarata() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wide text-gold-600">
-            Pourquoi Farata
+            Pourquoi FarataNikah
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
             Une plateforme conçue pour le mariage, pas la rencontre
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
-            Farata a été pensée pour offrir un cadre conforme aux valeurs
+            FarataNikah a été pensée pour offrir un cadre conforme aux valeurs
             islamiques, loin des codes des applications de rencontre
             classiques.
           </p>

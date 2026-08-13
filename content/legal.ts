@@ -19,7 +19,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "1. Objet",
         paragraphs: [
-          "Le présent règlement fixe les règles de conduite applicables à tous les membres de Farata, plateforme de mise en relation en vue du mariage destinée aux musulmans d'Afrique. Il complète les Conditions Générales de Vente et la Politique de confidentialité. En créant un compte, chaque membre s'engage à le respecter.",
+          "Le présent règlement fixe les règles de conduite applicables à tous les membres de FarataNikah, plateforme de mise en relation en vue du mariage destinée aux musulmans d'Afrique. Il complète les Conditions Générales de Vente et la Politique de confidentialité. En créant un compte, chaque membre s'engage à le respecter.",
         ],
       },
       {
@@ -31,7 +31,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "3. Vérification des profils",
         paragraphs: [
-          "Chaque nouveau profil est examiné manuellement par l'équipe de Farata avant d'être visible par les autres membres. Farata se réserve le droit de refuser ou de suspendre tout profil qui ne respecterait pas les critères d'inscription ou le présent règlement, sans obligation de justifier sa décision au-delà du motif communiqué au membre concerné.",
+          "Chaque nouveau profil est examiné manuellement par l'équipe de FarataNikah avant d'être visible par les autres membres. FarataNikah se réserve le droit de refuser ou de suspendre tout profil qui ne respecterait pas les critères d'inscription ou le présent règlement, sans obligation de justifier sa décision au-delà du motif communiqué au membre concerné.",
         ],
       },
       {
@@ -43,7 +43,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "5. Modération et sanctions",
         paragraphs: [
-          "Les messages échangés sur la plateforme font l'objet d'une modération automatisée, complétée par une revue humaine en cas de signalement. Farata se réserve le droit, selon la gravité du manquement constaté, d'adresser un avertissement, de suspendre temporairement un compte, ou de le bannir définitivement, sans préavis ni remboursement des sommes déjà versées au titre d'un abonnement en cours.",
+          "Les messages échangés sur la plateforme font l'objet d'une modération automatisée, complétée par une revue humaine en cas de signalement. FarataNikah se réserve le droit, selon la gravité du manquement constaté, d'adresser un avertissement, de suspendre temporairement un compte, ou de le bannir définitivement, sans préavis ni remboursement des sommes déjà versées au titre d'un abonnement en cours.",
         ],
       },
       {
@@ -55,7 +55,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "7. Responsabilité du membre",
         paragraphs: [
-          "Chaque membre est seul responsable des informations qu'il publie et des échanges qu'il engage avec d'autres membres. Farata vérifie l'identité déclarée des profils mais ne peut garantir l'exactitude de toutes les informations fournies ni se substituer au jugement personnel de chaque membre dans sa recherche de conjoint.",
+          "Chaque membre est seul responsable des informations qu'il publie et des échanges qu'il engage avec d'autres membres. FarataNikah vérifie l'identité déclarée des profils mais ne peut garantir l'exactitude de toutes les informations fournies ni se substituer au jugement personnel de chaque membre dans sa recherche de conjoint.",
         ],
       },
     ],
@@ -69,13 +69,13 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "1. Responsable du traitement",
         paragraphs: [
-          "Farata, dont le siège d'exploitation est situé à Dakar, Sénégal, est responsable du traitement des données personnelles collectées via la plateforme farata.net. Pour toute question relative à cette politique ou pour exercer vos droits, vous pouvez nous contacter à l'adresse faratasn@gmail.com.",
+          "FarataNikah, dont le siège d'exploitation est situé à Dakar, Sénégal, est responsable du traitement des données personnelles collectées via la plateforme faratanikah.com. Pour toute question relative à cette politique ou pour exercer vos droits, vous pouvez nous contacter à l'adresse faratasn@gmail.com.",
         ],
       },
       {
         heading: "2. Données collectées",
         paragraphs: [
-          "Nous collectons : les données d'inscription et de profil (prénom, date de naissance, genre, ville, pays, situation matrimoniale, pratique religieuse, critères de recherche, biographie) ; les photos de profil ; le contenu des messages échangés avec d'autres membres et avec l'assistante Coach Amina ; les données techniques de connexion ; et, pour les membres Premium, les données de transaction liées au paiement de l'abonnement (le numéro de carte ou de mobile money n'est jamais transmis à Farata — il est traité directement par notre prestataire de paiement Moneroo).",
+          "Nous collectons : les données d'inscription et de profil (prénom, date de naissance, genre, ville, pays, situation matrimoniale, pratique religieuse, critères de recherche, biographie) ; les photos de profil ; le contenu des messages échangés avec d'autres membres et avec l'assistante Coach Amina ; les données techniques de connexion ; et, pour les membres Premium, les données de transaction liées au paiement de l'abonnement (le numéro de carte ou de mobile money n'est jamais transmis à FarataNikah — il est traité directement par notre prestataire de paiement Moneroo).",
         ],
       },
       {
@@ -87,7 +87,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "4. Base légale",
         paragraphs: [
-          "Le traitement de vos données repose sur l'exécution du contrat qui vous lie à Farata (fourniture du service), sur votre consentement (notamment pour les photos et le mode anonyme), et, le cas échéant, sur l'intérêt légitime de Farata à assurer la sécurité de la plateforme.",
+          "Le traitement de vos données repose sur l'exécution du contrat qui vous lie à FarataNikah (fourniture du service), sur votre consentement (notamment pour les photos et le mode anonyme), et, le cas échéant, sur l'intérêt légitime de FarataNikah à assurer la sécurité de la plateforme.",
         ],
       },
       {
@@ -123,7 +123,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "10. Cookies",
         paragraphs: [
-          "Farata utilise des cookies strictement nécessaires au fonctionnement du service (maintien de votre session de connexion). Aucun cookie publicitaire ou de traçage tiers n'est utilisé à ce jour.",
+          "FarataNikah utilise des cookies strictement nécessaires au fonctionnement du service (maintien de votre session de connexion). Aucun cookie publicitaire ou de traçage tiers n'est utilisé à ce jour.",
         ],
       },
     ],
@@ -137,13 +137,13 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "Éditeur du site",
         paragraphs: [
-          "Le site farata.net est édité par Farata, dont l'activité est exploitée depuis Dakar, Sénégal. Contact : faratasn@gmail.com.",
+          "Le site faratanikah.com est édité par FarataNikah, dont l'activité est exploitée depuis Dakar, Sénégal. Contact : faratasn@gmail.com.",
         ],
       },
       {
         heading: "Directeur de publication",
         paragraphs: [
-          "Le directeur de publication est le représentant de Farata, joignable à l'adresse faratasn@gmail.com.",
+          "Le directeur de publication est le représentant de FarataNikah, joignable à l'adresse faratasn@gmail.com.",
         ],
       },
       {
@@ -155,7 +155,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "Propriété intellectuelle",
         paragraphs: [
-          "L'ensemble des éléments composant le site farata.net (textes, structure, identité visuelle, marque Farata) est protégé au titre de la propriété intellectuelle. Toute reproduction non autorisée est interdite.",
+          "L'ensemble des éléments composant le site faratanikah.com (textes, structure, identité visuelle, marque FarataNikah) est protégé au titre de la propriété intellectuelle. Toute reproduction non autorisée est interdite.",
         ],
       },
     ],
@@ -169,13 +169,13 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "1. Objet",
         paragraphs: [
-          "Les présentes Conditions Générales de Vente régissent la souscription à l'abonnement Farata Premium par les membres de la plateforme farata.net.",
+          "Les présentes Conditions Générales de Vente régissent la souscription à l'abonnement FarataNikah Premium par les membres de la plateforme faratanikah.com.",
         ],
       },
       {
         heading: "2. Description de l'offre",
         paragraphs: [
-          "L'abonnement Farata Premium donne accès à des fonctionnalités additionnelles : demandes de contact illimitées, questions illimitées à Coach Amina, visibilité de la liste des membres ayant consulté ou mis en favori votre profil, jusqu'à 10 photos HD, filtres de recherche avancés, messagerie vocale, meilleur classement dans les résultats de recherche, et un badge de profil vérifié Premium. Le détail des fonctionnalités incluses est présenté sur la page Tarifs.",
+          "L'abonnement FarataNikah Premium donne accès à des fonctionnalités additionnelles : demandes de contact illimitées, questions illimitées à Coach Amina, visibilité de la liste des membres ayant consulté ou mis en favori votre profil, jusqu'à 10 photos HD, filtres de recherche avancés, messagerie vocale, meilleur classement dans les résultats de recherche, et un badge de profil vérifié Premium. Le détail des fonctionnalités incluses est présenté sur la page Tarifs.",
         ],
       },
       {
@@ -187,7 +187,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "4. Modalités de paiement",
         paragraphs: [
-          "Le paiement s'effectue via notre prestataire Moneroo, qui prend en charge le paiement par mobile money (Orange Money, MTN Mobile Money, Moov Money, Wave, selon disponibilité) et par carte bancaire. Farata ne collecte ni ne conserve aucune donnée de carte bancaire ou de compte mobile money.",
+          "Le paiement s'effectue via notre prestataire Moneroo, qui prend en charge le paiement par mobile money (Orange Money, MTN Mobile Money, Moov Money, Wave, selon disponibilité) et par carte bancaire. FarataNikah ne collecte ni ne conserve aucune donnée de carte bancaire ou de compte mobile money.",
         ],
       },
       {
@@ -205,7 +205,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "7. Réclamations",
         paragraphs: [
-          "Toute réclamation relative à un paiement ou à l'abonnement Premium peut être adressée à faratasn@gmail.com. Farata s'engage à traiter chaque demande dans les meilleurs délais.",
+          "Toute réclamation relative à un paiement ou à l'abonnement Premium peut être adressée à faratasn@gmail.com. FarataNikah s'engage à traiter chaque demande dans les meilleurs délais.",
         ],
       },
     ],
@@ -219,19 +219,19 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "1. Objet",
         paragraphs: [
-          "Le présent document précise les engagements de Farata, agissant en qualité de responsable de traitement, concernant le recours à des sous-traitants pour le compte des membres de la plateforme farata.net.",
+          "Le présent document précise les engagements de FarataNikah, agissant en qualité de responsable de traitement, concernant le recours à des sous-traitants pour le compte des membres de la plateforme faratanikah.com.",
         ],
       },
       {
         heading: "2. Sous-traitants",
         paragraphs: [
-          "Farata a recours aux sous-traitants suivants dans le cadre de l'exploitation de la plateforme : Supabase (hébergement de la base de données, authentification, stockage des photos), Vercel Inc. (hébergement de l'application web), Anthropic (traitement automatisé des messages à des fins de modération, et fonctionnement de l'assistante conversationnelle Coach Amina), et Moneroo (traitement des paiements par mobile money et carte bancaire).",
+          "FarataNikah a recours aux sous-traitants suivants dans le cadre de l'exploitation de la plateforme : Supabase (hébergement de la base de données, authentification, stockage des photos), Vercel Inc. (hébergement de l'application web), Anthropic (traitement automatisé des messages à des fins de modération, et fonctionnement de l'assistante conversationnelle Coach Amina), et Moneroo (traitement des paiements par mobile money et carte bancaire).",
         ],
       },
       {
-        heading: "3. Engagements de Farata",
+        heading: "3. Engagements de FarataNikah",
         paragraphs: [
-          "Farata s'engage à ne recourir qu'à des sous-traitants présentant des garanties suffisantes en matière de sécurité et de confidentialité des données, à limiter l'accès de chaque sous-traitant aux seules données nécessaires à l'exécution de sa mission, et à informer ses membres de tout changement significatif dans la liste de ses sous-traitants.",
+          "FarataNikah s'engage à ne recourir qu'à des sous-traitants présentant des garanties suffisantes en matière de sécurité et de confidentialité des données, à limiter l'accès de chaque sous-traitant aux seules données nécessaires à l'exécution de sa mission, et à informer ses membres de tout changement significatif dans la liste de ses sous-traitants.",
         ],
       },
       {
@@ -243,7 +243,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "5. Contact",
         paragraphs: [
-          "Pour toute question relative au traitement de vos données ou à cet accord, vous pouvez contacter Farata à l'adresse faratasn@gmail.com.",
+          "Pour toute question relative au traitement de vos données ou à cet accord, vous pouvez contacter FarataNikah à l'adresse faratasn@gmail.com.",
         ],
       },
     ],

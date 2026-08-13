@@ -32,7 +32,7 @@ export interface ModerationResult {
   reasoning: string;
 }
 
-const SYSTEM_PROMPT = `Tu modères les messages échangés sur Farata, une plateforme de mariage halal pour musulmans sérieux en Afrique. Les utilisateurs échangent uniquement après acceptation mutuelle d'une demande de contact, en vue du mariage.
+const SYSTEM_PROMPT = `Tu modères les messages échangés sur FarataNikah, une plateforme de mariage halal pour musulmans sérieux en Afrique. Les utilisateurs échangent uniquement après acceptation mutuelle d'une demande de contact, en vue du mariage.
 
 Signale un message si, et seulement si, il contient :
 - une tentative d'échanger des coordonnées externes (numéro de téléphone, WhatsApp, Instagram, email) AVANT que la relation soit suffisamment établie — étape normale d'une conversation de mariage sérieuse une fois la confiance installée, donc ne signale que les tentatives précoces ou insistantes

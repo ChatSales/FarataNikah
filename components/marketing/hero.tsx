@@ -19,7 +19,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-primary-900/70">
-            Farata rassemble des célibataires musulmans sérieux, de tout le
+            FarataNikah rassemble des célibataires musulmans sérieux, de tout le
             continent, autour d&apos;un seul objectif&nbsp;: le mariage dans le
             respect des principes de l&apos;islam.
           </p>
@@ -31,26 +31,6 @@ export function Hero() {
             >
               Commencer sur le web
             </Link>
-            <div className="flex items-center gap-3">
-              <Link
-                href="#"
-                className="rounded-xl border border-primary-200 bg-cream-50 px-4 py-2 text-left text-xs text-primary-900/70 transition hover:border-primary-300"
-              >
-                <span className="block text-[10px] uppercase tracking-wide text-primary-900/50">
-                  Télécharger sur
-                </span>
-                <span className="font-semibold text-primary-800">l&apos;App Store</span>
-              </Link>
-              <Link
-                href="#"
-                className="rounded-xl border border-primary-200 bg-cream-50 px-4 py-2 text-left text-xs text-primary-900/70 transition hover:border-primary-300"
-              >
-                <span className="block text-[10px] uppercase tracking-wide text-primary-900/50">
-                  Disponible sur
-                </span>
-                <span className="font-semibold text-primary-800">Google Play</span>
-              </Link>
-            </div>
           </div>
 
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-medium text-primary-900/70">

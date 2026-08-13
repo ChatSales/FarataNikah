@@ -28,7 +28,7 @@ export default async function AdminLayout({
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/admin/verification" className="flex items-center gap-2 font-semibold">
             <ShieldCheck className="h-5 w-5 text-gold-400" />
-            Farata Admin
+            FarataNikah Admin
           </Link>
           <nav className="flex items-center gap-6 text-sm font-medium text-primary-100">
             <Link href="/admin/verification" className="transition hover:text-gold-300">

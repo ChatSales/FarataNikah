@@ -40,7 +40,7 @@ export function Footer() {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold-500 text-primary-900">
                 <HeartHandshake className="h-4.5 w-4.5" />
               </span>
-              <span className="text-lg tracking-tight">Farata</span>
+              <span className="text-lg tracking-tight">FarataNikah</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-200">
               La plateforme de mariage halal pour musulmans sérieux, partout
@@ -54,7 +54,7 @@ export function Footer() {
               href="/signup"
               className="mt-6 inline-flex rounded-full bg-gold-500 px-5 py-2.5 text-sm font-semibold text-primary-900 transition hover:bg-gold-400"
             >
-              Rejoindre Farata
+              Rejoindre FarataNikah
             </Link>
           </div>
 
@@ -109,7 +109,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-primary-800 pt-8 text-xs text-primary-300 sm:flex-row">
-          <p>© {new Date().getFullYear()} Farata. Tous droits réservés.</p>
+          <p>© {new Date().getFullYear()} FarataNikah. Tous droits réservés.</p>
           <p>Fait avec ♥ pour la Oumma</p>
         </div>
       </div>

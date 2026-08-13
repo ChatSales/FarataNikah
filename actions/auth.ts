@@ -34,12 +34,16 @@ export async function signUpAction(
 ): Promise<AuthActionState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const acceptTerms = formData.get("acceptTerms") === "on";
 
   if (!email || !password) {
     return { error: "Merci de renseigner un email et un mot de passe." };
   }
   if (password.length < 8) {
     return { error: "Le mot de passe doit contenir au moins 8 caractères." };
+  }
+  if (!acceptTerms) {
+    return { error: "Tu dois accepter le règlement et la politique de confidentialité pour continuer." };
   }
 
   const supabase = await createClient();

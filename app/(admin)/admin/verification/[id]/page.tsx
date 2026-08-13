@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { VerificationActions } from "@/components/admin/verification-actions";
 
 export default async function AdminVerificationDetailPage({
@@ -25,9 +26,12 @@ export default async function AdminVerificationDetailPage({
     .eq("profile_id", id)
     .order("position", { ascending: true });
 
+  const admin = createAdminClient();
   const photosWithUrls = await Promise.all(
     (photos ?? []).map(async (photo) => {
-      const { data: signed } = await supabase.storage
+      // Storage RLS only grants owner access — admins reviewing another
+      // member's photos need the service-role client to sign them.
+      const { data: signed } = await admin.storage
         .from("profile-photos")
         .createSignedUrl(photo.storage_path, 60 * 15);
       return { ...photo, url: signed?.signedUrl ?? null };

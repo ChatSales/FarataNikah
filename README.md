@@ -1,4 +1,4 @@
-# Farata.net
+# FarataNikah
 
 Plateforme de rencontre halal orientée mariage, pour l'Afrique francophone.
 Next.js (App Router) + Supabase (Postgres/Auth/Storage) + Claude (Anthropic) + Moneroo.
@@ -8,8 +8,13 @@ Next.js (App Router) + Supabase (Postgres/Auth/Storage) + Claude (Anthropic) + M
 - **M1** — Landing page publique, auth Supabase, onboarding en 4 étapes,
   schéma DB + vérification manuelle, middleware de protection des routes.
 - **M2** — Découverte de profils avec filtres et score de compatibilité
-  (heuristique, pas encore une vraie IA), demandes de contact, back-office
-  admin de vérification des profils.
+  (heuristique, complété en M7 par un vrai score Claude), demandes de
+  contact, back-office admin de vérification des profils.
+- **M7** — Rebranding FarataNikah, suppression de compte en libre-service,
+  case CGU obligatoire à l'inscription, messages vocaux Premium, score de
+  compatibilité IA (Claude, mis en cache), filtres de recherche avancés
+  Premium (profession, études, pratique religieuse), analytics, SEO
+  (sitemap/robots).
 - **M3** — Messagerie 1:1, modération des messages par Claude (Haiku),
   file de modération admin, favoris, visites de profil (Premium).
 - **M4** — Coach IA **Amina** : chat conversationnel streamé, limite
@@ -109,9 +114,10 @@ content/legal.ts      contenu des pages légales
 
 ## Notes importantes
 
-- Le score de compatibilité affiché dans Discover est une heuristique basée
-  sur des règles (pays, âge, madhhab, situation matrimoniale) — pas un vrai
-  scoring IA pour l'instant.
+- Le score de compatibilité affiché dans Discover combine une heuristique
+  basée sur des règles (pays, âge, madhhab, situation matrimoniale) pour le
+  pré-classement, et un vrai score Claude (mis en cache 30 jours dans
+  `compatibility_scores`) pour les meilleures correspondances de chaque page.
 - Les photos de profil sont stockées dans un bucket Supabase Storage privé ;
   elles ne sont révélées à un autre membre qu'une fois une demande de contact
   acceptée (ou si `blur_photos` est désactivé par le propriétaire).

@@ -16,7 +16,7 @@ export default function AuthLayout({
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-600 text-cream-50">
             <HeartHandshake className="h-5 w-5" />
           </span>
-          <span className="text-xl tracking-tight">Farata</span>
+          <span className="text-xl tracking-tight">FarataNikah</span>
         </Link>
         <div className="rounded-2xl border border-primary-100 bg-cream-50 p-8 shadow-sm">
           {children}

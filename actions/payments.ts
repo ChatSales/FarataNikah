@@ -24,14 +24,14 @@ export async function createCheckoutAction(
   if (!profile) redirect("/onboarding/basic-info");
   if (profile.verification_status !== "approved") redirect("/onboarding/pending");
   if (profile.is_premium) {
-    return { error: "Tu es déjà abonné(e) à Farata Premium." };
+    return { error: "Tu es déjà abonné(e) à FarataNikah Premium." };
   }
 
   let checkout: Awaited<ReturnType<typeof createMonerooCheckout>>;
   try {
     checkout = await createMonerooCheckout({
       amountFcfa: PREMIUM_MONTHLY_PRICE_FCFA,
-      description: "Abonnement Farata Premium — 1 mois",
+      description: "Abonnement FarataNikah Premium — 1 mois",
       customerEmail: profile.email,
       // Onboarding only collects a first name today, so we reuse it — Moneroo
       // requires a non-empty last_name but doesn't otherwise validate it.

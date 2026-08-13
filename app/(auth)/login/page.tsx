@@ -16,7 +16,7 @@ export default async function LoginPage({
         Content de te revoir
       </h1>
       <p className="mt-1.5 text-center text-sm text-primary-900/60">
-        Connecte-toi à ton compte Farata.
+        Connecte-toi à ton compte FarataNikah.
       </p>
       <div className="mt-8">
         <LoginForm redirectTo={redirect || "/app/discover"} />

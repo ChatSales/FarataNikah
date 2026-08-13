@@ -11,7 +11,7 @@ export function ProductPreview() {
           Un parcours pensé pour le mariage
         </h2>
         <p className="mt-4 text-lg text-primary-900/70">
-          Un aperçu rapide de Farata, de l&apos;inscription aux premiers
+          Un aperçu rapide de FarataNikah, de l&apos;inscription aux premiers
           échanges.
         </p>
       </div>
@@ -23,7 +23,7 @@ export function ProductPreview() {
             <span className="h-2.5 w-2.5 rounded-full bg-primary-200" />
             <span className="h-2.5 w-2.5 rounded-full bg-primary-200" />
             <span className="ml-3 rounded-md bg-cream-50 px-3 py-1 text-xs text-primary-900/50">
-              farata.net
+              faratanikah.com
             </span>
           </div>
           <div className="relative flex aspect-video items-center justify-center bg-gradient-to-br from-primary-700 to-primary-900">

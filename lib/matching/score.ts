@@ -1,9 +1,9 @@
 import type { Madhhab, MaritalStatus } from "@/lib/supabase/types";
 
-// MVP compatibility score: a simple rules-based heuristic (0-100), not an
-// AI/ML score. The pricing copy implies an "AI compatibility score" —
-// phase 2 can replace this with a real Claude-based scoring call, cached
-// per profile pair since it's too slow/costly to run live on every browse.
+// Rules-based heuristic (0-100). Used to pre-rank candidates before the
+// top matches get a real Claude-based score (see lib/matching/ai-score.ts),
+// and as the instant fallback for candidates outside that top slice or if
+// the AI call fails.
 
 export interface ScorableProfile {
   country: string;
