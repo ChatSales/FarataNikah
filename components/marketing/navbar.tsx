@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { HeartHandshake, Menu } from "lucide-react";
+import { HeartHandshake } from "lucide-react";
+import { MobileMenu } from "@/components/marketing/mobile-menu";
 
 const links = [{ href: "/", label: "Accueil" }];
 
 export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-primary-100/60 bg-cream-50/90 backdrop-blur">
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <nav className="relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 font-semibold text-primary-800">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-cream-50">
             <HeartHandshake className="h-4.5 w-4.5" />
@@ -41,13 +42,7 @@ export function Navbar() {
           </Link>
         </div>
 
-        <button
-          type="button"
-          aria-label="Ouvrir le menu"
-          className="rounded-md p-2 text-primary-800 lg:hidden"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
+        <MobileMenu />
       </nav>
     </header>
   );
