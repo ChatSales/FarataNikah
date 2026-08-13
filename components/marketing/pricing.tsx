@@ -39,7 +39,7 @@ const premiumIncluded = [
   "Message Flash : fais bonne impression",
   "Score de compatibilité IA détaillé",
   "Mieux classé dans les résultats",
-  "Filtres avancés (madhhab, hijra...)",
+  "Filtres avancés (madhhab, niveau de pratique...)",
   "Boosts de profil inclus",
   "Badge Premium vérifié ✓",
   "Support prioritaire 7 j/7",
@@ -54,11 +54,11 @@ export function Pricing() {
             Tarifs
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-            Gratuit pour commencer. Premium pour accélérer.
+            Commence gratuitement, passe Premium quand tu es prêt(e)
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
-            Tu peux utiliser Farata gratuitement. Mais si tu veux maximiser tes
-            chances, passe Premium.
+            L&apos;essentiel est accessible gratuitement. Premium débloque des
+            fonctionnalités pour aller plus loin dans ta recherche.
           </p>
         </div>
 
@@ -103,7 +103,7 @@ export function Pricing() {
             </span>
             <h3 className="text-lg font-semibold">Premium</h3>
             <p className="mt-1 text-sm text-primary-200">
-              Maximise tes chances de trouver ta moitié
+              Pour aller plus loin dans ta recherche
             </p>
             <p className="mt-6 flex items-baseline gap-2">
               <span className="text-lg text-primary-300 line-through">9 900 FCFA</span>

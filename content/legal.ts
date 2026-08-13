@@ -1,7 +1,8 @@
 // Placeholder legal content — NOT reviewed by a lawyer. Every page must be
-// replaced with real legal text (ideally reviewed for Senegalese/OHADA and
-// GDPR-equivalent compliance across target African markets) before Farata
-// accepts real users or real payments.
+// replaced with real legal text before Farata accepts real users or real
+// payments — ideally reviewed for OHADA/Senegalese law (company registered
+// in Dakar) as well as data-protection rules in the other African markets
+// the platform serves.
 
 export interface LegalPage {
   slug: string;

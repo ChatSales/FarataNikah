@@ -5,19 +5,19 @@ const points = [
     icon: UserCheck,
     title: "Vérification manuelle",
     description:
-      "Pas de bot, pas de faux profil. Chaque inscription passe par notre équipe avant d'être validée.",
+      "Chaque inscription est examinée par notre équipe avant validation, pour limiter les faux comptes.",
   },
   {
     icon: ScanEye,
-    title: "Modération intelligente",
+    title: "Messagerie surveillée",
     description:
-      "Notre IA scanne chaque message. Contenu inapproprié ? Bloqué instantanément. Pas de place pour la fitna.",
+      "Les échanges sont analysés automatiquement afin de repérer les contenus contraires à l'esprit de la plateforme.",
   },
   {
     icon: Lock,
-    title: "Contrôle total",
+    title: "Tes données, tes règles",
     description:
-      "Mode anonyme, photos floues... Tu décides qui voit quoi. Tes données restent les tiennes.",
+      "Mode anonyme, photos floutées, visibilité paramétrable : tu choisis ce que les autres membres peuvent voir.",
   },
 ];
 
@@ -30,11 +30,11 @@ export function Security() {
             Sécurité
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-            Ta sécurité n&apos;est pas négociable
+            Un cadre sûr pour chercher sereinement
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
-            Faux profils, arnaques, haram... On gère tout. Toi, concentre-toi
-            sur ta recherche.
+            On s&apos;occupe des faux profils et des comportements
+            inappropriés, pour que tu puisses te concentrer sur ta recherche.
           </p>
         </div>
 

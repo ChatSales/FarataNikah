@@ -1,26 +1,27 @@
 const steps = [
   {
     number: "01",
-    title: "Inscris-toi en 5 minutes",
+    title: "Crée ton profil",
     description:
-      "Pseudo, email, quelques infos. C'est rapide et 100 % gratuit.",
+      "Quelques informations sur toi, tes valeurs et ce que tu recherches pour ton mariage.",
   },
   {
     number: "02",
-    title: "Découvre des profils compatibles",
+    title: "Attends la validation",
     description:
-      "Notre IA analyse tes critères et te propose des personnes qui te correspondent vraiment.",
+      "Notre équipe vérifie ton profil pour garantir un espace fiable à tous les membres.",
   },
   {
     number: "03",
-    title: "Échange en toute pudeur",
+    title: "Parcours des profils compatibles",
     description:
-      "Messages modérés par IA, Ice Breakers pour bien démarrer. Pas de dérive, juste l'essentiel.",
+      "Filtre selon tes critères et envoie une demande de contact aux profils qui t'intéressent.",
   },
   {
     number: "04",
-    title: "Rencontre ta moitié",
-    description: "Qu'Allah facilite ta recherche et bénisse ton union. Amine.",
+    title: "Échange dans le respect",
+    description:
+      "Une fois la demande acceptée, discute librement, avec l'appui de Cheikh Moussa si besoin.",
   },
 ];
 
@@ -33,11 +34,10 @@ export function Steps() {
             4 étapes
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-            De l&apos;inscription au Nikah
+            Comment fonctionne Farata
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
-            Simple, rapide, efficace. Ton futur époux ou ta future épouse est
-            peut-être à quelques clics.
+            Un parcours clair, du premier profil à la première conversation.
           </p>
         </div>
 

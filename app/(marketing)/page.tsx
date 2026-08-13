@@ -17,16 +17,16 @@ export default function HomePage() {
       <Security />
       <Steps />
       <CtaBand
-        title="Ta moitié t'attend. Qu'est-ce que tu attends ?"
-        subtitle="Inscription gratuite. 5 minutes. Zéro engagement."
-        buttonLabel="Je me lance"
+        title="Prêt(e) à franchir le pas ?"
+        subtitle="La création de profil est gratuite et ne prend que quelques minutes."
+        buttonLabel="Créer mon profil"
       />
       <Pricing />
       <Testimonials />
       <QuranVerse />
       <CtaBand
-        title="Ta moitié t'attend peut-être ici. Fais le premier pas."
-        subtitle="Rejoins une communauté de musulmans sérieux, engagés dans une recherche sincère de mariage."
+        title="Rejoins une communauté panafricaine de musulmans sérieux"
+        subtitle="Où que tu sois en Afrique, ta recherche de mariage mérite un cadre sain et respectueux."
         buttonLabel="Créer mon profil gratuitement"
       />
     </>

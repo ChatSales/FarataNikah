@@ -3,27 +3,27 @@ import { ShieldOff, HandHeart, EyeOff, Sparkles } from "lucide-react";
 const features = [
   {
     icon: ShieldOff,
-    title: "Zéro faux profil",
+    title: "Des profils vérifiés",
     description:
-      "Chaque inscription est vérifiée à la main. Ici, tu parles à de vraies personnes.",
+      "Chaque nouveau membre est examiné par notre équipe avant d'apparaître sur la plateforme.",
   },
   {
     icon: HandHeart,
-    title: "Le halal, sans compromis",
+    title: "Une intention claire : le mariage",
     description:
-      "Pas de drague, pas de photos haram. Juste des gens sérieux qui veulent se marier.",
+      "Pas de drague ni de contenu déplacé — Farata s'adresse à celles et ceux qui cherchent un époux ou une épouse.",
   },
   {
     icon: EyeOff,
-    title: "Ta vie privée, notre priorité",
+    title: "Toi seul(e) décides qui te voit",
     description:
-      "Mode anonyme, photos floues... C'est toi qui décides qui te voit.",
+      "Mode anonyme, photos floutées par défaut : tu gardes le contrôle sur ta visibilité.",
   },
   {
     icon: Sparkles,
-    title: "Coach IA personnel",
+    title: "Cheikh Moussa, ton accompagnateur",
     description:
-      "Cheikh Moussa, ton coach IA, te guide 24 h/24. Conseils personnalisés et Ice Breakers pour bien démarrer.",
+      "Un assistant conversationnel disponible à tout moment pour t'aider à préparer tes échanges et poser tes questions.",
   },
 ];
 
@@ -33,14 +33,15 @@ export function WhyFarata() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-sm font-semibold uppercase tracking-wide text-gold-600">
-            100% halal, 100% sérieux — Pourquoi Farata
+            Pourquoi Farata
           </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-            Pas une app de rencontre. Une app de mariage.
+            Une plateforme conçue pour le mariage, pas la rencontre
           </h2>
           <p className="mt-4 text-lg text-primary-900/70">
-            On a créé ce qu&apos;on aurait aimé trouver&nbsp;: une plateforme
-            sérieuse, 100&nbsp;% halal, sans les dérives des autres apps.
+            Farata a été pensée pour offrir un cadre conforme aux valeurs
+            islamiques, loin des codes des applications de rencontre
+            classiques.
           </p>
         </div>
 

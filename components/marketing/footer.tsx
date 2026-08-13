@@ -11,16 +11,15 @@ const navigation = [
 ];
 
 const rencontre = [
-  { href: "/rencontre/dakar", label: "Rencontre Dakar" },
   { href: "/rencontre/senegal", label: "Rencontre Sénégal" },
-  { href: "/rencontre/mali", label: "Rencontre Mali" },
   { href: "/rencontre/cote-divoire", label: "Rencontre Côte d'Ivoire" },
-  { href: "/rencontre/burkina", label: "Rencontre Burkina" },
+  { href: "/rencontre/mali", label: "Rencontre Mali" },
+  { href: "/rencontre/nigeria", label: "Rencontre Nigeria" },
+  { href: "/rencontre/maroc", label: "Rencontre Maroc" },
   { href: "/rencontre/musulman", label: "Rencontre Musulman" },
-  { href: "/rencontre/gratuite", label: "Rencontre Gratuite" },
   { href: "/mariage-halal", label: "Mariage Halal" },
   { href: "/femme-musulmane", label: "Femme Musulmane" },
-  { href: "/villes", label: "Toutes les villes" },
+  { href: "/villes", label: "Toutes les villes d'Afrique" },
 ];
 
 const legal = [
@@ -44,8 +43,8 @@ export function Footer() {
               <span className="text-lg tracking-tight">Farata</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-200">
-              Ta moitié, par destin et invocation. La plateforme de rencontres
-              halal pour musulmans sérieux.
+              La plateforme de mariage halal pour musulmans sérieux, partout
+              en Afrique.
             </p>
             <div className="mt-5 flex items-center gap-2 text-xs font-medium text-primary-200">
               <ShieldCheck className="h-4 w-4 text-gold-400" />

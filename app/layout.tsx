@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Farata — La plateforme de rencontre halal pour musulmans sérieux",
+    default: "Farata — La plateforme de mariage halal pour musulmans d'Afrique",
     template: "%s | Farata",
   },
   description:
-    "Farata connecte des musulmans sérieux en vue du mariage, en toute conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Cheikh Moussa.",
+    "Farata connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Cheikh Moussa.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

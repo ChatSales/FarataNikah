@@ -5,14 +5,14 @@ export function ProductPreview() {
     <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-2xl text-center">
         <span className="text-sm font-semibold uppercase tracking-wide text-gold-600">
-          Découvrez Farata
+          Comment ça marche
         </span>
         <h2 className="mt-3 text-3xl font-bold tracking-tight text-primary-900 sm:text-4xl">
-          Une plateforme pensée pour toi
+          Un parcours pensé pour le mariage
         </h2>
         <p className="mt-4 text-lg text-primary-900/70">
-          2 minutes pour comprendre comment Farata va t&apos;aider à trouver ta
-          moitié.
+          Un aperçu rapide de Farata, de l&apos;inscription aux premiers
+          échanges.
         </p>
       </div>
 
