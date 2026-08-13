@@ -27,17 +27,19 @@ export interface MetaServerEventParams {
 // Moneroo's checkout, before we know the payment actually succeeded, while
 // this call runs from the webhook handler only once Moneroo confirms it.
 export async function sendMetaServerEvent(params: MetaServerEventParams): Promise<void> {
-  const accessToken = process.env.META_ACCESS_TOKEN;
-  if (!accessToken) return;
-
   const admin = createAdminClient();
   const { data: settings } = await admin
     .from("app_settings")
-    .select("meta_pixel_id")
+    .select("meta_pixel_id, meta_access_token")
     .eq("id", true)
     .maybeSingle();
+
+  // The token pasted into /admin/settings (self-service, no redeploy) takes
+  // priority; META_ACCESS_TOKEN stays as a fallback for anyone who'd rather
+  // set it as an env var instead.
+  const accessToken = settings?.meta_access_token || process.env.META_ACCESS_TOKEN;
   const pixelId = settings?.meta_pixel_id;
-  if (!pixelId) return;
+  if (!accessToken || !pixelId) return;
 
   const userData: Record<string, unknown> = {};
   if (params.email) userData.em = [sha256(params.email)];

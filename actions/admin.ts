@@ -264,7 +264,7 @@ export async function removeAdminAction(
 
 export type SettingsActionState = { error: string } | { success: true } | null;
 
-export async function saveMetaPixelIdAction(
+export async function saveMetaSettingsAction(
   _prevState: SettingsActionState,
   formData: FormData
 ): Promise<SettingsActionState> {
@@ -273,14 +273,27 @@ export async function saveMetaPixelIdAction(
     return { error: "L'identifiant du pixel Meta doit être une suite de chiffres." };
   }
 
+  const rawToken = String(formData.get("metaAccessToken") ?? "").trim();
+  const clearToken = formData.get("clearMetaAccessToken") === "on";
+
   const supabase = await createClient();
   await requireAdmin(supabase);
 
-  const { error } = await supabase
-    .from("app_settings")
-    .update({ meta_pixel_id: rawPixelId || null })
-    .eq("id", true);
-  if (error) return { error: "Impossible d'enregistrer le pixel Meta." };
+  const update: { meta_pixel_id: string | null; meta_access_token?: string | null } = {
+    meta_pixel_id: rawPixelId || null,
+  };
+  // Blank input leaves an already-saved token untouched (it's never sent
+  // back to the browser to prefill, so "blank" can't mean "the real value
+  // is empty") — only an explicit checkbox clears it, or a non-blank value
+  // replaces it.
+  if (clearToken) {
+    update.meta_access_token = null;
+  } else if (rawToken) {
+    update.meta_access_token = rawToken;
+  }
+
+  const { error } = await supabase.from("app_settings").update(update).eq("id", true);
+  if (error) return { error: "Impossible d'enregistrer les réglages Meta." };
 
   revalidatePath("/admin/settings");
   revalidatePath("/", "layout");
