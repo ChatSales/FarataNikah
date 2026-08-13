@@ -2,37 +2,7 @@
 
 import { useActionState } from "react";
 import { saveBasicInfoAction } from "@/actions/profile";
-
-const countries = [
-  "Algérie",
-  "Bénin",
-  "Burkina Faso",
-  "Cameroun",
-  "Comores",
-  "Côte d'Ivoire",
-  "Djibouti",
-  "Égypte",
-  "Éthiopie",
-  "Gambie",
-  "Ghana",
-  "Guinée",
-  "Guinée-Bissau",
-  "Kenya",
-  "Libye",
-  "Mali",
-  "Maroc",
-  "Mauritanie",
-  "Niger",
-  "Nigeria",
-  "Sénégal",
-  "Sierra Leone",
-  "Somalie",
-  "Tanzanie",
-  "Tchad",
-  "Togo",
-  "Tunisie",
-  "Autre",
-];
+import { AFRICAN_COUNTRIES } from "@/content/countries";
 
 export function BasicInfoForm() {
   const [state, formAction, pending] = useActionState(saveBasicInfoAction, null);
@@ -95,7 +65,7 @@ export function BasicInfoForm() {
             <option value="" disabled>
               Choisir
             </option>
-            {countries.map((c) => (
+            {AFRICAN_COUNTRIES.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>

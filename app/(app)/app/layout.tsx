@@ -41,6 +41,16 @@ export default async function AppLayout({
             </span>
             <span className="text-lg tracking-tight">Farata</span>
           </Link>
+
+          <nav className="flex items-center gap-6 text-sm font-medium text-primary-900/70">
+            <Link href="/app/discover" className="transition hover:text-primary-700">
+              Découvrir
+            </Link>
+            <Link href="/app/requests" className="transition hover:text-primary-700">
+              Mes demandes
+            </Link>
+          </nav>
+
           <form action={signOutAction}>
             <button
               type="submit"

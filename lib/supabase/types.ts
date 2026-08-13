@@ -14,6 +14,8 @@ export type Madhhab =
   | "other";
 export type VerificationStatus = "pending" | "approved" | "rejected";
 export type AdminRole = "admin" | "moderator" | "support";
+export type ContactRequestStatus = "pending" | "accepted" | "declined";
+export type ConversationStatus = "active" | "blocked" | "archived";
 
 export interface Database {
   public: {
@@ -130,6 +132,43 @@ export interface Database {
         Update: Partial<
           Database["public"]["Tables"]["daily_usage_counters"]["Row"]
         >;
+        Relationships: [];
+      };
+      contact_requests: {
+        Row: {
+          id: string;
+          sender_profile_id: string;
+          recipient_profile_id: string;
+          status: ContactRequestStatus;
+          message: string | null;
+          created_at: string;
+          responded_at: string | null;
+        };
+        Insert: Partial<
+          Database["public"]["Tables"]["contact_requests"]["Row"]
+        > & {
+          sender_profile_id: string;
+          recipient_profile_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["contact_requests"]["Row"]>;
+        Relationships: [];
+      };
+      conversations: {
+        Row: {
+          id: string;
+          contact_request_id: string;
+          profile_a_id: string;
+          profile_b_id: string;
+          status: ConversationStatus;
+          last_message_at: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["conversations"]["Row"]> & {
+          contact_request_id: string;
+          profile_a_id: string;
+          profile_b_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["conversations"]["Row"]>;
         Relationships: [];
       };
     };
