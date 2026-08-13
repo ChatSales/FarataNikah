@@ -3,12 +3,22 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { signInAction } from "@/actions/auth";
+import { GoogleButton } from "@/components/auth/google-button";
 
 export function LoginForm({ redirectTo }: { redirectTo: string }) {
   const [state, formAction, pending] = useActionState(signInAction, null);
 
   return (
-    <form action={formAction} className="space-y-5">
+    <div className="space-y-5">
+      <GoogleButton label="Se connecter avec Google" />
+
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-primary-100" />
+        <span className="text-xs text-primary-900/40">ou</span>
+        <div className="h-px flex-1 bg-primary-100" />
+      </div>
+
+      <form action={formAction} className="space-y-5">
       <input type="hidden" name="redirectTo" value={redirectTo} />
 
       <div>
@@ -60,12 +70,13 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         {pending ? "Connexion..." : "Se connecter"}
       </button>
 
-      <p className="text-center text-sm text-primary-900/70">
-        Pas encore de compte ?{" "}
-        <Link href="/signup" className="font-medium text-primary-700 underline">
-          Inscription gratuite
-        </Link>
-      </p>
-    </form>
+        <p className="text-center text-sm text-primary-900/70">
+          Pas encore de compte ?{" "}
+          <Link href="/signup" className="font-medium text-primary-700 underline">
+            Inscription gratuite
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

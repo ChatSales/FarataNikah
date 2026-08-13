@@ -12,7 +12,7 @@ export type AuthActionState = { error: string } | null;
 // (a Next.js quirk — the rendered content is correct, only the URL bar
 // lags, and it self-heals on the next navigation/refresh). Resolving the
 // destination here avoids the double-hop entirely for the common case.
-async function resolvePostLoginPath(
+export async function resolvePostLoginPath(
   supabase: Awaited<ReturnType<typeof createClient>>,
   userId: string,
   fallback: string
@@ -34,7 +34,6 @@ export async function signUpAction(
 ): Promise<AuthActionState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const acceptTerms = formData.get("acceptTerms") === "on";
 
   if (!email || !password) {
     return { error: "Merci de renseigner un email et un mot de passe." };
@@ -42,10 +41,9 @@ export async function signUpAction(
   if (password.length < 8) {
     return { error: "Le mot de passe doit contenir au moins 8 caractères." };
   }
-  if (!acceptTerms) {
-    return { error: "Tu dois accepter le règlement et la politique de confidentialité pour continuer." };
-  }
 
+  // CGU acceptance is recorded once, at onboarding/basic-info — the one
+  // mandatory first step shared by both email and Google signup.
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email,

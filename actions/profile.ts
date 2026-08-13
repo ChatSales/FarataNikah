@@ -37,6 +37,22 @@ export async function saveBasicInfoAction(
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("terms_accepted_at")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  // Signup (email or Google) never records CGU acceptance itself — this is
+  // the one mandatory first step for every new profile, so it's the single
+  // enforcement point for both auth methods. Already-accepted members
+  // editing this step again aren't re-prompted.
+  if (!existing?.terms_accepted_at && formData.get("acceptTerms") !== "on") {
+    return {
+      error: "Tu dois accepter le règlement et la politique de confidentialité pour continuer.",
+    };
+  }
+
   const parsed = basicInfoSchema.safeParse({
     first_name: formData.get("first_name"),
     gender: formData.get("gender"),
@@ -55,6 +71,7 @@ export async function saveBasicInfoAction(
     {
       user_id: user.id,
       email: user.email!,
+      terms_accepted_at: existing?.terms_accepted_at ?? new Date().toISOString(),
       ...parsed.data,
     },
     { onConflict: "user_id" }

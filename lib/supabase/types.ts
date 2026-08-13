@@ -78,6 +78,7 @@ export interface Database {
           premium_until: string | null;
           boost_credits: number;
           boosted_until: string | null;
+          terms_accepted_at: string | null;
           last_active_at: string;
           created_at: string;
           updated_at: string;

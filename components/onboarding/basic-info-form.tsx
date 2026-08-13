@@ -1,10 +1,15 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { saveBasicInfoAction } from "@/actions/profile";
 import { AFRICAN_COUNTRIES } from "@/content/countries";
 
-export function BasicInfoForm() {
+export function BasicInfoForm({
+  alreadyAcceptedTerms,
+}: {
+  alreadyAcceptedTerms: boolean;
+}) {
   const [state, formAction, pending] = useActionState(saveBasicInfoAction, null);
 
   return (
@@ -102,6 +107,28 @@ export function BasicInfoForm() {
           <option value="widowed">Veuf/Veuve</option>
         </select>
       </div>
+
+      {!alreadyAcceptedTerms && (
+        <label className="flex items-start gap-2.5 text-xs leading-relaxed text-primary-900/55">
+          <input
+            type="checkbox"
+            name="acceptTerms"
+            required
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-primary-300 text-primary-600 focus:ring-primary-500/40"
+          />
+          <span>
+            J&apos;ai lu et j&apos;accepte le{" "}
+            <Link href="/legal/reglement" className="underline" target="_blank">
+              règlement
+            </Link>{" "}
+            et la{" "}
+            <Link href="/legal/confidentialite" className="underline" target="_blank">
+              politique de confidentialité
+            </Link>
+            .
+          </span>
+        </label>
+      )}
 
       {state?.error && (
         <p className="rounded-lg bg-red-50 px-3.5 py-2.5 text-sm text-red-700">

@@ -1,9 +1,25 @@
 import type { Metadata } from "next";
 import { BasicInfoForm } from "@/components/onboarding/basic-info-form";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Tes informations" };
 
-export default function BasicInfoPage() {
+export default async function BasicInfoPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let alreadyAcceptedTerms = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("terms_accepted_at")
+      .eq("user_id", user.id)
+      .maybeSingle();
+    alreadyAcceptedTerms = Boolean(profile?.terms_accepted_at);
+  }
+
   return (
     <>
       <h1 className="text-center text-xl font-semibold text-primary-900">
@@ -13,7 +29,7 @@ export default function BasicInfoPage() {
         Ces informations apparaîtront sur ton profil.
       </p>
       <div className="mt-8">
-        <BasicInfoForm />
+        <BasicInfoForm alreadyAcceptedTerms={alreadyAcceptedTerms} />
       </div>
     </>
   );
