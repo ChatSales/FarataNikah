@@ -19,13 +19,22 @@ export default async function LegalPage({
       <h1 className="text-3xl font-bold tracking-tight text-primary-900">
         {page.title}
       </h1>
-      <div className="mt-4 rounded-lg border border-gold-400 bg-gold-300/20 px-4 py-3 text-sm text-primary-900">
-        ⚠️ Contenu provisoire, non revu juridiquement — à ne pas considérer
-        comme un texte contractuel définitif.
-      </div>
-      <div className="prose prose-p:text-primary-900/80 mt-8 space-y-4 text-base leading-relaxed">
-        {page.paragraphs.map((paragraph, i) => (
-          <p key={i}>{paragraph}</p>
+      <p className="mt-2 text-sm text-primary-900/50">
+        Dernière mise à jour : {page.updatedAt}
+      </p>
+
+      <div className="mt-10 space-y-8">
+        {page.sections.map((section) => (
+          <section key={section.heading}>
+            <h2 className="text-lg font-semibold text-primary-900">
+              {section.heading}
+            </h2>
+            <div className="mt-2 space-y-3 text-sm leading-relaxed text-primary-900/80">
+              {section.paragraphs.map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+            </div>
+          </section>
         ))}
       </div>
     </div>

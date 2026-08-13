@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { HeartHandshake } from "lucide-react";
+import { HeartHandshake, Settings } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -63,14 +63,23 @@ export default async function AppLayout({
             </Link>
           </nav>
 
-          <form action={signOutAction}>
-            <button
-              type="submit"
-              className="rounded-full border border-primary-200 px-4 py-2 text-sm font-medium text-primary-800 hover:bg-primary-50"
+          <div className="flex items-center gap-3">
+            <Link
+              href="/app/settings"
+              aria-label="Paramètres"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-primary-200 text-primary-700 transition hover:bg-primary-50"
             >
-              Se déconnecter
-            </button>
-          </form>
+              <Settings className="h-4 w-4" />
+            </Link>
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                className="rounded-full border border-primary-200 px-4 py-2 text-sm font-medium text-primary-800 hover:bg-primary-50"
+              >
+                Se déconnecter
+              </button>
+            </form>
+          </div>
         </div>
       </header>
       <main className="flex-1">{children}</main>

@@ -37,6 +37,9 @@ export default async function AdminLayout({
             <Link href="/admin/moderation" className="transition hover:text-gold-300">
               Modération
             </Link>
+            <Link href="/admin/stats" className="transition hover:text-gold-300">
+              Statistiques
+            </Link>
           </nav>
           <form action={signOutAction}>
             <button

@@ -26,6 +26,9 @@ export type ModerationFlagType =
 export type ModerationSeverity = "low" | "medium" | "high";
 export type ModerationFlagStatus = "pending_review" | "confirmed" | "dismissed";
 export type CoachMessageRole = "user" | "assistant";
+export type SubscriptionPlan = "free" | "premium_monthly";
+export type SubscriptionStatus = "active" | "canceled" | "expired" | "past_due";
+export type PaymentTransactionStatus = "pending" | "succeeded" | "failed" | "refunded";
 
 export interface Database {
   public: {
@@ -276,6 +279,50 @@ export interface Database {
           content: string;
         };
         Update: Partial<Database["public"]["Tables"]["coach_messages"]["Row"]>;
+        Relationships: [];
+      };
+      subscriptions: {
+        Row: {
+          id: string;
+          profile_id: string;
+          plan: SubscriptionPlan;
+          status: SubscriptionStatus;
+          provider_subscription_id: string | null;
+          current_period_start: string;
+          current_period_end: string;
+          cancel_at_period_end: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["subscriptions"]["Row"]> & {
+          profile_id: string;
+          current_period_end: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["subscriptions"]["Row"]>;
+        Relationships: [];
+      };
+      payment_transactions: {
+        Row: {
+          id: string;
+          profile_id: string;
+          subscription_id: string | null;
+          provider_transaction_id: string;
+          amount_fcfa: number;
+          currency: string;
+          status: PaymentTransactionStatus;
+          payment_method: string | null;
+          raw_payload: Record<string, unknown> | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<
+          Database["public"]["Tables"]["payment_transactions"]["Row"]
+        > & {
+          profile_id: string;
+          provider_transaction_id: string;
+          amount_fcfa: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["payment_transactions"]["Row"]>;
         Relationships: [];
       };
     };
