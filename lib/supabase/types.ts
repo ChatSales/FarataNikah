@@ -38,6 +38,11 @@ export type ProfileReportReason =
   | "scam"
   | "other";
 export type ProfileReportStatus = "pending_review" | "confirmed" | "dismissed";
+export type NotificationType =
+  | "contact_request_received"
+  | "contact_request_accepted"
+  | "profile_approved"
+  | "profile_rejected";
 
 export interface Database {
   public: {
@@ -182,6 +187,8 @@ export interface Database {
           profile_a_id: string;
           profile_b_id: string;
           status: ConversationStatus;
+          archived_by_a: boolean;
+          archived_by_b: boolean;
           last_message_at: string | null;
           created_at: string;
         };
@@ -384,6 +391,25 @@ export interface Database {
           reason: ProfileReportReason;
         };
         Update: Partial<Database["public"]["Tables"]["profile_reports"]["Row"]>;
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          id: string;
+          profile_id: string;
+          type: NotificationType;
+          title: string;
+          body: string | null;
+          link: string | null;
+          is_read: boolean;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["notifications"]["Row"]> & {
+          profile_id: string;
+          type: NotificationType;
+          title: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["notifications"]["Row"]>;
         Relationships: [];
       };
     };

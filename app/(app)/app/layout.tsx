@@ -26,7 +26,7 @@ export default async function AppLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("verification_status")
+    .select("id, verification_status")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -43,6 +43,12 @@ export default async function AppLayout({
     .maybeSingle();
   const isAdmin = Boolean(adminRow);
 
+  const { count: unreadNotificationCount } = await supabase
+    .from("notifications")
+    .select("id", { count: "exact", head: true })
+    .eq("profile_id", profile.id)
+    .eq("is_read", false);
+
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
       <header className="relative border-b border-primary-100 bg-cream-50">
@@ -54,7 +60,7 @@ export default async function AppLayout({
             <span className="text-lg tracking-tight">FarataNikah</span>
           </Link>
 
-          <AppNav isAdmin={isAdmin} />
+          <AppNav isAdmin={isAdmin} unreadNotificationCount={unreadNotificationCount ?? 0} />
         </div>
       </header>
       {isPending && (

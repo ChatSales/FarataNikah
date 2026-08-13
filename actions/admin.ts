@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createNotification } from "@/lib/notifications";
 
 export type AdminActionState = { error: string } | null;
 
@@ -60,6 +61,24 @@ async function setVerificationStatus(
     reason,
     changed_by: adminId,
   });
+
+  await createNotification(
+    status === "approved"
+      ? {
+          profileId,
+          type: "profile_approved",
+          title: "Profil validé !",
+          body: "Ton profil est maintenant visible par les autres membres.",
+          link: "/app/discover",
+        }
+      : {
+          profileId,
+          type: "profile_rejected",
+          title: "Profil non validé",
+          body: reason ?? "Notre équipe n'a pas pu valider ton profil en l'état.",
+          link: "/onboarding/pending",
+        }
+  );
 
   revalidatePath("/admin/verification");
   redirect("/admin/verification");

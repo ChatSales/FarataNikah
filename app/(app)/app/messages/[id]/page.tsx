@@ -75,6 +75,15 @@ export default async function ConversationPage({
     .neq("moderation_status", "blocked")
     .order("created_at", { ascending: true });
 
+  // Mark the other participant's messages as read now that this page has
+  // been viewed — drives the unread badge on the conversation list and nav.
+  await supabase
+    .from("messages")
+    .update({ is_read: true })
+    .eq("conversation_id", id)
+    .neq("sender_profile_id", profile.id)
+    .eq("is_read", false);
+
   // Voice clips live under the sender's own storage folder (owner-only RLS,
   // see 0009_voice_messages.sql), so the recipient's signed URL has to be
   // minted with the service-role client after the participant check above.

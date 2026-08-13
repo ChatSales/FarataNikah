@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { FREE_DAILY_CONTACT_REQUESTS } from "@/lib/usage-limits";
+import { createNotification } from "@/lib/notifications";
 
 export type ContactRequestActionState = { error: string } | { success: true } | null;
 
@@ -16,7 +17,7 @@ export type ContactRequestActionState = { error: string } | { success: true } | 
 async function getOwnApprovedProfile(
   supabase: Awaited<ReturnType<typeof createClient>>
 ): Promise<
-  | { profile: { id: string; is_premium: boolean } }
+  | { profile: { id: string; first_name: string; is_premium: boolean } }
   | { error: string }
 > {
   const {
@@ -26,7 +27,7 @@ async function getOwnApprovedProfile(
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, is_premium, verification_status")
+    .select("id, first_name, is_premium, verification_status")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -105,6 +106,14 @@ export async function sendContactRequestAction(
 
   if (error) return { error: "Impossible d'envoyer la demande." };
 
+  await createNotification({
+    profileId: recipientProfileId,
+    type: "contact_request_received",
+    title: "Nouvelle demande de contact",
+    body: `${profile.first_name} souhaite entrer en contact avec toi.`,
+    link: "/app/requests",
+  });
+
   revalidatePath("/app/discover");
   revalidatePath("/app/requests");
   return { success: true };
@@ -142,12 +151,24 @@ export async function respondToContactRequestAction(
   if (updateError) return { error: "Impossible de répondre à cette demande." };
 
   if (accept) {
-    const { error: convError } = await supabase.from("conversations").insert({
-      contact_request_id: request.id,
-      profile_a_id: request.sender_profile_id,
-      profile_b_id: request.recipient_profile_id,
+    const { data: conversation, error: convError } = await supabase
+      .from("conversations")
+      .insert({
+        contact_request_id: request.id,
+        profile_a_id: request.sender_profile_id,
+        profile_b_id: request.recipient_profile_id,
+      })
+      .select("id")
+      .single();
+    if (convError || !conversation) return { error: "Impossible de créer la conversation." };
+
+    await createNotification({
+      profileId: request.sender_profile_id,
+      type: "contact_request_accepted",
+      title: "Demande acceptée",
+      body: `${profile.first_name} a accepté ta demande de contact !`,
+      link: `/app/messages/${conversation.id}`,
     });
-    if (convError) return { error: "Impossible de créer la conversation." };
   }
 
   revalidatePath("/app/requests");
