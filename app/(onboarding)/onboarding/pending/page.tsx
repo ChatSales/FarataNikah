@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Clock3, XCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -60,14 +61,26 @@ export default async function PendingPage() {
         profils sérieux et sans faux comptes. Cela prend généralement moins de
         24h. Tu recevras un email dès que ton profil sera validé.
       </p>
-      <form action={signOutAction} className="mt-8">
-        <button
-          type="submit"
-          className="rounded-full border border-primary-200 px-5 py-2.5 text-sm font-medium text-primary-800 hover:bg-primary-50"
+      <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
+        En attendant, tu peux déjà parcourir les profils — la messagerie
+        s&apos;ouvrira une fois ton profil validé.
+      </p>
+      <div className="mt-8 flex flex-col items-center gap-3">
+        <Link
+          href="/app/discover"
+          className="rounded-full bg-primary-600 px-6 py-2.5 text-sm font-semibold text-cream-50 transition hover:bg-primary-700"
         >
-          Se déconnecter
-        </button>
-      </form>
+          Accéder à l&apos;application
+        </Link>
+        <form action={signOutAction}>
+          <button
+            type="submit"
+            className="rounded-full border border-primary-200 px-5 py-2.5 text-sm font-medium text-primary-800 hover:bg-primary-50"
+          >
+            Se déconnecter
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

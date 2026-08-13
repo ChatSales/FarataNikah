@@ -24,10 +24,13 @@ export async function sendMessageAction(
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id")
+    .select("id, verification_status")
     .eq("user_id", user.id)
     .maybeSingle();
   if (!profile) redirect("/onboarding/basic-info");
+  if (profile.verification_status !== "approved") {
+    return { error: "La messagerie s'ouvre une fois ton profil validé." };
+  }
 
   const { data: conversation } = await supabase
     .from("conversations")
@@ -125,10 +128,13 @@ export async function sendVoiceMessageAction(
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, is_premium")
+    .select("id, is_premium, verification_status")
     .eq("user_id", user.id)
     .maybeSingle();
   if (!profile) redirect("/onboarding/basic-info");
+  if (profile.verification_status !== "approved") {
+    return { error: "La messagerie s'ouvre une fois ton profil validé." };
+  }
   if (!profile.is_premium) {
     return { error: "Les messages vocaux sont réservés aux membres Premium." };
   }

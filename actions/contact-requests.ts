@@ -7,9 +7,18 @@ import { FREE_DAILY_CONTACT_REQUESTS } from "@/lib/usage-limits";
 
 export type ContactRequestActionState = { error: string } | { success: true } | null;
 
+// Contact requests (and accepting them) stay gated to approved profiles —
+// pending members can browse per the M7 access change, but shouldn't be
+// reaching out to or connecting with other members before they're vetted
+// themselves. Returns an inline error instead of redirect()ing away, since
+// this is now reachable mid-browse from Discover rather than unreachable
+// entirely like before that change.
 async function getOwnApprovedProfile(
   supabase: Awaited<ReturnType<typeof createClient>>
-) {
+): Promise<
+  | { profile: { id: string; is_premium: boolean } }
+  | { error: string }
+> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -22,9 +31,13 @@ async function getOwnApprovedProfile(
     .maybeSingle();
 
   if (!profile) redirect("/onboarding/basic-info");
-  if (profile.verification_status !== "approved") redirect("/onboarding/pending");
+  if (profile.verification_status !== "approved") {
+    return {
+      error: "Tu pourras contacter d'autres membres une fois ton profil validé.",
+    };
+  }
 
-  return profile;
+  return { profile };
 }
 
 export async function sendContactRequestAction(
@@ -36,7 +49,9 @@ export async function sendContactRequestAction(
   if (!recipientProfileId) return { error: "Profil introuvable." };
 
   const supabase = await createClient();
-  const profile = await getOwnApprovedProfile(supabase);
+  const result = await getOwnApprovedProfile(supabase);
+  if ("error" in result) return result;
+  const profile = result.profile;
 
   if (profile.id === recipientProfileId) {
     return { error: "Tu ne peux pas t'envoyer une demande à toi-même." };
@@ -93,7 +108,9 @@ export async function respondToContactRequestAction(
   const accept = formData.get("accept") === "true";
 
   const supabase = await createClient();
-  const profile = await getOwnApprovedProfile(supabase);
+  const result = await getOwnApprovedProfile(supabase);
+  if ("error" in result) return result;
+  const profile = result.profile;
 
   const { data: request } = await supabase
     .from("contact_requests")

@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MessageForm } from "@/components/messages/message-form";
@@ -19,10 +19,27 @@ export default async function ConversationPage({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, is_premium")
+    .select("id, is_premium, verification_status")
     .eq("user_id", user.id)
     .single();
   if (!profile) redirect("/onboarding/basic-info");
+
+  if (profile.verification_status !== "approved") {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-10 text-center sm:px-6 lg:px-8">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-primary-600">
+          <Clock3 className="h-7 w-7" />
+        </span>
+        <h1 className="mt-5 text-xl font-semibold text-primary-900">
+          Messagerie verrouillée
+        </h1>
+        <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
+          Tu pourras échanger des messages avec les autres membres une fois
+          ton profil validé par notre équipe.
+        </p>
+      </div>
+    );
+  }
 
   const { data: conversation } = await supabase
     .from("conversations")

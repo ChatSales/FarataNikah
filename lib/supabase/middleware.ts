@@ -60,7 +60,10 @@ export async function updateSession(request: NextRequest) {
         new URL("/onboarding/basic-info", request.url)
       );
     }
-    if (profile.verification_status !== "approved") {
+    // Pending profiles get full app access except messaging (gated in the
+    // messages routes/actions themselves) — only a rejected profile is
+    // blocked outright, sent to /onboarding/pending for the rejection reason.
+    if (profile.verification_status === "rejected") {
       return NextResponse.redirect(new URL("/onboarding/pending", request.url));
     }
   }
