@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
 import { BasicInfoForm } from "@/components/onboarding/basic-info-form";
+import { MetaPixelEvent } from "@/components/analytics/meta-pixel-event";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Tes informations" };
 
-export default async function BasicInfoPage() {
+export default async function BasicInfoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ new?: string }>;
+}) {
+  const { new: isNewSignup } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,6 +28,7 @@ export default async function BasicInfoPage() {
 
   return (
     <>
+      {isNewSignup === "1" && <MetaPixelEvent event="CompleteRegistration" />}
       <h1 className="text-center text-xl font-semibold text-primary-900">
         Parle-nous de toi
       </h1>

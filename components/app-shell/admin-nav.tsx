@@ -9,6 +9,8 @@ const links = [
   { href: "/admin/verification", label: "Vérification" },
   { href: "/admin/moderation", label: "Modération" },
   { href: "/admin/stats", label: "Statistiques" },
+  { href: "/admin/team", label: "Équipe" },
+  { href: "/admin/settings", label: "Réglages" },
 ];
 
 export function AdminNav() {

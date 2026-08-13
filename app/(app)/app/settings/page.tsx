@@ -5,8 +5,16 @@ import { UpgradeButton } from "@/components/settings/upgrade-button";
 import { DeleteAccountButton } from "@/components/settings/delete-account-button";
 import { UnblockButton } from "@/components/settings/unblock-button";
 import { BoostPanel } from "@/components/settings/boost-panel";
+import { AdminPlanToggle } from "@/components/settings/admin-plan-toggle";
+import { MetaPixelEvent } from "@/components/analytics/meta-pixel-event";
+import { PREMIUM_MONTHLY_PRICE_FCFA } from "@/lib/premium";
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ checkout?: string }>;
+}) {
+  const { checkout } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -21,6 +29,25 @@ export default async function SettingsPage() {
     .eq("user_id", user.id)
     .single();
   if (!profile) redirect("/onboarding/basic-info");
+
+  const { data: adminRow } = await supabase
+    .from("admin_users")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const isAdmin = Boolean(adminRow);
+
+  let purchasedAmount: number | null = null;
+  if (checkout === "return") {
+    const { data: lastTransaction } = await supabase
+      .from("payment_transactions")
+      .select("amount_fcfa, status")
+      .eq("profile_id", profile.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    purchasedAmount = lastTransaction?.amount_fcfa ?? PREMIUM_MONTHLY_PRICE_FCFA;
+  }
 
   const { data: subscription } = await supabase
     .from("subscriptions")
@@ -43,6 +70,12 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
+      {checkout === "return" && purchasedAmount !== null && (
+        <MetaPixelEvent
+          event="Purchase"
+          params={{ value: purchasedAmount, currency: "XOF" }}
+        />
+      )}
       <h1 className="text-2xl font-semibold text-primary-900">Paramètres</h1>
 
       <section className="mt-8 rounded-2xl border border-primary-100 bg-cream-50 p-6">
@@ -85,6 +118,8 @@ export default async function SettingsPage() {
           </div>
         )}
       </section>
+
+      {isAdmin && <AdminPlanToggle isPremium={profile.is_premium} />}
 
       <section className="mt-6 rounded-2xl border border-gold-200 bg-gold-50/60 p-6">
         <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-gold-700">

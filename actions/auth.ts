@@ -23,7 +23,7 @@ export async function resolvePostLoginPath(
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (!profile) return "/onboarding/basic-info";
+  if (!profile) return "/onboarding/basic-info?new=1";
   if (profile.verification_status !== "approved") return "/onboarding/pending";
   return fallback;
 }
@@ -57,7 +57,7 @@ export async function signUpAction(
     return { error: "Impossible de créer le compte : " + error.message };
   }
 
-  redirect("/onboarding/basic-info");
+  redirect("/onboarding/basic-info?new=1");
 }
 
 export async function signInAction(

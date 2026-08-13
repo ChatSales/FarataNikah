@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createNotification } from "@/lib/notifications";
+import { PREMIUM_PERIOD_DAYS } from "@/lib/premium";
 
 export type AdminActionState = { error: string } | null;
 
@@ -150,4 +152,137 @@ export async function confirmProfileReportAction(formData: FormData) {
 export async function dismissProfileReportAction(formData: FormData) {
   const reportId = String(formData.get("reportId") ?? "");
   await setProfileReportStatus(reportId, "dismissed");
+}
+
+// Lets an admin flip their OWN account between the free and Premium
+// experience for testing — never touches anyone else's plan, and only
+// works for accounts already in admin_users (checked server-side by
+// requireAdmin, not just hidden in the UI).
+export type ToggleOwnPremiumState = { error: string } | { success: true } | null;
+
+export async function toggleOwnPremiumAction(
+  _prevState: ToggleOwnPremiumState
+): Promise<ToggleOwnPremiumState> {
+  const supabase = await createClient();
+  const { user } = await requireAdmin(supabase);
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, is_premium")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!profile) return { error: "Ton profil n'est pas encore créé." };
+
+  const nextIsPremium = !profile.is_premium;
+  const premiumUntil = nextIsPremium
+    ? new Date(Date.now() + PREMIUM_PERIOD_DAYS * 24 * 3600 * 1000).toISOString()
+    : null;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({ is_premium: nextIsPremium, premium_until: premiumUntil })
+    .eq("id", profile.id);
+  if (error) return { error: "Impossible de changer de plan." };
+
+  revalidatePath("/app/settings");
+  revalidatePath("/app/discover");
+  return { success: true };
+}
+
+export type TeamActionState = { error: string } | { success: true } | null;
+
+export async function addAdminByEmailAction(
+  _prevState: TeamActionState,
+  formData: FormData
+): Promise<TeamActionState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!email) return { error: "Merci de renseigner un email." };
+
+  const supabase = await createClient();
+  await requireAdmin(supabase);
+
+  // admin_users has no client-writable RLS policy by design (provisioning
+  // was meant to stay out of reach of a compromised member session) — the
+  // requireAdmin() check above is what stands in for that policy now that
+  // there's a UI for it, same pattern as the account-deletion storage
+  // cleanup already uses the service-role client for cross-user writes.
+  const admin = createAdminClient();
+
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("id, user_id, first_name")
+    .ilike("email", email)
+    .maybeSingle();
+  if (!profile) {
+    return { error: "Aucun compte trouvé avec cet email. La personne doit d'abord s'inscrire." };
+  }
+
+  const { data: existing } = await admin
+    .from("admin_users")
+    .select("id")
+    .eq("user_id", profile.user_id)
+    .maybeSingle();
+  if (existing) return { error: `${profile.first_name} est déjà administrateur/trice.` };
+
+  const { error } = await admin
+    .from("admin_users")
+    .insert({ user_id: profile.user_id, role: "admin" });
+  if (error) return { error: "Impossible d'ajouter cet administrateur." };
+
+  revalidatePath("/admin/team");
+  return { success: true };
+}
+
+export async function removeAdminAction(
+  _prevState: TeamActionState,
+  formData: FormData
+): Promise<TeamActionState> {
+  const adminUserId = String(formData.get("adminUserId") ?? "");
+  if (!adminUserId) return { error: "Administrateur introuvable." };
+
+  const supabase = await createClient();
+  const { user } = await requireAdmin(supabase);
+
+  if (adminUserId === user.id) {
+    return { error: "Tu ne peux pas te retirer toi-même. Demande à un autre admin." };
+  }
+
+  const admin = createAdminClient();
+  const { count } = await admin
+    .from("admin_users")
+    .select("id", { count: "exact", head: true });
+  if ((count ?? 0) <= 1) {
+    return { error: "Impossible de retirer le dernier administrateur." };
+  }
+
+  const { error } = await admin.from("admin_users").delete().eq("user_id", adminUserId);
+  if (error) return { error: "Impossible de retirer cet administrateur." };
+
+  revalidatePath("/admin/team");
+  return { success: true };
+}
+
+export type SettingsActionState = { error: string } | { success: true } | null;
+
+export async function saveMetaPixelIdAction(
+  _prevState: SettingsActionState,
+  formData: FormData
+): Promise<SettingsActionState> {
+  const rawPixelId = String(formData.get("metaPixelId") ?? "").trim();
+  if (rawPixelId && !/^\d{10,20}$/.test(rawPixelId)) {
+    return { error: "L'identifiant du pixel Meta doit être une suite de chiffres." };
+  }
+
+  const supabase = await createClient();
+  await requireAdmin(supabase);
+
+  const { error } = await supabase
+    .from("app_settings")
+    .update({ meta_pixel_id: rawPixelId || null })
+    .eq("id", true);
+  if (error) return { error: "Impossible d'enregistrer le pixel Meta." };
+
+  revalidatePath("/admin/settings");
+  revalidatePath("/", "layout");
+  return { success: true };
 }
