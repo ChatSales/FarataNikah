@@ -35,13 +35,6 @@ export default async function PendingPage() {
           {profile.verification_rejection_reason ||
             "Notre équipe n'a pas pu valider ton profil en l'état."}
         </p>
-        <p className="mt-4 text-sm text-primary-900/65">
-          Contacte-nous à{" "}
-          <a href="mailto:faratasn@gmail.com" className="underline">
-            faratasn@gmail.com
-          </a>{" "}
-          pour plus d&apos;informations.
-        </p>
         <form action={signOutAction} className="mt-8">
           <button
             type="submit"

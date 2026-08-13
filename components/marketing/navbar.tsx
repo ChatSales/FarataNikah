@@ -1,14 +1,7 @@
 import Link from "next/link";
 import { HeartHandshake, Menu } from "lucide-react";
 
-const links = [
-  { href: "/", label: "Accueil" },
-  { href: "/comment-ca-marche", label: "Comment s'inscrire ?" },
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/blog", label: "Blog" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/contact", label: "Contact" },
-];
+const links = [{ href: "/", label: "Accueil" }];
 
 export function Navbar() {
   return (
@@ -39,12 +32,6 @@ export function Navbar() {
             className="rounded-full px-4 py-2 text-sm font-medium text-primary-800 transition hover:bg-primary-50"
           >
             Se connecter
-          </Link>
-          <Link
-            href="/dashboard"
-            className="rounded-full border border-primary-200 px-4 py-2 text-sm font-medium text-primary-800 transition hover:bg-primary-50"
-          >
-            Dashboard
           </Link>
           <Link
             href="/signup"

@@ -1,26 +1,7 @@
 import Link from "next/link";
-import { HeartHandshake, ShieldCheck, Mail, MapPin } from "lucide-react";
+import { HeartHandshake, ShieldCheck } from "lucide-react";
 
-const navigation = [
-  { href: "/", label: "Accueil" },
-  { href: "/comment-ca-marche", label: "Comment ça marche" },
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/blog", label: "Blog" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/contact", label: "Contact" },
-];
-
-const rencontre = [
-  { href: "/rencontre/senegal", label: "Rencontre Sénégal" },
-  { href: "/rencontre/cote-divoire", label: "Rencontre Côte d'Ivoire" },
-  { href: "/rencontre/mali", label: "Rencontre Mali" },
-  { href: "/rencontre/nigeria", label: "Rencontre Nigeria" },
-  { href: "/rencontre/maroc", label: "Rencontre Maroc" },
-  { href: "/rencontre/musulman", label: "Rencontre Musulman" },
-  { href: "/mariage-halal", label: "Mariage Halal" },
-  { href: "/femme-musulmane", label: "Femme Musulmane" },
-  { href: "/villes", label: "Toutes les villes d'Afrique" },
-];
+const navigation = [{ href: "/", label: "Accueil" }];
 
 const legal = [
   { href: "/legal/reglement", label: "Règlement" },
@@ -34,7 +15,7 @@ export function Footer() {
   return (
     <footer className="border-t border-primary-100 bg-primary-900 text-primary-100">
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-3">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 font-semibold text-cream-50">
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold-500 text-primary-900">
@@ -72,19 +53,6 @@ export function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-cream-50">Rencontre</h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
-              {rencontre.map((item) => (
-                <li key={item.href}>
-                  <Link href={item.href} className="transition hover:text-gold-300">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
             <h3 className="text-sm font-semibold text-cream-50">Légal</h3>
             <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
               {legal.map((item) => (
@@ -94,16 +62,6 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-            </ul>
-
-            <h3 className="mt-6 text-sm font-semibold text-cream-50">Contact</h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
-              <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-gold-400" /> faratasn@gmail.com
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gold-400" /> Dakar, Sénégal
-              </li>
             </ul>
           </div>
         </div>

@@ -49,7 +49,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "6. Signalement",
         paragraphs: [
-          "Tout membre constatant un comportement contraire au présent règlement peut le signaler à l'adresse faratasn@gmail.com. Chaque signalement est examiné par l'équipe de modération dans les meilleurs délais.",
+          "Tout membre constatant un comportement contraire au présent règlement peut le signaler à l'équipe de modération. Chaque signalement est examiné dans les meilleurs délais.",
         ],
       },
       {
@@ -69,7 +69,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "1. Responsable du traitement",
         paragraphs: [
-          "FarataNikah, dont le siège d'exploitation est situé à Dakar, Sénégal, est responsable du traitement des données personnelles collectées via la plateforme faratanikah.com. Pour toute question relative à cette politique ou pour exercer vos droits, vous pouvez nous contacter à l'adresse faratasn@gmail.com.",
+          "FarataNikah est responsable du traitement des données personnelles collectées via la plateforme faratanikah.com. Vous pouvez exercer vos droits directement depuis les paramètres de votre compte (voir section 7).",
         ],
       },
       {
@@ -105,7 +105,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "7. Vos droits",
         paragraphs: [
-          "Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et d'opposition au traitement de vos données, ainsi que d'un droit à la portabilité. Vous pouvez exercer ces droits directement depuis les paramètres de votre compte pour la plupart des informations, ou en nous écrivant à faratasn@gmail.com. Nous répondons à toute demande dans un délai raisonnable.",
+          "Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation et d'opposition au traitement de vos données, ainsi que d'un droit à la portabilité. Vous pouvez exercer ces droits directement depuis les paramètres de votre compte, notamment la suppression de compte qui efface votre profil et vos données associées. Nous traitons toute demande dans un délai raisonnable.",
         ],
       },
       {
@@ -117,7 +117,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "9. Transferts internationaux",
         paragraphs: [
-          "Certains de nos sous-traitants opèrent des infrastructures situées hors du Sénégal. Nous veillons à ce que ces transferts s'accompagnent de garanties appropriées de la part de nos prestataires.",
+          "Certains de nos sous-traitants opèrent des infrastructures situées à l'international. Nous veillons à ce que ces transferts s'accompagnent de garanties appropriées de la part de nos prestataires.",
         ],
       },
       {
@@ -137,13 +137,13 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "Éditeur du site",
         paragraphs: [
-          "Le site faratanikah.com est édité par FarataNikah, dont l'activité est exploitée depuis Dakar, Sénégal. Contact : faratasn@gmail.com.",
+          "Le site faratanikah.com est édité par FarataNikah.",
         ],
       },
       {
         heading: "Directeur de publication",
         paragraphs: [
-          "Le directeur de publication est le représentant de FarataNikah, joignable à l'adresse faratasn@gmail.com.",
+          "Le directeur de publication est le représentant de FarataNikah.",
         ],
       },
       {
@@ -205,7 +205,7 @@ export const legalPages: Record<string, LegalPage> = {
       {
         heading: "7. Réclamations",
         paragraphs: [
-          "Toute réclamation relative à un paiement ou à l'abonnement Premium peut être adressée à faratasn@gmail.com. FarataNikah s'engage à traiter chaque demande dans les meilleurs délais.",
+          "Toute réclamation relative à un paiement ou à l'abonnement Premium est traitée par FarataNikah dans les meilleurs délais.",
         ],
       },
     ],
@@ -238,12 +238,6 @@ export const legalPages: Record<string, LegalPage> = {
         heading: "4. Sécurité",
         paragraphs: [
           "Les mesures de sécurité mises en œuvre incluent le contrôle d'accès aux données au niveau de la base de données (chaque membre n'accédant qu'à ses propres données et aux profils approuvés), le chiffrement des communications, et le stockage des photos dans un espace de stockage privé dont l'accès est conditionné par les réglages de confidentialité du membre.",
-        ],
-      },
-      {
-        heading: "5. Contact",
-        paragraphs: [
-          "Pour toute question relative au traitement de vos données ou à cet accord, vous pouvez contacter FarataNikah à l'adresse faratasn@gmail.com.",
         ],
       },
     ],
