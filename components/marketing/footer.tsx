@@ -1,0 +1,119 @@
+import Link from "next/link";
+import { HeartHandshake, ShieldCheck, Mail, MapPin } from "lucide-react";
+
+const navigation = [
+  { href: "/", label: "Accueil" },
+  { href: "/comment-ca-marche", label: "Comment ça marche" },
+  { href: "/tarifs", label: "Tarifs" },
+  { href: "/blog", label: "Blog" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
+];
+
+const rencontre = [
+  { href: "/rencontre/dakar", label: "Rencontre Dakar" },
+  { href: "/rencontre/senegal", label: "Rencontre Sénégal" },
+  { href: "/rencontre/mali", label: "Rencontre Mali" },
+  { href: "/rencontre/cote-divoire", label: "Rencontre Côte d'Ivoire" },
+  { href: "/rencontre/burkina", label: "Rencontre Burkina" },
+  { href: "/rencontre/musulman", label: "Rencontre Musulman" },
+  { href: "/rencontre/gratuite", label: "Rencontre Gratuite" },
+  { href: "/mariage-halal", label: "Mariage Halal" },
+  { href: "/femme-musulmane", label: "Femme Musulmane" },
+  { href: "/villes", label: "Toutes les villes" },
+];
+
+const legal = [
+  { href: "/legal/reglement", label: "Règlement" },
+  { href: "/legal/confidentialite", label: "Confidentialité" },
+  { href: "/legal/mentions-legales", label: "Mentions légales" },
+  { href: "/legal/cgv", label: "CGV" },
+  { href: "/legal/dpa", label: "Accord de traitement (DPA)" },
+];
+
+export function Footer() {
+  return (
+    <footer className="border-t border-primary-100 bg-primary-900 text-primary-100">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="flex items-center gap-2 font-semibold text-cream-50">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold-500 text-primary-900">
+                <HeartHandshake className="h-4.5 w-4.5" />
+              </span>
+              <span className="text-lg tracking-tight">Farata</span>
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-primary-200">
+              Ta moitié, par destin et invocation. La plateforme de rencontres
+              halal pour musulmans sérieux.
+            </p>
+            <div className="mt-5 flex items-center gap-2 text-xs font-medium text-primary-200">
+              <ShieldCheck className="h-4 w-4 text-gold-400" />
+              RGPD — 100% Conforme
+            </div>
+            <Link
+              href="/signup"
+              className="mt-6 inline-flex rounded-full bg-gold-500 px-5 py-2.5 text-sm font-semibold text-primary-900 transition hover:bg-gold-400"
+            >
+              Rejoindre Farata
+            </Link>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-cream-50">Navigation</h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
+              {navigation.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="transition hover:text-gold-300">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-cream-50">Rencontre</h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
+              {rencontre.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="transition hover:text-gold-300">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-cream-50">Légal</h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
+              {legal.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className="transition hover:text-gold-300">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <h3 className="mt-6 text-sm font-semibold text-cream-50">Contact</h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-primary-200">
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-gold-400" /> faratasn@gmail.com
+              </li>
+              <li className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gold-400" /> Dakar, Sénégal
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-primary-800 pt-8 text-xs text-primary-300 sm:flex-row">
+          <p>© {new Date().getFullYear()} Farata. Tous droits réservés.</p>
+          <p>Fait avec ♥ pour la Oumma</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
