@@ -49,7 +49,7 @@ export default async function VisitorsPage() {
           <Lock className="h-5 w-5 shrink-0 text-gold-600" />
           <p className="text-sm text-primary-900/70">
             Fonctionnalité réservée aux membres Premium.{" "}
-            <Link href="/tarifs" className="font-semibold text-gold-600 underline">
+            <Link href="/app/settings" className="font-semibold text-gold-600 underline">
               Découvrir Premium
             </Link>
           </p>
