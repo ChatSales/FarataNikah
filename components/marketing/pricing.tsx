@@ -5,7 +5,7 @@ const freeIncluded = [
   "Création de profil complète",
   "3 photos de profil",
   "5 demandes de contact par jour",
-  "3 questions par jour à Cheikh Moussa (Coach IA)",
+  "3 questions par jour à Coach Amina",
   "Répondre aux messages reçus",
   "Ice Breaker : idées de messages",
   "Accès à l'Académie du Mariage",
@@ -14,7 +14,7 @@ const freeIncluded = [
 
 const freeExcluded = [
   "Demandes de contact illimitées",
-  "Coach Cheikh Moussa illimité",
+  "Coach Amina illimité",
   "Voir qui t'a mis en favori",
   "Voir qui a visité ton profil",
   "Messages vocaux",
@@ -28,7 +28,7 @@ const freeExcluded = [
 
 const premiumIncluded = [
   "Demandes de contact illimitées",
-  "Coach Cheikh Moussa : questions illimitées",
+  "Coach Amina : questions illimitées",
   "Voir qui t'a ajouté en favoris ⭐",
   "Voir qui a visité ton profil 👁️",
   "Jusqu'à 10 photos HD sur ton profil",

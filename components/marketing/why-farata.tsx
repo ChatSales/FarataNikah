@@ -21,7 +21,7 @@ const features = [
   },
   {
     icon: Sparkles,
-    title: "Cheikh Moussa, ton accompagnateur",
+    title: "Coach Amina, ton accompagnatrice",
     description:
       "Un assistant conversationnel disponible à tout moment pour t'aider à préparer tes échanges et poser tes questions.",
   },

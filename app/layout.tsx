@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | Farata",
   },
   description:
-    "Farata connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Cheikh Moussa.",
+    "Farata connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Amina.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

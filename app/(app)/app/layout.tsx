@@ -58,6 +58,9 @@ export default async function AppLayout({
             <Link href="/app/visitors" className="transition hover:text-primary-700">
               Visiteurs
             </Link>
+            <Link href="/app/coach" className="transition hover:text-primary-700">
+              Coach Amina
+            </Link>
           </nav>
 
           <form action={signOutAction}>

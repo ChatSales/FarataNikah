@@ -21,7 +21,7 @@ const steps = [
     number: "04",
     title: "Échange dans le respect",
     description:
-      "Une fois la demande acceptée, discute librement, avec l'appui de Cheikh Moussa si besoin.",
+      "Une fois la demande acceptée, discute librement, avec l'appui de Coach Amina si besoin.",
   },
 ];
 

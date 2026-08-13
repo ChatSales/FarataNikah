@@ -25,6 +25,7 @@ export type ModerationFlagType =
   | "other";
 export type ModerationSeverity = "low" | "medium" | "high";
 export type ModerationFlagStatus = "pending_review" | "confirmed" | "dismissed";
+export type CoachMessageRole = "user" | "assistant";
 
 export interface Database {
   public: {
@@ -245,6 +246,36 @@ export interface Database {
           visited_profile_id: string;
         };
         Update: Partial<Database["public"]["Tables"]["profile_visits"]["Row"]>;
+        Relationships: [];
+      };
+      coach_conversations: {
+        Row: {
+          id: string;
+          profile_id: string;
+          created_at: string;
+        };
+        Insert: Partial<
+          Database["public"]["Tables"]["coach_conversations"]["Row"]
+        > & {
+          profile_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["coach_conversations"]["Row"]>;
+        Relationships: [];
+      };
+      coach_messages: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          role: CoachMessageRole;
+          content: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["coach_messages"]["Row"]> & {
+          conversation_id: string;
+          role: CoachMessageRole;
+          content: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["coach_messages"]["Row"]>;
         Relationships: [];
       };
     };
