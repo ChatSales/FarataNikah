@@ -5,6 +5,7 @@ import {
   type MonerooWebhookPayload,
 } from "@/lib/payments/moneroo";
 import { PREMIUM_PERIOD_DAYS, getPremiumPlan } from "@/lib/premium";
+import { sendMetaServerEvent } from "@/lib/meta-capi";
 
 export const runtime = "nodejs";
 
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
 
   const { data: transaction } = await supabase
     .from("payment_transactions")
-    .select("id, profile_id, status, subscription_id, plan_id")
+    .select("id, profile_id, status, subscription_id, plan_id, amount_fcfa")
     .eq("provider_transaction_id", payload.data.id)
     .maybeSingle();
 
@@ -89,6 +90,24 @@ export async function POST(request: NextRequest) {
         boost_credits: (currentProfile?.boost_credits ?? 0) + (plan?.boosts ?? 0),
       })
       .eq("id", transaction.profile_id);
+
+    // Only leg of Purchase tracking that fires on an actually confirmed
+    // payment — the client Pixel event (app/(app)/app/settings/page.tsx)
+    // fires as soon as the browser returns from Moneroo, before this
+    // webhook may have run, so it can't tell a real success from a
+    // same-URL failure on its own. Shared event_id = transaction.id so
+    // Meta de-duplicates the two instead of double-counting.
+    const { data: purchaserProfile } = await supabase
+      .from("profiles")
+      .select("email")
+      .eq("id", transaction.profile_id)
+      .maybeSingle();
+    await sendMetaServerEvent({
+      eventName: "Purchase",
+      eventId: transaction.id,
+      email: purchaserProfile?.email,
+      customData: { value: transaction.amount_fcfa, currency: "XOF" },
+    });
   } else if (payload.event === "payment.failed" || payload.event === "payment.cancelled") {
     await supabase
       .from("payment_transactions")

@@ -13,7 +13,12 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error && data.user) {
-      const next = await resolvePostLoginPath(supabase, data.user.id, "/app/discover");
+      const next = await resolvePostLoginPath(
+        supabase,
+        data.user.id,
+        "/app/discover",
+        data.user.email
+      );
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

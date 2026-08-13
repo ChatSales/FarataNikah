@@ -38,15 +38,20 @@ export default async function SettingsPage({
   const isAdmin = Boolean(adminRow);
 
   let purchasedAmount: number | null = null;
+  let purchaseEventId: string | null = null;
   if (checkout === "return") {
     const { data: lastTransaction } = await supabase
       .from("payment_transactions")
-      .select("amount_fcfa, status")
+      .select("id, amount_fcfa, status")
       .eq("profile_id", profile.id)
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
     purchasedAmount = lastTransaction?.amount_fcfa ?? PREMIUM_MONTHLY_PRICE_FCFA;
+    // Shared with the server-side Conversions API call the Moneroo webhook
+    // fires for this same transaction (lib/meta-capi.ts) — same event_id on
+    // both legs so Meta de-duplicates instead of double-counting.
+    purchaseEventId = lastTransaction?.id ?? null;
   }
 
   const { data: subscription } = await supabase
@@ -74,6 +79,7 @@ export default async function SettingsPage({
         <MetaPixelEvent
           event="Purchase"
           params={{ value: purchasedAmount, currency: "XOF" }}
+          eventId={purchaseEventId ?? undefined}
         />
       )}
       <h1 className="text-2xl font-semibold text-primary-900">Paramètres</h1>

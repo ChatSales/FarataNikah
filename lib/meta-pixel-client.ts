@@ -6,8 +6,14 @@ declare global {
   }
 }
 
-export function trackMetaEvent(event: string, params?: Record<string, unknown>) {
+export function trackMetaEvent(
+  event: string,
+  params?: Record<string, unknown>,
+  eventId?: string
+) {
   if (typeof window !== "undefined" && typeof window.fbq === "function") {
-    window.fbq("track", event, params);
+    // eventID lets Meta de-duplicate against the matching server-side
+    // Conversions API call for the same conversion (lib/meta-capi.ts).
+    window.fbq("track", event, params ?? {}, eventId ? { eventID: eventId } : undefined);
   }
 }

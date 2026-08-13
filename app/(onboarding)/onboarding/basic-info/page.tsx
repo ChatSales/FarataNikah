@@ -8,9 +8,9 @@ export const metadata: Metadata = { title: "Tes informations" };
 export default async function BasicInfoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ new?: string }>;
+  searchParams: Promise<{ new?: string; eid?: string }>;
 }) {
-  const { new: isNewSignup } = await searchParams;
+  const { new: isNewSignup, eid } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -28,7 +28,9 @@ export default async function BasicInfoPage({
 
   return (
     <>
-      {isNewSignup === "1" && <MetaPixelEvent event="CompleteRegistration" />}
+      {isNewSignup === "1" && (
+        <MetaPixelEvent event="CompleteRegistration" eventId={eid} />
+      )}
       <h1 className="text-center text-xl font-semibold text-primary-900">
         Parle-nous de toi
       </h1>

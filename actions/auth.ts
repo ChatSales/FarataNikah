@@ -1,9 +1,19 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { sendMetaServerEvent } from "@/lib/meta-capi";
 
 export type AuthActionState = { error: string } | null;
+
+async function requestMeta() {
+  const h = await headers();
+  return {
+    clientIp: h.get("x-forwarded-for")?.split(",")[0]?.trim(),
+    userAgent: h.get("user-agent") ?? undefined,
+  };
+}
 
 // Redirecting straight to /app/discover and letting the proxy middleware
 // catch an incomplete/unapproved profile works, but middleware issuing a
@@ -15,7 +25,8 @@ export type AuthActionState = { error: string } | null;
 export async function resolvePostLoginPath(
   supabase: Awaited<ReturnType<typeof createClient>>,
   userId: string,
-  fallback: string
+  fallback: string,
+  email?: string
 ): Promise<string> {
   const { data: profile } = await supabase
     .from("profiles")
@@ -23,7 +34,25 @@ export async function resolvePostLoginPath(
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (!profile) return "/onboarding/basic-info?new=1";
+  if (!profile) {
+    // First time this user has ever reached the app (covers Google's
+    // first-login-is-signup flow, not just email signup) — the
+    // CompleteRegistration event lives here so both auth methods report it
+    // from the same place, deduplicated against the client Pixel call via
+    // eventId (components/analytics/meta-pixel-event.tsx reads `eid`).
+    const eventId = crypto.randomUUID();
+    if (email) {
+      const { clientIp, userAgent } = await requestMeta();
+      await sendMetaServerEvent({
+        eventName: "CompleteRegistration",
+        eventId,
+        email,
+        clientIp,
+        userAgent,
+      });
+    }
+    return `/onboarding/basic-info?new=1&eid=${eventId}`;
+  }
   if (profile.verification_status !== "approved") return "/onboarding/pending";
   return fallback;
 }
@@ -57,7 +86,17 @@ export async function signUpAction(
     return { error: "Impossible de créer le compte : " + error.message };
   }
 
-  redirect("/onboarding/basic-info?new=1");
+  const eventId = crypto.randomUUID();
+  const { clientIp, userAgent } = await requestMeta();
+  await sendMetaServerEvent({
+    eventName: "CompleteRegistration",
+    eventId,
+    email,
+    clientIp,
+    userAgent,
+  });
+
+  redirect(`/onboarding/basic-info?new=1&eid=${eventId}`);
 }
 
 export async function signInAction(
@@ -79,7 +118,7 @@ export async function signInAction(
     return { error: "Email ou mot de passe incorrect." };
   }
 
-  redirect(await resolvePostLoginPath(supabase, data.user.id, redirectTo));
+  redirect(await resolvePostLoginPath(supabase, data.user.id, redirectTo, data.user.email));
 }
 
 export async function signOutAction() {
@@ -126,5 +165,5 @@ export async function updatePasswordAction(
     return { error: "Impossible de mettre à jour le mot de passe." };
   }
 
-  redirect(await resolvePostLoginPath(supabase, data.user.id, "/app/discover"));
+  redirect(await resolvePostLoginPath(supabase, data.user.id, "/app/discover", data.user.email));
 }
