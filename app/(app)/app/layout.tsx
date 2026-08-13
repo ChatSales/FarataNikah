@@ -36,6 +36,13 @@ export default async function AppLayout({
   }
   const isPending = profile.verification_status === "pending";
 
+  const { data: adminRow } = await supabase
+    .from("admin_users")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const isAdmin = Boolean(adminRow);
+
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
       <header className="relative border-b border-primary-100 bg-cream-50">
@@ -47,7 +54,7 @@ export default async function AppLayout({
             <span className="text-lg tracking-tight">FarataNikah</span>
           </Link>
 
-          <AppNav />
+          <AppNav isAdmin={isAdmin} />
         </div>
       </header>
       {isPending && (

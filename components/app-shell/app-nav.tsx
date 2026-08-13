@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X, Settings, ShieldCheck } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 
 const links = [
@@ -14,7 +14,7 @@ const links = [
   { href: "/app/coach", label: "Coach Amina" },
 ];
 
-export function AppNav() {
+export function AppNav({ isAdmin }: { isAdmin: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -28,6 +28,14 @@ export function AppNav() {
       </nav>
 
       <div className="hidden items-center gap-3 lg:flex">
+        {isAdmin && (
+          <Link
+            href="/admin/verification"
+            className="flex items-center gap-1.5 rounded-full border border-gold-400 bg-gold-400/10 px-3.5 py-2 text-sm font-medium text-gold-700 transition hover:bg-gold-400/20"
+          >
+            <ShieldCheck className="h-4 w-4" /> Admin
+          </Link>
+        )}
         <Link
           href="/app/settings"
           aria-label="Paramètres"
@@ -75,6 +83,15 @@ export function AppNav() {
             >
               Paramètres
             </Link>
+            {isAdmin && (
+              <Link
+                href="/admin/verification"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-gold-700 transition hover:bg-gold-400/10"
+              >
+                <ShieldCheck className="h-4 w-4" /> Admin
+              </Link>
+            )}
           </div>
           <form action={signOutAction} className="mt-3 border-t border-primary-100 pt-3">
             <button

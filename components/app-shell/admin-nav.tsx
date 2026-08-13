@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowLeftRight } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
 
 const links = [
@@ -24,14 +24,22 @@ export function AdminNav() {
         ))}
       </nav>
 
-      <form action={signOutAction} className="hidden md:block">
-        <button
-          type="submit"
-          className="rounded-full border border-primary-700 px-4 py-2 text-sm font-medium transition hover:bg-primary-800"
+      <div className="hidden items-center gap-3 md:flex">
+        <Link
+          href="/app/discover"
+          className="flex items-center gap-1.5 rounded-full border border-primary-700 px-3.5 py-2 text-sm font-medium transition hover:bg-primary-800"
         >
-          Se déconnecter
-        </button>
-      </form>
+          <ArrowLeftRight className="h-4 w-4" /> Voir l&apos;application
+        </Link>
+        <form action={signOutAction}>
+          <button
+            type="submit"
+            className="rounded-full border border-primary-700 px-4 py-2 text-sm font-medium transition hover:bg-primary-800"
+          >
+            Se déconnecter
+          </button>
+        </form>
+      </div>
 
       <button
         type="button"
@@ -56,6 +64,13 @@ export function AdminNav() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/app/discover"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary-100 transition hover:bg-primary-800 hover:text-gold-300"
+            >
+              <ArrowLeftRight className="h-4 w-4" /> Voir l&apos;application
+            </Link>
           </div>
           <form action={signOutAction} className="mt-3 border-t border-primary-800 pt-3">
             <button
