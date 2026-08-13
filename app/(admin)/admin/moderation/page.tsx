@@ -1,6 +1,7 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Flag } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { ModerationFlagActions } from "@/components/admin/moderation-flag-actions";
+import { ProfileReportActions } from "@/components/admin/profile-report-actions";
 
 const flagTypeLabels: Record<string, string> = {
   inappropriate_content: "Contenu inapproprié",
@@ -14,6 +15,15 @@ const severityLabels: Record<string, string> = {
   low: "Faible",
   medium: "Moyenne",
   high: "Élevée",
+};
+
+const reportReasonLabels: Record<string, string> = {
+  fake_profile: "Faux profil / usurpation",
+  inappropriate_content: "Contenu inapproprié",
+  harassment: "Harcèlement",
+  already_married_hidden: "Situation matrimoniale cachée",
+  scam: "Arnaque / démarchage",
+  other: "Autre",
 };
 
 export default async function AdminModerationQueuePage() {
@@ -37,6 +47,20 @@ export default async function AdminModerationQueuePage() {
 
   const messageById = new Map((messages ?? []).map((m) => [m.id, m]));
   const profileById = new Map((profiles ?? []).map((p) => [p.id, p]));
+
+  const { data: reports } = await supabase
+    .from("profile_reports")
+    .select("id, reporter_profile_id, reported_profile_id, reason, details, created_at")
+    .eq("status", "pending_review")
+    .order("created_at", { ascending: true });
+
+  const reportProfileIds = Array.from(
+    new Set((reports ?? []).flatMap((r) => [r.reporter_profile_id, r.reported_profile_id]))
+  );
+  const { data: reportProfiles } = reportProfileIds.length
+    ? await supabase.from("profiles").select("id, first_name").in("id", reportProfileIds)
+    : { data: [] };
+  const reportProfileById = new Map((reportProfiles ?? []).map((p) => [p.id, p]));
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
@@ -77,6 +101,40 @@ export default async function AdminModerationQueuePage() {
                 </div>
                 <div className="mt-4">
                   <ModerationFlagActions flagId={f.id} />
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <h2 className="mt-12 text-xl font-semibold text-primary-900">
+        Signalements de profils ({reports?.length ?? 0})
+      </h2>
+
+      {!reports || reports.length === 0 ? (
+        <p className="mt-4 text-sm text-primary-900/60">
+          Aucun profil signalé en attente.
+        </p>
+      ) : (
+        <ul className="mt-6 space-y-4">
+          {reports.map((r) => {
+            const reporter = reportProfileById.get(r.reporter_profile_id);
+            const reported = reportProfileById.get(r.reported_profile_id);
+            return (
+              <li key={r.id} className="rounded-xl border border-red-100 bg-red-50/40 p-5">
+                <p className="flex items-center gap-2 text-sm font-semibold text-primary-900">
+                  <Flag className="h-4 w-4 text-red-500" />
+                  {reported?.first_name ?? "Profil"} signalé par {reporter?.first_name ?? "un membre"}{" "}
+                  · {reportReasonLabels[r.reason]}
+                </p>
+                {r.details && (
+                  <p className="mt-2 rounded-lg bg-cream-50 p-3 text-sm text-primary-900/80">
+                    &ldquo;{r.details}&rdquo;
+                  </p>
+                )}
+                <div className="mt-4">
+                  <ProfileReportActions reportId={r.id} />
                 </div>
               </li>
             );

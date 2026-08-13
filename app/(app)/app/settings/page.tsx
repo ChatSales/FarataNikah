@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
-import { CheckCircle2, Mail } from "lucide-react";
+import { CheckCircle2, Mail, Ban } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { UpgradeButton } from "@/components/settings/upgrade-button";
 import { DeleteAccountButton } from "@/components/settings/delete-account-button";
+import { UnblockButton } from "@/components/settings/unblock-button";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -25,6 +26,17 @@ export default async function SettingsPage() {
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
+
+  const { data: blocks } = await supabase
+    .from("blocked_profiles")
+    .select("id, blocked_profile_id")
+    .eq("blocker_profile_id", profile.id);
+
+  const blockedIds = (blocks ?? []).map((b) => b.blocked_profile_id);
+  const { data: blockedProfiles } = blockedIds.length
+    ? await supabase.from("profiles").select("id, first_name").in("id", blockedIds)
+    : { data: [] };
+  const blockedNameById = new Map((blockedProfiles ?? []).map((p) => [p.id, p.first_name]));
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
@@ -70,6 +82,27 @@ export default async function SettingsPage() {
           </div>
         )}
       </section>
+
+      {blocks && blocks.length > 0 && (
+        <section className="mt-6 rounded-2xl border border-primary-100 bg-cream-50 p-6">
+          <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary-900/60">
+            <Ban className="h-4 w-4" /> Profils bloqués
+          </h2>
+          <ul className="mt-3 space-y-2">
+            {blocks.map((b) => (
+              <li
+                key={b.id}
+                className="flex items-center justify-between rounded-lg border border-primary-100 px-3.5 py-2.5"
+              >
+                <span className="text-sm text-primary-900">
+                  {blockedNameById.get(b.blocked_profile_id) ?? "Profil"}
+                </span>
+                <UnblockButton profileId={b.blocked_profile_id} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-6 rounded-2xl border border-red-100 bg-cream-50 p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-red-700/80">

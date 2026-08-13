@@ -107,3 +107,28 @@ export async function dismissModerationFlagAction(formData: FormData) {
   const flagId = String(formData.get("flagId") ?? "");
   await setModerationFlagStatus(flagId, "dismissed");
 }
+
+async function setProfileReportStatus(
+  reportId: string,
+  status: "confirmed" | "dismissed"
+) {
+  const supabase = await createClient();
+  const { adminId } = await requireAdmin(supabase);
+
+  await supabase
+    .from("profile_reports")
+    .update({ status, reviewed_by: adminId })
+    .eq("id", reportId);
+
+  revalidatePath("/admin/moderation");
+}
+
+export async function confirmProfileReportAction(formData: FormData) {
+  const reportId = String(formData.get("reportId") ?? "");
+  await setProfileReportStatus(reportId, "confirmed");
+}
+
+export async function dismissProfileReportAction(formData: FormData) {
+  const reportId = String(formData.get("reportId") ?? "");
+  await setProfileReportStatus(reportId, "dismissed");
+}

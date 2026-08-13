@@ -58,6 +58,18 @@ export default async function DiscoverPage({
 
   const oppositeGender = viewer.gender === "male" ? "female" : "male";
 
+  const { data: blocks } = await supabase
+    .from("blocked_profiles")
+    .select("blocker_profile_id, blocked_profile_id")
+    .or(`blocker_profile_id.eq.${viewer.id},blocked_profile_id.eq.${viewer.id}`);
+  const blockedIds = Array.from(
+    new Set(
+      (blocks ?? []).map((b) =>
+        b.blocker_profile_id === viewer.id ? b.blocked_profile_id : b.blocker_profile_id
+      )
+    )
+  );
+
   let query = supabase
     .from("profiles")
     .select(
@@ -68,6 +80,7 @@ export default async function DiscoverPage({
     .neq("id", viewer.id)
     .limit(30);
 
+  if (blockedIds.length > 0) query = query.not("id", "in", `(${blockedIds.join(",")})`);
   if (params.country) query = query.eq("country", params.country);
   if (params.minAge) {
     const maxDob = new Date();

@@ -30,6 +30,14 @@ export type CoachMessageRole = "user" | "assistant";
 export type SubscriptionPlan = "free" | "premium_monthly";
 export type SubscriptionStatus = "active" | "canceled" | "expired" | "past_due";
 export type PaymentTransactionStatus = "pending" | "succeeded" | "failed" | "refunded";
+export type ProfileReportReason =
+  | "fake_profile"
+  | "inappropriate_content"
+  | "harassment"
+  | "already_married_hidden"
+  | "scam"
+  | "other";
+export type ProfileReportStatus = "pending_review" | "confirmed" | "dismissed";
 
 export interface Database {
   public: {
@@ -343,6 +351,39 @@ export interface Database {
           score: number;
         };
         Update: Partial<Database["public"]["Tables"]["compatibility_scores"]["Row"]>;
+        Relationships: [];
+      };
+      blocked_profiles: {
+        Row: {
+          id: string;
+          blocker_profile_id: string;
+          blocked_profile_id: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["blocked_profiles"]["Row"]> & {
+          blocker_profile_id: string;
+          blocked_profile_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["blocked_profiles"]["Row"]>;
+        Relationships: [];
+      };
+      profile_reports: {
+        Row: {
+          id: string;
+          reporter_profile_id: string;
+          reported_profile_id: string;
+          reason: ProfileReportReason;
+          details: string | null;
+          status: ProfileReportStatus;
+          reviewed_by: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["profile_reports"]["Row"]> & {
+          reporter_profile_id: string;
+          reported_profile_id: string;
+          reason: ProfileReportReason;
+        };
+        Update: Partial<Database["public"]["Tables"]["profile_reports"]["Row"]>;
         Relationships: [];
       };
     };

@@ -6,6 +6,7 @@ import { getGatedPrimaryPhotoUrl } from "@/lib/connections";
 import { computeCompatibilityScore, type ScorableProfile } from "@/lib/matching/score";
 import { ContactRequestPanel } from "@/components/discover/contact-request-panel";
 import { FavoriteButton } from "@/components/discover/favorite-button";
+import { BlockReportMenu } from "@/components/discover/block-report-menu";
 import type { Madhhab, MaritalStatus } from "@/lib/supabase/types";
 
 const madhhabLabels: Record<Madhhab, string> = {
@@ -47,7 +48,7 @@ export default async function ProfileDetailPage({
   const { data: viewer } = await supabase
     .from("profiles")
     .select(
-      "id, country, city, madhhab, marital_status, date_of_birth, seeking_criteria"
+      "id, country, city, madhhab, marital_status, date_of_birth, seeking_criteria, is_premium"
     )
     .eq("user_id", user.id)
     .single();
@@ -63,6 +64,14 @@ export default async function ProfileDetailPage({
 
   if (!candidate || candidate.verification_status !== "approved") notFound();
   if (candidate.id === viewer.id) redirect("/app/discover");
+
+  const { count: blockCount } = await supabase
+    .from("blocked_profiles")
+    .select("id", { count: "exact", head: true })
+    .or(
+      `and(blocker_profile_id.eq.${viewer.id},blocked_profile_id.eq.${candidate.id}),and(blocker_profile_id.eq.${candidate.id},blocked_profile_id.eq.${viewer.id})`
+    );
+  if ((blockCount ?? 0) > 0) notFound();
 
   await supabase.from("profile_visits").insert({
     visitor_profile_id: viewer.id,
@@ -142,12 +151,17 @@ export default async function ProfileDetailPage({
         </div>
 
         <div className="p-6">
-          <h1 className="text-2xl font-semibold text-primary-900">
-            {displayName}, {ageFromDob(candidate.date_of_birth)} ans
-          </h1>
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-primary-900/60">
-            <MapPin className="h-4 w-4" /> {candidate.city}, {candidate.country}
-          </p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-semibold text-primary-900">
+                {displayName}, {ageFromDob(candidate.date_of_birth)} ans
+              </h1>
+              <p className="mt-1 flex items-center gap-1.5 text-sm text-primary-900/60">
+                <MapPin className="h-4 w-4" /> {candidate.city}, {candidate.country}
+              </p>
+            </div>
+            <BlockReportMenu profileId={candidate.id} />
+          </div>
 
           <div className="mt-5 flex flex-wrap gap-2 text-xs font-medium text-primary-800">
             <span className="rounded-full bg-primary-100 px-3 py-1">
@@ -190,6 +204,7 @@ export default async function ProfileDetailPage({
               <ContactRequestPanel
                 recipientProfileId={candidate.id}
                 connectionStatus={connectionStatus}
+                isPremium={viewer.is_premium}
               />
             </div>
             <FavoriteButton

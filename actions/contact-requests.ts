@@ -57,6 +57,16 @@ export async function sendContactRequestAction(
     return { error: "Tu ne peux pas t'envoyer une demande à toi-même." };
   }
 
+  const { count: blockCount } = await supabase
+    .from("blocked_profiles")
+    .select("id", { count: "exact", head: true })
+    .or(
+      `and(blocker_profile_id.eq.${profile.id},blocked_profile_id.eq.${recipientProfileId}),and(blocker_profile_id.eq.${recipientProfileId},blocked_profile_id.eq.${profile.id})`
+    );
+  if ((blockCount ?? 0) > 0) {
+    return { error: "Impossible d'envoyer une demande à ce profil." };
+  }
+
   const { data: existing } = await supabase
     .from("contact_requests")
     .select("id, status")
