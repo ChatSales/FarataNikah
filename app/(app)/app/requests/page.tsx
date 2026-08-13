@@ -61,6 +61,19 @@ export default async function RequestsPage() {
   const sent = (requests ?? []).filter((r) => r.sender_profile_id === viewer.id);
   const accepted = (requests ?? []).filter((r) => r.status === "accepted");
 
+  const { data: conversations } = accepted.length
+    ? await supabase
+        .from("conversations")
+        .select("id, contact_request_id")
+        .in(
+          "contact_request_id",
+          accepted.map((r) => r.id)
+        )
+    : { data: [] };
+  const conversationByRequestId = new Map(
+    (conversations ?? []).map((c) => [c.contact_request_id, c.id])
+  );
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-semibold text-primary-900">Mes demandes</h1>
@@ -143,10 +156,34 @@ export default async function RequestsPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-primary-900/60">
             Connexions ({accepted.length})
           </h2>
-          <p className="mt-2 text-sm text-primary-900/60">
-            La messagerie arrive dans la prochaine étape de développement. Vos
-            demandes acceptées sont bien enregistrées.
-          </p>
+          <ul className="mt-3 space-y-3">
+            {accepted.map((r) => {
+              const otherProfileId =
+                r.sender_profile_id === viewer.id
+                  ? r.recipient_profile_id
+                  : r.sender_profile_id;
+              const other = profileById.get(otherProfileId);
+              const conversationId = conversationByRequestId.get(r.id);
+              return (
+                <li
+                  key={r.id}
+                  className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 p-4"
+                >
+                  <span className="font-semibold text-primary-900">
+                    {other?.is_anonymous ? "Profil anonyme" : other?.first_name}
+                  </span>
+                  {conversationId && (
+                    <Link
+                      href={`/app/messages/${conversationId}`}
+                      className="rounded-full bg-primary-600 px-4 py-2 text-xs font-semibold text-cream-50 transition hover:bg-primary-700"
+                    >
+                      Ouvrir la conversation
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </section>
       )}
     </div>

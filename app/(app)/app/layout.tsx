@@ -49,6 +49,15 @@ export default async function AppLayout({
             <Link href="/app/requests" className="transition hover:text-primary-700">
               Mes demandes
             </Link>
+            <Link href="/app/messages" className="transition hover:text-primary-700">
+              Messages
+            </Link>
+            <Link href="/app/favorites" className="transition hover:text-primary-700">
+              Favoris
+            </Link>
+            <Link href="/app/visitors" className="transition hover:text-primary-700">
+              Visiteurs
+            </Link>
           </nav>
 
           <form action={signOutAction}>

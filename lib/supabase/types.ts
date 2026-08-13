@@ -16,6 +16,15 @@ export type VerificationStatus = "pending" | "approved" | "rejected";
 export type AdminRole = "admin" | "moderator" | "support";
 export type ContactRequestStatus = "pending" | "accepted" | "declined";
 export type ConversationStatus = "active" | "blocked" | "archived";
+export type MessageModerationStatus = "approved" | "flagged" | "blocked";
+export type ModerationFlagType =
+  | "inappropriate_content"
+  | "contact_info_exchange"
+  | "harassment"
+  | "spam"
+  | "other";
+export type ModerationSeverity = "low" | "medium" | "high";
+export type ModerationFlagStatus = "pending_review" | "confirmed" | "dismissed";
 
 export interface Database {
   public: {
@@ -169,6 +178,73 @@ export interface Database {
           profile_b_id: string;
         };
         Update: Partial<Database["public"]["Tables"]["conversations"]["Row"]>;
+        Relationships: [];
+      };
+      messages: {
+        Row: {
+          id: string;
+          conversation_id: string;
+          sender_profile_id: string;
+          content: string;
+          moderation_status: MessageModerationStatus;
+          is_read: boolean;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["messages"]["Row"]> & {
+          conversation_id: string;
+          sender_profile_id: string;
+          content: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["messages"]["Row"]>;
+        Relationships: [];
+      };
+      moderation_flags: {
+        Row: {
+          id: string;
+          message_id: string;
+          profile_id: string;
+          flag_type: ModerationFlagType;
+          severity: ModerationSeverity;
+          ai_reasoning: string | null;
+          status: ModerationFlagStatus;
+          reviewed_by: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["moderation_flags"]["Row"]> & {
+          message_id: string;
+          profile_id: string;
+          flag_type: ModerationFlagType;
+          severity: ModerationSeverity;
+        };
+        Update: Partial<Database["public"]["Tables"]["moderation_flags"]["Row"]>;
+        Relationships: [];
+      };
+      favorites: {
+        Row: {
+          id: string;
+          profile_id: string;
+          favorited_profile_id: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["favorites"]["Row"]> & {
+          profile_id: string;
+          favorited_profile_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["favorites"]["Row"]>;
+        Relationships: [];
+      };
+      profile_visits: {
+        Row: {
+          id: string;
+          visitor_profile_id: string;
+          visited_profile_id: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["profile_visits"]["Row"]> & {
+          visitor_profile_id: string;
+          visited_profile_id: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["profile_visits"]["Row"]>;
         Relationships: [];
       };
     };

@@ -82,3 +82,28 @@ export async function rejectProfileAction(
   if (!reason) return { error: "Merci d'indiquer un motif de rejet." };
   return setVerificationStatus(profileId, "rejected", reason);
 }
+
+async function setModerationFlagStatus(
+  flagId: string,
+  status: "confirmed" | "dismissed"
+) {
+  const supabase = await createClient();
+  const { adminId } = await requireAdmin(supabase);
+
+  await supabase
+    .from("moderation_flags")
+    .update({ status, reviewed_by: adminId })
+    .eq("id", flagId);
+
+  revalidatePath("/admin/moderation");
+}
+
+export async function confirmModerationFlagAction(formData: FormData) {
+  const flagId = String(formData.get("flagId") ?? "");
+  await setModerationFlagStatus(flagId, "confirmed");
+}
+
+export async function dismissModerationFlagAction(formData: FormData) {
+  const flagId = String(formData.get("flagId") ?? "");
+  await setModerationFlagStatus(flagId, "dismissed");
+}

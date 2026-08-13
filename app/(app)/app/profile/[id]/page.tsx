@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getGatedPrimaryPhotoUrl } from "@/lib/connections";
 import { computeCompatibilityScore, type ScorableProfile } from "@/lib/matching/score";
 import { ContactRequestPanel } from "@/components/discover/contact-request-panel";
+import { FavoriteButton } from "@/components/discover/favorite-button";
 import type { Madhhab, MaritalStatus } from "@/lib/supabase/types";
 
 const madhhabLabels: Record<Madhhab, string> = {
@@ -62,6 +63,18 @@ export default async function ProfileDetailPage({
 
   if (!candidate || candidate.verification_status !== "approved") notFound();
   if (candidate.id === viewer.id) redirect("/app/discover");
+
+  await supabase.from("profile_visits").insert({
+    visitor_profile_id: viewer.id,
+    visited_profile_id: candidate.id,
+  });
+
+  const { data: favorite } = await supabase
+    .from("favorites")
+    .select("id")
+    .eq("profile_id", viewer.id)
+    .eq("favorited_profile_id", candidate.id)
+    .maybeSingle();
 
   const photoUrl = await getGatedPrimaryPhotoUrl(supabase, viewer.id, {
     id: candidate.id,
@@ -172,10 +185,16 @@ export default async function ProfileDetailPage({
             </div>
           )}
 
-          <div className="mt-8">
-            <ContactRequestPanel
-              recipientProfileId={candidate.id}
-              connectionStatus={connectionStatus}
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="flex-1">
+              <ContactRequestPanel
+                recipientProfileId={candidate.id}
+                connectionStatus={connectionStatus}
+              />
+            </div>
+            <FavoriteButton
+              favoritedProfileId={candidate.id}
+              isFavorited={Boolean(favorite)}
             />
           </div>
         </div>

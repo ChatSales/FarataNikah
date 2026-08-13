@@ -34,6 +34,9 @@ export default async function AdminLayout({
             <Link href="/admin/verification" className="transition hover:text-gold-300">
               Vérification
             </Link>
+            <Link href="/admin/moderation" className="transition hover:text-gold-300">
+              Modération
+            </Link>
           </nav>
           <form action={signOutAction}>
             <button
