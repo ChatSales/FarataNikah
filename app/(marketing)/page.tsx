@@ -6,6 +6,8 @@ import { Steps } from "@/components/marketing/steps";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { Pricing } from "@/components/marketing/pricing";
 import { Testimonials } from "@/components/marketing/testimonials";
+import { TestimonialsCarousel } from "@/components/marketing/testimonials-carousel";
+import { Faq } from "@/components/marketing/faq";
 import { QuranVerse } from "@/components/marketing/quran-verse";
 
 export default function HomePage() {
@@ -22,7 +24,9 @@ export default function HomePage() {
         buttonLabel="Créer mon profil"
       />
       <Pricing />
+      <TestimonialsCarousel />
       <Testimonials />
+      <Faq />
       <QuranVerse />
       <CtaBand
         title="Rejoins une communauté panafricaine de musulmans sérieux"

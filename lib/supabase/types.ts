@@ -351,6 +351,7 @@ export interface Database {
           score: number;
           reasoning: string | null;
           computed_at: string;
+          analysis: Record<string, unknown> | null;
         };
         Insert: Partial<Database["public"]["Tables"]["compatibility_scores"]["Row"]> & {
           profile_id: string;

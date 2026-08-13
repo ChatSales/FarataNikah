@@ -7,6 +7,7 @@ import { computeCompatibilityScore, type ScorableProfile } from "@/lib/matching/
 import { ContactRequestPanel } from "@/components/discover/contact-request-panel";
 import { FavoriteButton } from "@/components/discover/favorite-button";
 import { BlockReportMenu } from "@/components/discover/block-report-menu";
+import { CompatibilityAnalysisModal } from "@/components/discover/compatibility-analysis-modal";
 import type { Madhhab, MaritalStatus } from "@/lib/supabase/types";
 
 const madhhabLabels: Record<Madhhab, string> = {
@@ -48,7 +49,7 @@ export default async function ProfileDetailPage({
   const { data: viewer } = await supabase
     .from("profiles")
     .select(
-      "id, country, city, madhhab, marital_status, date_of_birth, seeking_criteria, is_premium"
+      "id, first_name, country, city, madhhab, marital_status, date_of_birth, seeking_criteria, is_premium"
     )
     .eq("user_id", user.id)
     .single();
@@ -199,7 +200,16 @@ export default async function ProfileDetailPage({
             </div>
           )}
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-6">
+            <CompatibilityAnalysisModal
+              candidateProfileId={candidate.id}
+              candidateName={displayName}
+              viewerName={viewer.first_name}
+              isPremium={viewer.is_premium}
+            />
+          </div>
+
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <div className="flex-1">
               <ContactRequestPanel
                 recipientProfileId={candidate.id}
