@@ -76,6 +76,8 @@ export interface Database {
           verification_rejection_reason: string | null;
           is_premium: boolean;
           premium_until: string | null;
+          boost_credits: number;
+          boosted_until: string | null;
           last_active_at: string;
           created_at: string;
           updated_at: string;
@@ -329,6 +331,7 @@ export interface Database {
           currency: string;
           status: PaymentTransactionStatus;
           payment_method: string | null;
+          plan_id: string | null;
           raw_payload: Record<string, unknown> | null;
           created_at: string;
           updated_at: string;

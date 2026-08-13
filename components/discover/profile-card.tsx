@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { UserRound, MapPin, Send } from "lucide-react";
+import { UserRound, MapPin, Send, Rocket } from "lucide-react";
 import { sendContactRequestAction } from "@/actions/contact-requests";
 
 export interface DiscoverProfile {
@@ -16,6 +16,7 @@ export interface DiscoverProfile {
   compatibilityScore: number;
   photoUrl: string | null;
   connectionStatus: "none" | "pending_sent" | "pending_received" | "accepted";
+  isBoosted?: boolean;
 }
 
 export function ProfileCard({ profile }: { profile: DiscoverProfile }) {
@@ -49,6 +50,11 @@ export function ProfileCard({ profile }: { profile: DiscoverProfile }) {
         <span className="absolute right-2 top-2 rounded-full bg-primary-900/80 px-2.5 py-1 text-xs font-semibold text-cream-50">
           {profile.compatibilityScore}% compatible
         </span>
+        {profile.isBoosted && (
+          <span className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-gold-500 px-2.5 py-1 text-xs font-semibold text-primary-900">
+            <Rocket className="h-3 w-3" /> Boosté
+          </span>
+        )}
       </Link>
 
       <div className="flex flex-1 flex-col p-4">

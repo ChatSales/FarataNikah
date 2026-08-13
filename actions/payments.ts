@@ -1,15 +1,21 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createMonerooCheckout } from "@/lib/payments/moneroo";
-import { PREMIUM_MONTHLY_PRICE_FCFA } from "@/lib/premium";
+import { getPremiumPlan, BOOST_DURATION_MINUTES } from "@/lib/premium";
 
 export type CheckoutActionState = { error: string } | null;
 
 export async function createCheckoutAction(
-  _prevState: CheckoutActionState
+  _prevState: CheckoutActionState,
+  formData: FormData
 ): Promise<CheckoutActionState> {
+  const planId = String(formData.get("planId") ?? "1month");
+  const plan = getPremiumPlan(planId);
+  if (!plan) return { error: "Offre invalide." };
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -30,15 +36,15 @@ export async function createCheckoutAction(
   let checkout: Awaited<ReturnType<typeof createMonerooCheckout>>;
   try {
     checkout = await createMonerooCheckout({
-      amountFcfa: PREMIUM_MONTHLY_PRICE_FCFA,
-      description: "Abonnement FarataNikah Premium — 1 mois",
+      amountFcfa: plan.priceFcfa,
+      description: `Abonnement ${plan.label} — FarataNikah`,
       customerEmail: profile.email,
       // Onboarding only collects a first name today, so we reuse it — Moneroo
       // requires a non-empty last_name but doesn't otherwise validate it.
       customerFirstName: profile.first_name,
       customerLastName: profile.first_name,
       returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings?checkout=return`,
-      metadata: { profile_id: profile.id },
+      metadata: { profile_id: profile.id, plan_id: plan.id },
     });
   } catch (err) {
     console.error("Moneroo checkout creation failed:", err);
@@ -51,7 +57,8 @@ export async function createCheckoutAction(
   const { error: insertError } = await supabase.from("payment_transactions").insert({
     profile_id: profile.id,
     provider_transaction_id: checkout.transactionId,
-    amount_fcfa: PREMIUM_MONTHLY_PRICE_FCFA,
+    amount_fcfa: plan.priceFcfa,
+    plan_id: plan.id,
     status: "pending",
   });
   if (insertError) {
@@ -60,4 +67,43 @@ export async function createCheckoutAction(
   }
 
   redirect(checkout.checkoutUrl);
+}
+
+export type BoostActionState = { error: string } | { success: true } | null;
+
+export async function activateBoostAction(
+  _prevState: BoostActionState
+): Promise<BoostActionState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, boost_credits, boosted_until")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!profile) redirect("/onboarding/basic-info");
+
+  if (profile.boosted_until && new Date(profile.boosted_until) > new Date()) {
+    return { error: "Un boost est déjà actif sur ton profil." };
+  }
+  if (profile.boost_credits <= 0) {
+    return { error: "Tu n'as plus de boost disponible. Passe Premium pour en obtenir." };
+  }
+
+  const boostedUntil = new Date(Date.now() + BOOST_DURATION_MINUTES * 60 * 1000);
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      boost_credits: profile.boost_credits - 1,
+      boosted_until: boostedUntil.toISOString(),
+    })
+    .eq("id", profile.id);
+  if (error) return { error: "Impossible d'activer le boost." };
+
+  revalidatePath("/app/settings");
+  return { success: true };
 }

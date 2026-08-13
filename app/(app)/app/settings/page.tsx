@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-import { CheckCircle2, Mail, Ban } from "lucide-react";
+import { CheckCircle2, Mail, Ban, Rocket } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { UpgradeButton } from "@/components/settings/upgrade-button";
 import { DeleteAccountButton } from "@/components/settings/delete-account-button";
 import { UnblockButton } from "@/components/settings/unblock-button";
+import { BoostPanel } from "@/components/settings/boost-panel";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -14,7 +15,9 @@ export default async function SettingsPage() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, email, first_name, is_premium, premium_until")
+    .select(
+      "id, email, first_name, is_premium, premium_until, boost_credits, boosted_until"
+    )
     .eq("user_id", user.id)
     .single();
   if (!profile) redirect("/onboarding/basic-info");
@@ -81,6 +84,18 @@ export default async function SettingsPage() {
             </div>
           </div>
         )}
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-gold-200 bg-gold-50/60 p-6">
+        <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-gold-700">
+          <Rocket className="h-4 w-4" /> Boost
+        </h2>
+        <div className="mt-3">
+          <BoostPanel
+            boostCredits={profile.boost_credits}
+            boostedUntil={profile.boosted_until}
+          />
+        </div>
       </section>
 
       {blocks && blocks.length > 0 && (

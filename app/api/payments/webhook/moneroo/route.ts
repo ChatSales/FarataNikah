@@ -4,7 +4,7 @@ import {
   verifyMonerooSignature,
   type MonerooWebhookPayload,
 } from "@/lib/payments/moneroo";
-import { PREMIUM_PERIOD_DAYS } from "@/lib/premium";
+import { PREMIUM_PERIOD_DAYS, getPremiumPlan } from "@/lib/premium";
 
 export const runtime = "nodejs";
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
   const { data: transaction } = await supabase
     .from("payment_transactions")
-    .select("id, profile_id, status, subscription_id")
+    .select("id, profile_id, status, subscription_id, plan_id")
     .eq("provider_transaction_id", payload.data.id)
     .maybeSingle();
 
@@ -44,9 +44,11 @@ export async function POST(request: NextRequest) {
   }
 
   if (payload.event === "payment.success") {
+    const plan = transaction.plan_id ? getPremiumPlan(transaction.plan_id) : undefined;
+    const periodDays = plan?.days ?? PREMIUM_PERIOD_DAYS;
     const periodStart = new Date();
     const periodEnd = new Date(periodStart);
-    periodEnd.setDate(periodEnd.getDate() + PREMIUM_PERIOD_DAYS);
+    periodEnd.setDate(periodEnd.getDate() + periodDays);
 
     const { data: subscription, error: subError } = await supabase
       .from("subscriptions")
@@ -73,9 +75,19 @@ export async function POST(request: NextRequest) {
       })
       .eq("id", transaction.id);
 
+    const { data: currentProfile } = await supabase
+      .from("profiles")
+      .select("boost_credits")
+      .eq("id", transaction.profile_id)
+      .single();
+
     await supabase
       .from("profiles")
-      .update({ is_premium: true, premium_until: periodEnd.toISOString() })
+      .update({
+        is_premium: true,
+        premium_until: periodEnd.toISOString(),
+        boost_credits: (currentProfile?.boost_credits ?? 0) + (plan?.boosts ?? 0),
+      })
       .eq("id", transaction.profile_id);
   } else if (payload.event === "payment.failed" || payload.event === "payment.cancelled") {
     await supabase

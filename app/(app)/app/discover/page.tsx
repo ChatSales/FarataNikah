@@ -73,7 +73,7 @@ export default async function DiscoverPage({
   let query = supabase
     .from("profiles")
     .select(
-      "id, first_name, city, country, madhhab, marital_status, date_of_birth, seeking_criteria, is_anonymous, blur_photos, profession, education_level, religious_practice_level, bio"
+      "id, first_name, city, country, madhhab, marital_status, date_of_birth, seeking_criteria, is_anonymous, blur_photos, profession, education_level, religious_practice_level, bio, boosted_until"
     )
     .eq("verification_status", "approved")
     .eq("gender", oppositeGender)
@@ -198,11 +198,17 @@ export default async function DiscoverPage({
         compatibilityScore: aiScores.get(c.id)?.score ?? heuristicScore,
         photoUrl,
         connectionStatus: statusFor(c.id),
+        isBoosted: Boolean(c.boosted_until && new Date(c.boosted_until) > new Date()),
       };
     })
   );
 
-  profiles.sort((a, b) => b.compatibilityScore - a.compatibilityScore);
+  // Boosted profiles pin to the top of Discover for the duration of their
+  // boost, then fall back to the usual compatibility ranking.
+  profiles.sort((a, b) => {
+    if (a.isBoosted !== b.isBoosted) return a.isBoosted ? -1 : 1;
+    return b.compatibilityScore - a.compatibilityScore;
+  });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
