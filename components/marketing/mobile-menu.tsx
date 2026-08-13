@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
+import { useClickOutside } from "@/lib/hooks/use-click-outside";
 
 const links = [{ href: "/", label: "Accueil" }];
 
 export function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useClickOutside(menuRef, () => setOpen(false), open);
 
   return (
-    <div className="lg:hidden">
+    <div ref={menuRef} className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}

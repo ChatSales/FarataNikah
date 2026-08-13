@@ -19,7 +19,7 @@ export default async function LoginPage({
         Connecte-toi à ton compte FarataNikah.
       </p>
       <div className="mt-8">
-        <LoginForm redirectTo={redirect || "/app/discover"} />
+        <LoginForm redirectTo={redirect || "/app/home"} />
       </div>
     </>
   );

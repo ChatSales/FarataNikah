@@ -64,7 +64,7 @@ export default async function ProfileDetailPage({
     .maybeSingle();
 
   if (!candidate || candidate.verification_status !== "approved") notFound();
-  if (candidate.id === viewer.id) redirect("/app/discover");
+  if (candidate.id === viewer.id) redirect("/app/home");
 
   const { count: blockCount } = await supabase
     .from("blocked_profiles")

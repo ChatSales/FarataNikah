@@ -105,7 +105,7 @@ export async function signInAction(
 ): Promise<AuthActionState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const redirectTo = String(formData.get("redirectTo") ?? "/app/discover");
+  const redirectTo = String(formData.get("redirectTo") ?? "/app/home");
 
   if (!email || !password) {
     return { error: "Merci de renseigner un email et un mot de passe." };
@@ -165,5 +165,5 @@ export async function updatePasswordAction(
     return { error: "Impossible de mettre à jour le mot de passe." };
   }
 
-  redirect(await resolvePostLoginPath(supabase, data.user.id, "/app/discover", data.user.email));
+  redirect(await resolvePostLoginPath(supabase, data.user.id, "/app/home", data.user.email));
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { NotificationType } from "@/lib/supabase/types";
@@ -16,10 +17,11 @@ export interface NotificationItem {
 
 export type NotificationsResult = { notifications: NotificationItem[] } | { error: string };
 
-// Fetches the member's most recent notifications and marks whatever was
-// unread as read in the same call — the bell dropdown is the only UI that
-// reads this list, so "opened the dropdown" and "seen" are the same event.
-export async function fetchAndMarkNotificationsAction(): Promise<NotificationsResult> {
+// Plain fetch, no side effect — the dedicated /app/notifications page reads
+// via this, and viewing the list no longer auto-marks everything read
+// (that used to happen on dropdown open; now it's an explicit action per
+// item or via "tout marquer lu").
+export async function getNotificationsAction(): Promise<NotificationsResult> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -38,13 +40,41 @@ export async function fetchAndMarkNotificationsAction(): Promise<NotificationsRe
     .select("id, type, title, body, link, is_read, created_at")
     .eq("profile_id", profile.id)
     .order("created_at", { ascending: false })
-    .limit(20);
+    .limit(100);
   if (error) return { error: "Impossible de charger les notifications." };
 
-  const unreadIds = (notifications ?? []).filter((n) => !n.is_read).map((n) => n.id);
-  if (unreadIds.length > 0) {
-    await supabase.from("notifications").update({ is_read: true }).in("id", unreadIds);
-  }
-
   return { notifications: notifications ?? [] };
+}
+
+export async function markNotificationReadAction(notificationId: string): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  await supabase.from("notifications").update({ is_read: true }).eq("id", notificationId);
+  revalidatePath("/app/notifications");
+}
+
+export async function markAllNotificationsReadAction(): Promise<void> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!profile) redirect("/onboarding/basic-info");
+
+  await supabase
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("profile_id", profile.id)
+    .eq("is_read", false);
+  revalidatePath("/app/notifications");
 }

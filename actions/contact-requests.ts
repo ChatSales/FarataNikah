@@ -115,6 +115,7 @@ export async function sendContactRequestAction(
   });
 
   revalidatePath("/app/discover");
+  revalidatePath("/app/home");
   revalidatePath("/app/requests");
   return { success: true };
 }
@@ -173,5 +174,6 @@ export async function respondToContactRequestAction(
 
   revalidatePath("/app/requests");
   revalidatePath("/app/discover");
+  revalidatePath("/app/home");
   return { success: true };
 }

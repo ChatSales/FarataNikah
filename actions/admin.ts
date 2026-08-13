@@ -20,7 +20,7 @@ async function requireAdmin(supabase: Awaited<ReturnType<typeof createClient>>) 
     .select("id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!adminRow) redirect("/app/discover");
+  if (!adminRow) redirect("/app/home");
 
   return { user, adminId: adminRow.id };
 }
@@ -71,7 +71,7 @@ async function setVerificationStatus(
           type: "profile_approved",
           title: "Profil validé !",
           body: "Ton profil est maintenant visible par les autres membres.",
-          link: "/app/discover",
+          link: "/app/home",
         }
       : {
           profileId,

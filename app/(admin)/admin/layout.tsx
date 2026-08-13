@@ -20,7 +20,7 @@ export default async function AdminLayout({
     .select("id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!adminRow) redirect("/app/discover");
+  if (!adminRow) redirect("/app/home");
 
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">

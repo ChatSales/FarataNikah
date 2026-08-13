@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import Link from "next/link";
 import { MoreVertical, Ban, Flag, X } from "lucide-react";
 import { blockProfileAction, reportProfileAction } from "@/actions/blocking";
+import { useClickOutside } from "@/lib/hooks/use-click-outside";
 
 const reportReasons: { value: string; label: string }[] = [
   { value: "fake_profile", label: "Faux profil / usurpation" },
@@ -19,6 +20,8 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
   const [reportOpen, setReportOpen] = useState(false);
   const [blockState, blockAction, blockPending] = useActionState(blockProfileAction, null);
   const [reportState, reportAction, reportPending] = useActionState(reportProfileAction, null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useClickOutside(menuRef, () => setMenuOpen(false), menuOpen);
 
   if (blockState && "success" in blockState) {
     return (
@@ -33,7 +36,7 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
   }
 
   return (
-    <div className="relative">
+    <div ref={menuRef} className="relative">
       <button
         type="button"
         onClick={() => setMenuOpen((v) => !v)}

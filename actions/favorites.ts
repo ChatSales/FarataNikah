@@ -39,4 +39,5 @@ export async function toggleFavoriteAction(formData: FormData) {
   revalidatePath("/app/favorites");
   revalidatePath(`/app/profile/${favoritedProfileId}`);
   revalidatePath("/app/discover");
+  revalidatePath("/app/home");
 }

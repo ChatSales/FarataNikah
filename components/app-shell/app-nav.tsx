@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   Menu,
   X,
+  Home,
   Compass,
   Eye,
   Heart,
@@ -13,15 +14,18 @@ import {
   Crown,
   Rocket,
   MessageCircle,
+  Bell,
   Settings,
+  UserRound,
   Sparkles,
   ShieldCheck,
   ChevronDown,
 } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
-import { NotificationsBell } from "@/components/app-shell/notifications-bell";
+import { useClickOutside } from "@/lib/hooks/use-click-outside";
 
 const primaryLinks = [
+  { href: "/app/home", label: "Accueil", icon: Home },
   { href: "/app/discover", label: "Découvrir", icon: Compass },
   { href: "/app/visitors", label: "Visiteurs", icon: Eye },
   { href: "/app/favorites", label: "Favoris", icon: Heart },
@@ -34,27 +38,36 @@ function NavIcon({
   icon: Icon,
   active,
   gold,
+  badge,
 }: {
   href: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   active: boolean;
   gold?: boolean;
+  badge?: number;
 }) {
   return (
     <Link
       href={href}
-      className={`flex flex-col items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-medium transition ${
+      className={`relative flex flex-col items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition ${
         gold
-          ? "text-gold-600 hover:text-gold-700"
+          ? "text-gold-600 hover:bg-gold-400/10 hover:text-gold-700"
           : active
-            ? "text-primary-700"
-            : "text-primary-900/55 hover:text-primary-700"
+            ? "bg-primary-50 text-primary-700"
+            : "text-primary-900/55 hover:bg-primary-50/60 hover:text-primary-700"
       }`}
     >
-      <Icon
-        className={`h-5 w-5 ${gold ? "text-gold-500" : active ? "text-primary-600" : ""}`}
-      />
+      <span className="relative">
+        <Icon
+          className={`h-5 w-5 ${gold ? "text-gold-500" : active ? "text-primary-600" : ""}`}
+        />
+        {Boolean(badge) && (
+          <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-red-500 px-0.5 text-[9px] font-semibold text-white">
+            {badge! > 9 ? "9+" : badge}
+          </span>
+        )}
+      </span>
       {label}
     </Link>
   );
@@ -70,6 +83,11 @@ export function AppNav({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(drawerRef, () => setOpen(false), open);
+  useClickOutside(profileMenuRef, () => setProfileMenuOpen(false), profileMenuOpen);
 
   return (
     <>
@@ -93,9 +111,15 @@ export function AppNav({
           icon={MessageCircle}
           active={pathname.startsWith("/app/messages")}
         />
-        <NotificationsBell initialUnreadCount={unreadNotificationCount} />
+        <NavIcon
+          href="/app/notifications"
+          label="Notifications"
+          icon={Bell}
+          active={pathname.startsWith("/app/notifications")}
+          badge={unreadNotificationCount}
+        />
 
-        <div className="relative ml-1">
+        <div ref={profileMenuRef} className="relative ml-1">
           <button
             type="button"
             onClick={() => setProfileMenuOpen((v) => !v)}
@@ -103,7 +127,7 @@ export function AppNav({
             className="flex items-center gap-1 rounded-full border border-primary-200 p-1 pr-2 text-primary-700 transition hover:bg-primary-50"
           >
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 text-primary-700">
-              <Sparkles className="h-3.5 w-3.5" />
+              <UserRound className="h-3.5 w-3.5" />
             </span>
             <ChevronDown className="h-3.5 w-3.5" />
           </button>
@@ -147,7 +171,18 @@ export function AppNav({
       </div>
 
       <div className="flex items-center gap-1 lg:hidden">
-        <NotificationsBell initialUnreadCount={unreadNotificationCount} />
+        <Link
+          href="/app/notifications"
+          aria-label="Notifications"
+          className="relative flex h-9 w-9 items-center justify-center rounded-full border border-primary-200 text-primary-700 transition hover:bg-primary-50"
+        >
+          <Bell className="h-4 w-4" />
+          {unreadNotificationCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
+              {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
+            </span>
+          )}
+        </Link>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -160,7 +195,10 @@ export function AppNav({
       </div>
 
       {open && (
-        <div className="absolute inset-x-0 top-16 z-40 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6 lg:hidden">
+        <div
+          ref={drawerRef}
+          className="absolute inset-x-0 top-16 z-40 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6 lg:hidden"
+        >
           <div className="flex flex-col gap-1">
             {primaryLinks.map((link) => (
               <Link

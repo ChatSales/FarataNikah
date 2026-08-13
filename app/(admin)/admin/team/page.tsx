@@ -16,7 +16,7 @@ export default async function AdminTeamPage() {
     .select("id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!adminRow) redirect("/app/discover");
+  if (!adminRow) redirect("/app/home");
 
   const { data: admins } = await supabase
     .from("admin_users")

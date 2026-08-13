@@ -42,7 +42,8 @@ export type NotificationType =
   | "contact_request_received"
   | "contact_request_accepted"
   | "profile_approved"
-  | "profile_rejected";
+  | "profile_rejected"
+  | "premium_activated";
 
 export interface Database {
   public: {

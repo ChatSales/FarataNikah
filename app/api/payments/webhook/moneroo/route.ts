@@ -6,6 +6,7 @@ import {
 } from "@/lib/payments/moneroo";
 import { PREMIUM_PERIOD_DAYS, getPremiumPlan } from "@/lib/premium";
 import { sendMetaServerEvent } from "@/lib/meta-capi";
+import { createNotification } from "@/lib/notifications";
 
 export const runtime = "nodejs";
 
@@ -107,6 +108,16 @@ export async function POST(request: NextRequest) {
       eventId: transaction.id,
       email: purchaserProfile?.email,
       customData: { value: transaction.amount_fcfa, currency: "XOF" },
+    });
+
+    await createNotification({
+      profileId: transaction.profile_id,
+      type: "premium_activated",
+      title: "Ton abonnement Premium est actif",
+      body: plan
+        ? `Ton plan ${plan.label} est activé jusqu'au ${periodEnd.toLocaleDateString("fr-FR")}.`
+        : `Ton abonnement Premium est activé jusqu'au ${periodEnd.toLocaleDateString("fr-FR")}.`,
+      link: "/app/settings",
     });
   } else if (payload.event === "payment.failed" || payload.event === "payment.cancelled") {
     await supabase

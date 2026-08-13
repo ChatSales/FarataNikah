@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       const next = await resolvePostLoginPath(
         supabase,
         data.user.id,
-        "/app/discover",
+        "/app/home",
         data.user.email
       );
       return NextResponse.redirect(`${origin}${next}`);

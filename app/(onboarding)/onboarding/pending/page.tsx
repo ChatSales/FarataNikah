@@ -21,7 +21,7 @@ export default async function PendingPage() {
     .maybeSingle();
 
   if (!profile) redirect("/onboarding/basic-info");
-  if (profile.verification_status === "approved") redirect("/app/discover");
+  if (profile.verification_status === "approved") redirect("/app/home");
 
   if (profile.verification_status === "rejected") {
     return (
@@ -67,7 +67,7 @@ export default async function PendingPage() {
       </p>
       <div className="mt-8 flex flex-col items-center gap-3">
         <Link
-          href="/app/discover"
+          href="/app/home"
           className="rounded-full bg-primary-600 px-6 py-2.5 text-sm font-semibold text-cream-50 transition hover:bg-primary-700"
         >
           Accéder à l&apos;application

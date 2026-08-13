@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { HeartHandshake, Clock3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppNav } from "@/components/app-shell/app-nav";
+import { CoachFab } from "@/components/app-shell/coach-fab";
 
 // Belt-and-suspenders alongside proxy.ts: redirect() inside a Server Action
 // (e.g. signInAction) resolves the target route's RSC payload server-side
@@ -53,7 +54,7 @@ export default async function AppLayout({
     <div className="flex min-h-screen flex-col bg-cream-50">
       <header className="relative border-b border-primary-100 bg-cream-50">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/app/discover" className="flex items-center gap-2 font-semibold text-primary-800">
+          <Link href="/app/home" className="flex items-center gap-2 font-semibold text-primary-800">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-cream-50">
               <HeartHandshake className="h-4.5 w-4.5" />
             </span>
@@ -71,6 +72,7 @@ export default async function AppLayout({
         </div>
       )}
       <main className="flex-1">{children}</main>
+      <CoachFab />
     </div>
   );
 }

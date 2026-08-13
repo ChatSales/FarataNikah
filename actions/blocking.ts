@@ -56,6 +56,7 @@ export async function blockProfileAction(
     );
 
   revalidatePath("/app/discover");
+  revalidatePath("/app/home");
   revalidatePath(`/app/profile/${targetProfileId}`);
   revalidatePath("/app/messages");
   return { success: true };
@@ -79,6 +80,7 @@ export async function unblockProfileAction(
   if (error) return { error: "Impossible de débloquer ce profil." };
 
   revalidatePath("/app/discover");
+  revalidatePath("/app/home");
   revalidatePath(`/app/profile/${targetProfileId}`);
   return { success: true };
 }

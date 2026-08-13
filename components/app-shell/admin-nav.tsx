@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X, ArrowLeftRight } from "lucide-react";
 import { signOutAction } from "@/actions/auth";
+import { useClickOutside } from "@/lib/hooks/use-click-outside";
 
 const links = [
   { href: "/admin/verification", label: "Vérification" },
@@ -15,6 +16,8 @@ const links = [
 
 export function AdminNav() {
   const [open, setOpen] = useState(false);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  useClickOutside(drawerRef, () => setOpen(false), open);
 
   return (
     <>
@@ -28,7 +31,7 @@ export function AdminNav() {
 
       <div className="hidden items-center gap-3 md:flex">
         <Link
-          href="/app/discover"
+          href="/app/home"
           className="flex items-center gap-1.5 rounded-full border border-primary-700 px-3.5 py-2 text-sm font-medium transition hover:bg-primary-800"
         >
           <ArrowLeftRight className="h-4 w-4" /> Voir l&apos;application
@@ -54,7 +57,10 @@ export function AdminNav() {
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-16 z-40 border-b border-primary-800 bg-primary-900 px-4 py-4 shadow-lg sm:px-6 md:hidden">
+        <div
+          ref={drawerRef}
+          className="absolute inset-x-0 top-16 z-40 border-b border-primary-800 bg-primary-900 px-4 py-4 shadow-lg sm:px-6 md:hidden"
+        >
           <div className="flex flex-col gap-1">
             {links.map((link) => (
               <Link
@@ -67,7 +73,7 @@ export function AdminNav() {
               </Link>
             ))}
             <Link
-              href="/app/discover"
+              href="/app/home"
               onClick={() => setOpen(false)}
               className="flex items-center gap-1.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary-100 transition hover:bg-primary-800 hover:text-gold-300"
             >

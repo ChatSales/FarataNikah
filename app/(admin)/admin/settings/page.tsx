@@ -16,7 +16,7 @@ export default async function AdminSettingsPage() {
     .select("id")
     .eq("user_id", user.id)
     .maybeSingle();
-  if (!adminRow) redirect("/app/discover");
+  if (!adminRow) redirect("/app/home");
 
   const { data: settings } = await supabase
     .from("app_settings")
