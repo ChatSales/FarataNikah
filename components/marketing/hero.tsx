@@ -48,7 +48,7 @@ export function Hero() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-[220px] sm:max-w-xs lg:max-w-sm">
+          <div className="relative mx-auto w-full max-w-[220px] sm:max-w-xs lg:max-w-md">
             <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-gradient-to-br from-primary-200/60 via-gold-200/40 to-transparent blur-2xl" />
             <div className="relative overflow-hidden rounded-[2rem] border border-primary-100 shadow-2xl shadow-primary-900/15">
               <Image
@@ -57,8 +57,8 @@ export function Hero() {
                 width={1024}
                 height={1536}
                 priority
-                sizes="(min-width: 1024px) 384px, (min-width: 640px) 320px, 220px"
-                className="aspect-[6/5] w-full object-cover object-top"
+                sizes="(min-width: 1024px) 448px, (min-width: 640px) 320px, 220px"
+                className="aspect-[6/5] w-full object-cover object-top lg:aspect-[4/5]"
               />
             </div>
             <div className="absolute -bottom-4 left-1/2 flex w-[85%] -translate-x-1/2 items-center gap-3 rounded-2xl border border-primary-100 bg-cream-50/95 px-4 py-2.5 shadow-xl backdrop-blur sm:-bottom-5 sm:px-5 sm:py-3.5">
