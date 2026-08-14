@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { MetaPixel } from "@/components/analytics/meta-pixel";
+import { ConnectivityWatcher } from "@/components/app-shell/connectivity-watcher";
 import { createPublicClient } from "@/lib/supabase/public";
 import "./globals.css";
 
@@ -39,6 +40,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         {children}
+        <ConnectivityWatcher />
         <Analytics />
         {settings?.meta_pixel_id && <MetaPixel pixelId={settings.meta_pixel_id} />}
       </body>

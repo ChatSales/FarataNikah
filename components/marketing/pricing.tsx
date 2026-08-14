@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Check, X } from "lucide-react";
+import { Reveal } from "@/components/marketing/reveal";
 
 const freeIncluded = [
   "Création de profil complète",
@@ -63,7 +64,8 @@ export function Pricing() {
         </div>
 
         <div className="mx-auto mt-14 grid max-w-4xl gap-8 lg:grid-cols-2">
-          <div className="rounded-3xl border border-primary-100 bg-cream-50 p-8">
+          <Reveal delay={0} className="h-full">
+          <div className="h-full rounded-3xl border border-primary-100 bg-cream-50 p-8 transition hover:-translate-y-1 hover:shadow-md">
             <h3 className="text-lg font-semibold text-primary-900">Gratuit</h3>
             <p className="mt-1 text-sm text-primary-900/60">
               Découvre la plateforme à ton rythme
@@ -96,8 +98,10 @@ export function Pricing() {
               ))}
             </ul>
           </div>
+          </Reveal>
 
-          <div className="relative rounded-3xl border-2 border-gold-500 bg-primary-900 p-8 text-cream-50 shadow-xl">
+          <Reveal delay={120} className="h-full">
+          <div className="relative h-full rounded-3xl border-2 border-gold-500 bg-primary-900 p-8 text-cream-50 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
             <span className="absolute -top-3.5 left-8 rounded-full bg-gold-500 px-3 py-1 text-xs font-semibold text-primary-900">
               Offre de lancement
             </span>
@@ -133,6 +137,7 @@ export function Pricing() {
               * Tarif de lancement limité. Prix normal : 9 900 FCFA / mois
             </p>
           </div>
+          </Reveal>
         </div>
       </div>
     </section>

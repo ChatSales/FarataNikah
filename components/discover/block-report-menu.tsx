@@ -2,7 +2,7 @@
 
 import { useActionState, useRef, useState } from "react";
 import Link from "next/link";
-import { MoreVertical, Ban, Flag, X } from "lucide-react";
+import { MoreVertical, Ban, Flag, X, Loader2 } from "lucide-react";
 import { blockProfileAction, reportProfileAction } from "@/actions/blocking";
 import { useClickOutside } from "@/lib/hooks/use-click-outside";
 
@@ -47,7 +47,7 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 top-12 z-20 w-48 overflow-hidden rounded-xl border border-primary-100 bg-cream-50 shadow-lg">
+        <div className="animate-dropdown absolute right-0 top-12 z-20 w-48 overflow-hidden rounded-xl border border-primary-100 bg-cream-50 shadow-lg">
           <form
             action={blockAction}
             onSubmit={() => setMenuOpen(false)}
@@ -58,7 +58,12 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
               disabled={blockPending}
               className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-primary-900 transition hover:bg-primary-50 disabled:opacity-60"
             >
-              <Ban className="h-4 w-4" /> Bloquer
+              {blockPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Ban className="h-4 w-4" />
+              )}
+              {blockPending ? "Blocage..." : "Bloquer"}
             </button>
           </form>
           <button
@@ -75,8 +80,8 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
       )}
 
       {reportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/50 px-4">
-          <div className="relative w-full max-w-sm rounded-2xl bg-cream-50 p-6 shadow-xl">
+        <div className="animate-fade-up fixed inset-0 z-50 flex items-center justify-center bg-primary-900/50 px-4" style={{ animationDuration: "0.2s" }}>
+          <div className="animate-scale-in relative w-full max-w-sm rounded-2xl bg-cream-50 p-6 shadow-xl">
             <button
               type="button"
               onClick={() => setReportOpen(false)}
@@ -146,8 +151,9 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
                 <button
                   type="submit"
                   disabled={reportPending}
-                  className="w-full rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
+                  className="flex w-full items-center justify-center gap-2 rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
                 >
+                  {reportPending && <Loader2 className="h-4 w-4 animate-spin" />}
                   {reportPending ? "Envoi..." : "Envoyer le signalement"}
                 </button>
               </form>

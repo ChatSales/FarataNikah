@@ -34,8 +34,8 @@ export function MessageFlashUpsell() {
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/50 px-4">
-          <div className="relative w-full max-w-sm rounded-2xl bg-cream-50 p-6 text-center shadow-xl">
+        <div className="animate-fade-up fixed inset-0 z-50 flex items-center justify-center bg-primary-900/50 px-4" style={{ animationDuration: "0.2s" }}>
+          <div className="animate-scale-in relative w-full max-w-sm rounded-2xl bg-cream-50 p-6 text-center shadow-xl">
             <button
               type="button"
               onClick={() => setOpen(false)}

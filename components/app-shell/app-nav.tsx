@@ -133,7 +133,7 @@ export function AppNav({
           </button>
 
           {profileMenuOpen && (
-            <div className="absolute right-0 top-11 z-40 w-52 overflow-hidden rounded-xl border border-primary-100 bg-cream-50 shadow-lg">
+            <div className="animate-dropdown absolute right-0 top-11 z-40 w-52 overflow-hidden rounded-xl border border-primary-100 bg-cream-50 shadow-lg">
               <Link
                 href="/app/settings"
                 onClick={() => setProfileMenuOpen(false)}
@@ -197,7 +197,7 @@ export function AppNav({
       {open && (
         <div
           ref={drawerRef}
-          className="absolute inset-x-0 top-16 z-40 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6 lg:hidden"
+          className="animate-dropdown absolute inset-x-0 top-16 z-40 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6 lg:hidden"
         >
           <div className="flex flex-col gap-1">
             {primaryLinks.map((link) => (

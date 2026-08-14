@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useEffect, useState } from "react";
-import { Send, Mic, Sparkles } from "lucide-react";
+import { Send, Mic, Sparkles, Loader2 } from "lucide-react";
 import { sendMessageAction } from "@/actions/messages";
 import { VoiceRecorder } from "@/components/messages/voice-recorder";
 
@@ -68,10 +68,14 @@ export function MessageForm({
             <button
               type="submit"
               disabled={pending}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-600 text-cream-50 transition hover:bg-primary-700 disabled:opacity-60"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-600 text-cream-50 transition hover:scale-105 hover:bg-primary-700 disabled:opacity-60 disabled:hover:scale-100"
               aria-label="Envoyer"
             >
-              <Send className="h-4 w-4" />
+              {pending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </button>
           </div>
         </form>

@@ -1,4 +1,5 @@
 import { HeartHandshake, ShieldCheck, Users2 } from "lucide-react";
+import { Reveal } from "@/components/marketing/reveal";
 
 const commitments = [
   {
@@ -39,19 +40,18 @@ export function Testimonials() {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {commitments.map((c) => (
-            <div
-              key={c.title}
-              className="flex h-full flex-col rounded-2xl border border-primary-100 bg-cream-50 p-7"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-100 text-primary-700">
-                <c.icon className="h-5.5 w-5.5" />
-              </span>
-              <h3 className="mt-5 font-semibold text-primary-900">{c.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
-                {c.description}
-              </p>
-            </div>
+          {commitments.map((c, i) => (
+            <Reveal key={c.title} delay={i * 100} className="h-full">
+              <div className="flex h-full flex-col rounded-2xl border border-primary-100 bg-cream-50 p-7 transition hover:-translate-y-1 hover:shadow-md">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-100 text-primary-700">
+                  <c.icon className="h-5.5 w-5.5" />
+                </span>
+                <h3 className="mt-5 font-semibold text-primary-900">{c.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
+                  {c.description}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

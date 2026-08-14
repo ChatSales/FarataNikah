@@ -54,8 +54,8 @@ export function CompatibilityAnalysisModal({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-900/50 px-4 py-8">
-          <div className="relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-cream-50 shadow-xl">
+        <div className="animate-fade-up fixed inset-0 z-50 flex items-center justify-center bg-primary-900/50 px-4 py-8" style={{ animationDuration: "0.2s" }}>
+          <div className="animate-scale-in relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-cream-50 shadow-xl">
             <div className="flex items-center justify-between border-b border-primary-100 px-5 py-4">
               <h2 className="text-sm font-semibold text-primary-900">
                 Analyse de compatibilité

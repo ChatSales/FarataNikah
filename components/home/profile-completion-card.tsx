@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { UserRound, MapPin } from "lucide-react";
@@ -15,10 +18,17 @@ export function ProfileCompletionCard({
   photoUrl: string | null;
   completionPercent: number;
 }) {
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setWidth(completionPercent));
+    return () => cancelAnimationFrame(id);
+  }, [completionPercent]);
+
   return (
     <Link
       href="/app/settings"
-      className="mt-6 block rounded-2xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-cream-50 transition hover:brightness-105"
+      className="animate-fade-up mt-6 block rounded-2xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-cream-50 transition hover:brightness-105"
     >
       <div className="flex items-center gap-3">
         <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-cream-50 text-primary-600">
@@ -43,8 +53,8 @@ export function ProfileCompletionCard({
         </div>
         <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-cream-50/20">
           <div
-            className="h-full rounded-full bg-cream-50 transition-all"
-            style={{ width: `${completionPercent}%` }}
+            className="h-full rounded-full bg-cream-50 transition-[width] duration-1000 ease-out"
+            style={{ width: `${width}%` }}
           />
         </div>
         <p className="mt-2 text-center text-xs text-cream-50/70">Cliquez pour compléter</p>

@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 import { signUpAction } from "@/actions/auth";
 import { GoogleButton } from "@/components/auth/google-button";
 
@@ -71,8 +72,9 @@ export function SignupForm() {
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-full bg-primary-600 py-3 text-sm font-semibold text-cream-50 transition hover:bg-primary-700 disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-primary-600 py-3 text-sm font-semibold text-cream-50 transition hover:bg-primary-700 disabled:opacity-60"
         >
+          {pending && <Loader2 className="h-4 w-4 animate-spin" />}
           {pending ? "Création du compte..." : "Créer mon compte"}
         </button>
 

@@ -59,7 +59,7 @@ export function AdminNav() {
       {open && (
         <div
           ref={drawerRef}
-          className="absolute inset-x-0 top-16 z-40 border-b border-primary-800 bg-primary-900 px-4 py-4 shadow-lg sm:px-6 md:hidden"
+          className="animate-dropdown absolute inset-x-0 top-16 z-40 border-b border-primary-800 bg-primary-900 px-4 py-4 shadow-lg sm:px-6 md:hidden"
         >
           <div className="flex flex-col gap-1">
             {links.map((link) => (

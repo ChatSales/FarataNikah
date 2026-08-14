@@ -91,7 +91,7 @@ export default async function RequestsPage() {
               return (
                 <li
                   key={r.id}
-                  className="rounded-xl border border-primary-100 bg-cream-50 p-4"
+                  className="rounded-xl border border-primary-100 bg-cream-50 p-4 transition hover:border-primary-200 hover:shadow-sm"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -133,7 +133,7 @@ export default async function RequestsPage() {
               return (
                 <li
                   key={r.id}
-                  className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 p-4"
+                  className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 p-4 transition hover:border-primary-200 hover:shadow-sm"
                 >
                   <Link
                     href={`/app/profile/${r.recipient_profile_id}`}
@@ -167,7 +167,7 @@ export default async function RequestsPage() {
               return (
                 <li
                   key={r.id}
-                  className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 p-4"
+                  className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 p-4 transition hover:border-primary-200 hover:shadow-sm"
                 >
                   <span className="font-semibold text-primary-900">
                     {other?.is_anonymous ? "Profil anonyme" : other?.first_name}

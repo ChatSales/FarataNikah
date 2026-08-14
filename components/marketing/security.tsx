@@ -1,4 +1,5 @@
 import { UserCheck, ScanEye, Lock } from "lucide-react";
+import { Reveal } from "@/components/marketing/reveal";
 
 const points = [
   {
@@ -39,21 +40,20 @@ export function Security() {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {points.map((point) => (
-            <div
-              key={point.title}
-              className="rounded-2xl border border-primary-100 bg-cream-50 p-7"
-            >
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-cream-50">
-                <point.icon className="h-6 w-6" />
-              </span>
-              <h3 className="mt-5 text-lg font-semibold text-primary-900">
-                {point.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
-                {point.description}
-              </p>
-            </div>
+          {points.map((point, i) => (
+            <Reveal key={point.title} delay={i * 100}>
+              <div className="h-full rounded-2xl border border-primary-100 bg-cream-50 p-7 transition hover:-translate-y-1 hover:shadow-md">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-cream-50">
+                  <point.icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-5 text-lg font-semibold text-primary-900">
+                  {point.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
+                  {point.description}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

@@ -9,30 +9,43 @@ import { Testimonials } from "@/components/marketing/testimonials";
 import { TestimonialsCarousel } from "@/components/marketing/testimonials-carousel";
 import { Faq } from "@/components/marketing/faq";
 import { QuranVerse } from "@/components/marketing/quran-verse";
+import { Reveal } from "@/components/marketing/reveal";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <ProductPreview />
+      <Reveal>
+        <ProductPreview />
+      </Reveal>
       <WhyFarata />
       <Security />
       <Steps />
-      <CtaBand
-        title="Prêt(e) à franchir le pas ?"
-        subtitle="La création de profil est gratuite et ne prend que quelques minutes."
-        buttonLabel="Créer mon profil"
-      />
+      <Reveal>
+        <CtaBand
+          title="Prêt(e) à franchir le pas ?"
+          subtitle="La création de profil est gratuite et ne prend que quelques minutes."
+          buttonLabel="Créer mon profil"
+        />
+      </Reveal>
       <Pricing />
-      <TestimonialsCarousel />
+      <Reveal>
+        <TestimonialsCarousel />
+      </Reveal>
       <Testimonials />
-      <Faq />
-      <QuranVerse />
-      <CtaBand
-        title="Rejoins une communauté panafricaine de musulmans sérieux"
-        subtitle="Où que tu sois en Afrique, ta recherche de mariage mérite un cadre sain et respectueux."
-        buttonLabel="Créer mon profil gratuitement"
-      />
+      <Reveal>
+        <Faq />
+      </Reveal>
+      <Reveal>
+        <QuranVerse />
+      </Reveal>
+      <Reveal>
+        <CtaBand
+          title="Rejoins une communauté panafricaine de musulmans sérieux"
+          subtitle="Où que tu sois en Afrique, ta recherche de mariage mérite un cadre sain et respectueux."
+          buttonLabel="Créer mon profil gratuitement"
+        />
+      </Reveal>
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { UserRound, MapPin, Send, Rocket } from "lucide-react";
+import { UserRound, MapPin, Send, Rocket, Loader2 } from "lucide-react";
 import { sendContactRequestAction } from "@/actions/contact-requests";
 
 export interface DiscoverProfile {
@@ -28,10 +28,10 @@ export function ProfileCard({ profile }: { profile: DiscoverProfile }) {
   const alreadyActedOn = profile.connectionStatus !== "none" || (state && "success" in state);
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-primary-100 bg-cream-50 shadow-sm">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-primary-100 bg-cream-50 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
       <Link
         href={`/app/profile/${profile.id}`}
-        className="relative flex aspect-[4/5] items-center justify-center bg-primary-100"
+        className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-primary-100"
       >
         {profile.photoUrl ? (
           <Image
@@ -39,7 +39,7 @@ export function ProfileCard({ profile }: { profile: DiscoverProfile }) {
             alt={profile.displayName}
             fill
             sizes="(min-width: 1024px) 280px, 45vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
           <div className="flex flex-col items-center gap-2 text-primary-400">
@@ -83,7 +83,11 @@ export function ProfileCard({ profile }: { profile: DiscoverProfile }) {
                 disabled={pending}
                 className="flex w-full items-center justify-center gap-1.5 rounded-full bg-primary-600 py-2 text-xs font-semibold text-cream-50 transition hover:bg-primary-700 disabled:opacity-60"
               >
-                <Send className="h-3.5 w-3.5" />
+                {pending ? (
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                ) : (
+                  <Send className="h-3.5 w-3.5" />
+                )}
                 {pending ? "Envoi..." : "Envoyer une demande"}
               </button>
             </form>

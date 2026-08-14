@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/marketing/reveal";
+
 const steps = [
   {
     number: "01",
@@ -43,18 +45,20 @@ export function Steps() {
 
         <div className="relative mt-16 grid gap-10 md:grid-cols-4">
           <div className="pointer-events-none absolute top-6 left-0 right-0 hidden h-px bg-primary-200 md:block" />
-          {steps.map((step) => (
-            <div key={step.number} className="relative text-center md:text-left">
-              <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-sm font-bold text-cream-50 md:mx-0 mx-auto">
-                {step.number}
-              </span>
-              <h3 className="mt-5 font-semibold text-primary-900">
-                {step.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
-                {step.description}
-              </p>
-            </div>
+          {steps.map((step, i) => (
+            <Reveal key={step.number} delay={i * 120}>
+              <div className="relative text-center transition hover:-translate-y-1 md:text-left">
+                <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-primary-600 text-sm font-bold text-cream-50 md:mx-0 mx-auto">
+                  {step.number}
+                </span>
+                <h3 className="mt-5 font-semibold text-primary-900">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
+                  {step.description}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

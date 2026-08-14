@@ -25,7 +25,7 @@ export function MobileMenu() {
       </button>
 
       {open && (
-        <div className="absolute inset-x-0 top-16 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6">
+        <div className="animate-dropdown absolute inset-x-0 top-16 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6">
           <div className="flex flex-col gap-1">
             {links.map((link) => (
               <Link

@@ -61,11 +61,17 @@ export function Faq() {
                     }`}
                   />
                 </button>
-                {isOpen && (
-                  <p className="px-5 pb-4 text-sm leading-relaxed text-primary-900/70">
-                    {item.a}
-                  </p>
-                )}
+                <div
+                  className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                    isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <p className="px-5 pb-4 text-sm leading-relaxed text-primary-900/70">
+                      {item.a}
+                    </p>
+                  </div>
+                </div>
               </div>
             );
           })}

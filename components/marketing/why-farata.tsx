@@ -1,4 +1,5 @@
 import { ShieldOff, HandHeart, EyeOff, Sparkles } from "lucide-react";
+import { Reveal } from "@/components/marketing/reveal";
 
 const features = [
   {
@@ -46,21 +47,20 @@ export function WhyFarata() {
         </div>
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="rounded-2xl border border-primary-100 bg-cream-50 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-100 text-primary-700">
-                <feature.icon className="h-5.5 w-5.5" />
-              </span>
-              <h3 className="mt-5 font-semibold text-primary-900">
-                {feature.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
-                {feature.description}
-              </p>
-            </div>
+          {features.map((feature, i) => (
+            <Reveal key={feature.title} delay={i * 80}>
+              <div className="h-full rounded-2xl border border-primary-100 bg-cream-50 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-100 text-primary-700">
+                  <feature.icon className="h-5.5 w-5.5" />
+                </span>
+                <h3 className="mt-5 font-semibold text-primary-900">
+                  {feature.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-primary-900/65">
+                  {feature.description}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>

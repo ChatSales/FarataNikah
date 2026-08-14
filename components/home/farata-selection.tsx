@@ -15,7 +15,7 @@ export function FarataSelection({ profiles }: { profiles: SelectionProfile[] }) 
   if (profiles.length === 0) return null;
 
   return (
-    <section className="mt-6 overflow-hidden rounded-2xl border border-primary-100 bg-cream-50 p-4">
+    <section className="animate-fade-up mt-6 overflow-hidden rounded-2xl border border-primary-100 bg-cream-50 p-4" style={{ animationDelay: "150ms" }}>
       <div className="flex items-center gap-2.5">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600">
           <Heart className="h-4 w-4" />
@@ -27,20 +27,21 @@ export function FarataSelection({ profiles }: { profiles: SelectionProfile[] }) 
       </div>
 
       <div className="-mx-4 mt-4 flex gap-3 overflow-x-auto px-4 pb-1">
-        {profiles.map((p) => (
+        {profiles.map((p, i) => (
           <div
             key={p.id}
-            className="relative w-32 shrink-0 overflow-hidden rounded-xl border border-primary-100"
+            className="animate-fade-up group relative w-32 shrink-0 overflow-hidden rounded-xl border border-primary-100 transition hover:-translate-y-1 hover:shadow-md"
+            style={{ animationDelay: `${180 + i * 60}ms` }}
           >
             <Link href={`/app/profile/${p.id}`}>
-              <div className="relative aspect-[4/5] bg-primary-100">
+              <div className="relative aspect-[4/5] overflow-hidden bg-primary-100">
                 {p.photoUrl ? (
                   <Image
                     src={p.photoUrl}
                     alt={p.displayName}
                     fill
                     sizes="128px"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center text-primary-400">
