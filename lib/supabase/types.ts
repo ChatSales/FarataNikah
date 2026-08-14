@@ -69,6 +69,8 @@ export interface Database {
           education_level: string | null;
           height_cm: number | null;
           bio: string | null;
+          interests: string | null;
+          life_goals: string | null;
           seeking_criteria: Record<string, unknown>;
           is_anonymous: boolean;
           blur_photos: boolean;

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ArrowLeft, Camera, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { EditProfileForm } from "@/components/settings/edit-profile-form";
+import { PrivacyForm } from "@/components/settings/privacy-form";
+import { ChangePasswordForm } from "@/components/settings/change-password-form";
 import type { Madhhab } from "@/lib/supabase/types";
 
 export default async function EditProfilePage() {
@@ -15,7 +17,7 @@ export default async function EditProfilePage() {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, nationality, madhhab, religious_practice_level, has_children, wants_children, profession, education_level, height_cm, bio, seeking_criteria"
+      "id, first_name, date_of_birth, marital_status, country, city, nationality, madhhab, religious_practice_level, has_children, wants_children, profession, education_level, height_cm, bio, interests, life_goals, seeking_criteria, is_anonymous, blur_photos"
     )
     .eq("user_id", user.id)
     .single();
@@ -42,15 +44,16 @@ export default async function EditProfilePage() {
       </div>
 
       <Link
+        id="photo"
         href="/onboarding/photos"
-        className="mt-6 flex items-center justify-between rounded-2xl border border-primary-100 bg-cream-50 p-5 transition hover:border-primary-200 hover:shadow-sm"
+        className="scroll-mt-20 mt-6 flex items-center justify-between rounded-2xl border border-primary-100 bg-cream-50 p-5 transition hover:border-primary-200 hover:shadow-sm"
       >
         <div className="flex items-center gap-3">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600">
             <Camera className="h-5 w-5" />
           </span>
           <div>
-            <p className="text-sm font-semibold text-primary-900">Mes photos</p>
+            <p className="text-sm font-semibold text-primary-900">Photo de profil</p>
             <p className="text-xs text-primary-900/55">
               {photoCount === 0
                 ? "Aucune photo — ajoute-en au moins une"
@@ -61,9 +64,14 @@ export default async function EditProfilePage() {
         <ChevronRight className="h-4 w-4 text-primary-400" />
       </Link>
 
-      <div className="mt-6 rounded-2xl border border-primary-100 bg-cream-50 p-6">
+      <div className="mt-6">
         <EditProfileForm
           defaults={{
+            first_name: profile.first_name,
+            date_of_birth: profile.date_of_birth,
+            marital_status: profile.marital_status,
+            country: profile.country,
+            city: profile.city,
             nationality: profile.nationality,
             madhhab: profile.madhhab as Madhhab,
             religious_practice_level: profile.religious_practice_level,
@@ -73,10 +81,17 @@ export default async function EditProfilePage() {
             education_level: profile.education_level,
             height_cm: profile.height_cm,
             bio: profile.bio,
+            interests: profile.interests,
+            life_goals: profile.life_goals,
             seeking_min_age: seekingCriteria?.min_age ?? null,
             seeking_max_age: seekingCriteria?.max_age ?? null,
           }}
         />
+      </div>
+
+      <div className="mt-6 space-y-6">
+        <PrivacyForm defaults={{ is_anonymous: profile.is_anonymous, blur_photos: profile.blur_photos }} />
+        <ChangePasswordForm />
       </div>
     </div>
   );

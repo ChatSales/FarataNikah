@@ -5,6 +5,7 @@ import {
   type MonerooWebhookPayload,
 } from "@/lib/payments/moneroo";
 import { PREMIUM_PERIOD_DAYS, getPremiumPlan } from "@/lib/premium";
+import { getBoostTier } from "@/lib/boost-pricing";
 import { sendMetaServerEvent } from "@/lib/meta-capi";
 import { createNotification } from "@/lib/notifications";
 
@@ -43,6 +44,44 @@ export async function POST(request: NextRequest) {
   // Idempotent: webhooks can be retried up to 3 times.
   if (transaction.status === "succeeded") {
     return NextResponse.json({ received: true, alreadyProcessed: true });
+  }
+
+  const boostTier = transaction.plan_id ? getBoostTier(transaction.plan_id) : undefined;
+
+  if (payload.event === "payment.success" && boostTier) {
+    const { data: currentProfile } = await supabase
+      .from("profiles")
+      .select("boosted_until, email")
+      .eq("id", transaction.profile_id)
+      .single();
+
+    // Stack onto an already-active boost instead of overwriting it, so
+    // buying a second boost while the first is still running extends the
+    // visibility window rather than wasting the remaining time.
+    const base =
+      currentProfile?.boosted_until && new Date(currentProfile.boosted_until) > new Date()
+        ? new Date(currentProfile.boosted_until)
+        : new Date();
+    const boostedUntil = new Date(base.getTime() + boostTier.hours * 60 * 60 * 1000);
+
+    await supabase
+      .from("profiles")
+      .update({ boosted_until: boostedUntil.toISOString() })
+      .eq("id", transaction.profile_id);
+
+    await supabase
+      .from("payment_transactions")
+      .update({ status: "succeeded", raw_payload: rawPayload })
+      .eq("id", transaction.id);
+
+    await sendMetaServerEvent({
+      eventName: "Purchase",
+      eventId: transaction.id,
+      email: currentProfile?.email,
+      customData: { value: transaction.amount_fcfa, currency: "XOF" },
+    });
+
+    return NextResponse.json({ received: true });
   }
 
   if (payload.event === "payment.success") {

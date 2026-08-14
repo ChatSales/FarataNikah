@@ -29,7 +29,7 @@ export default async function HomePage() {
   const { data: viewer } = await supabase
     .from("profiles")
     .select(
-      "id, first_name, city, country, gender, madhhab, marital_status, date_of_birth, seeking_criteria, is_premium, bio, profession, education_level, height_cm, nationality, religious_practice_level"
+      "id, first_name, city, country, gender, madhhab, marital_status, date_of_birth, seeking_criteria, is_premium, bio, profession, religious_practice_level, interests, life_goals"
     )
     .eq("user_id", user.id)
     .single();
@@ -46,13 +46,12 @@ export default async function HomePage() {
     blur_photos: false,
   });
 
-  const completionPercent = computeProfileCompletion({
+  const { percent: completionPercent } = computeProfileCompletion({
     bio: viewer.bio,
     profession: viewer.profession,
-    education_level: viewer.education_level,
-    height_cm: viewer.height_cm,
-    nationality: viewer.nationality,
     religious_practice_level: viewer.religious_practice_level,
+    interests: viewer.interests,
+    life_goals: viewer.life_goals,
     seeking_criteria: viewer.seeking_criteria as Record<string, unknown>,
     hasPhoto,
   });

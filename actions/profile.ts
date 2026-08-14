@@ -167,6 +167,11 @@ export async function saveReligiousPracticeAction(
 }
 
 const editProfileSchema = z.object({
+  first_name: z.string().trim().min(2, "Prénom trop court"),
+  date_of_birth: z.string().refine(isAdult, "Tu dois avoir au moins 18 ans."),
+  marital_status: z.enum(["single", "divorced", "widowed"]),
+  country: z.string().trim().min(2, "Pays requis"),
+  city: z.string().trim().min(2, "Ville requise"),
   nationality: z.string().trim().optional(),
   madhhab: z.enum([
     "hanafi",
@@ -183,6 +188,8 @@ const editProfileSchema = z.object({
   education_level: z.string().trim().optional(),
   height_cm: z.coerce.number().int().min(120).max(230).optional(),
   bio: z.string().trim().max(1000).optional(),
+  interests: z.string().trim().max(500).optional(),
+  life_goals: z.string().trim().max(500).optional(),
   seeking_min_age: z.coerce.number().int().min(18).max(100).optional(),
   seeking_max_age: z.coerce.number().int().min(18).max(100).optional(),
 });
@@ -204,6 +211,11 @@ export async function updateProfileDetailsAction(
   if (!user) redirect("/login");
 
   const parsed = editProfileSchema.safeParse({
+    first_name: formData.get("first_name"),
+    date_of_birth: formData.get("date_of_birth"),
+    marital_status: formData.get("marital_status"),
+    country: formData.get("country"),
+    city: formData.get("city"),
     nationality: formData.get("nationality") || undefined,
     madhhab: formData.get("madhhab"),
     religious_practice_level: formData.get("religious_practice_level") || undefined,
@@ -214,6 +226,8 @@ export async function updateProfileDetailsAction(
     education_level: formData.get("education_level") || undefined,
     height_cm: formData.get("height_cm") || undefined,
     bio: formData.get("bio") || undefined,
+    interests: formData.get("interests") || undefined,
+    life_goals: formData.get("life_goals") || undefined,
     seeking_min_age: formData.get("seeking_min_age") || undefined,
     seeking_max_age: formData.get("seeking_max_age") || undefined,
   });
@@ -228,6 +242,11 @@ export async function updateProfileDetailsAction(
     .from("profiles")
     .update({
       ...(profileFields as {
+        first_name: string;
+        date_of_birth: string;
+        marital_status: "single" | "divorced" | "widowed";
+        country: string;
+        city: string;
         nationality?: string;
         madhhab: Madhhab;
         religious_practice_level?: string;
@@ -237,6 +256,8 @@ export async function updateProfileDetailsAction(
         education_level?: string;
         height_cm?: number;
         bio?: string;
+        interests?: string;
+        life_goals?: string;
       }),
       seeking_criteria: {
         min_age: seeking_min_age ?? null,
@@ -250,6 +271,7 @@ export async function updateProfileDetailsAction(
   }
 
   revalidatePath("/app/home");
+  revalidatePath("/app/settings");
   revalidatePath("/app/settings/profile");
   return { success: true };
 }
@@ -316,5 +338,78 @@ export async function savePrivacyAction(
   }
 
   redirect("/onboarding/pending");
+}
+
+export type PrivacyActionState = { error: string } | { success: true } | null;
+
+// Settings-reachable counterpart to savePrivacyAction — same fields, but
+// reports success inline instead of redirect()ing into the onboarding flow.
+export async function updatePrivacyAction(
+  _prevState: PrivacyActionState,
+  formData: FormData
+): Promise<PrivacyActionState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const parsed = privacySchema.safeParse({
+    is_anonymous: formData.get("is_anonymous") === "on",
+    blur_photos: formData.get("blur_photos") === "on",
+  });
+  if (!parsed.success) {
+    return { error: "Formulaire invalide." };
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update(parsed.data)
+    .eq("user_id", user.id);
+
+  if (error) {
+    return { error: "Impossible d'enregistrer : " + error.message };
+  }
+
+  revalidatePath("/app/settings/profile");
+  return { success: true };
+}
+
+const changePasswordSchema = z
+  .object({
+    password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas.",
+    path: ["confirmPassword"],
+  });
+
+export type ChangePasswordActionState = { error: string } | { success: true } | null;
+
+export async function changePasswordAction(
+  _prevState: ChangePasswordActionState,
+  formData: FormData
+): Promise<ChangePasswordActionState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const parsed = changePasswordSchema.safeParse({
+    password: formData.get("password"),
+    confirmPassword: formData.get("confirmPassword"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Formulaire invalide." };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+  if (error) {
+    return { error: "Impossible de mettre à jour le mot de passe : " + error.message };
+  }
+
+  return { success: true };
 }
 

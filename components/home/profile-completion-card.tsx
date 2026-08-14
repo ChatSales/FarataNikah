@@ -57,7 +57,9 @@ export function ProfileCompletionCard({
             style={{ width: `${width}%` }}
           />
         </div>
-        <p className="mt-2 text-center text-xs text-cream-50/70">Cliquez pour compléter</p>
+        <p className="mt-2 text-center text-xs text-cream-50/70">
+          {completionPercent >= 100 ? "Profil complet — modifier" : "Cliquez pour compléter"}
+        </p>
       </div>
     </Link>
   );
