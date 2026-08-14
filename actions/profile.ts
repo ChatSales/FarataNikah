@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import type { Madhhab } from "@/lib/supabase/types";
@@ -163,6 +164,94 @@ export async function saveReligiousPracticeAction(
   }
 
   redirect("/onboarding/photos");
+}
+
+const editProfileSchema = z.object({
+  nationality: z.string().trim().optional(),
+  madhhab: z.enum([
+    "hanafi",
+    "maliki",
+    "shafii",
+    "hanbali",
+    "no_preference",
+    "other",
+  ]),
+  religious_practice_level: z.string().trim().optional(),
+  has_children: z.coerce.boolean(),
+  wants_children: z.coerce.boolean().optional(),
+  profession: z.string().trim().optional(),
+  education_level: z.string().trim().optional(),
+  height_cm: z.coerce.number().int().min(120).max(230).optional(),
+  bio: z.string().trim().max(1000).optional(),
+  seeking_min_age: z.coerce.number().int().min(18).max(100).optional(),
+  seeking_max_age: z.coerce.number().int().min(18).max(100).optional(),
+});
+
+export type EditProfileActionState = { error: string } | { success: true } | null;
+
+// Unlike saveReligiousPracticeAction (its onboarding counterpart, which
+// always redirect()s to the next onboarding step), this is reachable any
+// time from Settings — it updates the same fields but stays on the page
+// and reports success inline instead of advancing a wizard.
+export async function updateProfileDetailsAction(
+  _prevState: EditProfileActionState,
+  formData: FormData
+): Promise<EditProfileActionState> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const parsed = editProfileSchema.safeParse({
+    nationality: formData.get("nationality") || undefined,
+    madhhab: formData.get("madhhab"),
+    religious_practice_level: formData.get("religious_practice_level") || undefined,
+    has_children: formData.get("has_children") === "on",
+    wants_children:
+      formData.get("wants_children") === "" ? undefined : formData.get("wants_children") === "on",
+    profession: formData.get("profession") || undefined,
+    education_level: formData.get("education_level") || undefined,
+    height_cm: formData.get("height_cm") || undefined,
+    bio: formData.get("bio") || undefined,
+    seeking_min_age: formData.get("seeking_min_age") || undefined,
+    seeking_max_age: formData.get("seeking_max_age") || undefined,
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Formulaire invalide." };
+  }
+
+  const { seeking_min_age, seeking_max_age, ...profileFields } = parsed.data;
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      ...(profileFields as {
+        nationality?: string;
+        madhhab: Madhhab;
+        religious_practice_level?: string;
+        has_children: boolean;
+        wants_children?: boolean;
+        profession?: string;
+        education_level?: string;
+        height_cm?: number;
+        bio?: string;
+      }),
+      seeking_criteria: {
+        min_age: seeking_min_age ?? null,
+        max_age: seeking_max_age ?? null,
+      },
+    })
+    .eq("user_id", user.id);
+
+  if (error) {
+    return { error: "Impossible d'enregistrer : " + error.message };
+  }
+
+  revalidatePath("/app/home");
+  revalidatePath("/app/settings/profile");
+  return { success: true };
 }
 
 export async function addProfilePhotoAction(storagePath: string) {

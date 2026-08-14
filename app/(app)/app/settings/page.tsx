@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import { CheckCircle2, Mail, Ban, Rocket } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle2, Mail, Ban, Rocket, UserRound, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { UpgradeButton } from "@/components/settings/upgrade-button";
 import { DeleteAccountButton } from "@/components/settings/delete-account-button";
@@ -84,7 +85,25 @@ export default async function SettingsPage({
       )}
       <h1 className="text-2xl font-semibold text-primary-900">Paramètres</h1>
 
-      <section className="mt-8 rounded-2xl border border-primary-100 bg-cream-50 p-6">
+      <Link
+        href="/app/settings/profile"
+        className="mt-8 flex items-center justify-between rounded-2xl border border-primary-100 bg-cream-50 p-6 transition hover:border-primary-200 hover:shadow-sm"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600">
+            <UserRound className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="text-sm font-semibold text-primary-900">Mon profil</p>
+            <p className="text-xs text-primary-900/55">
+              Photos, bio, profession, critères de recherche...
+            </p>
+          </div>
+        </div>
+        <ChevronRight className="h-4 w-4 text-primary-400" />
+      </Link>
+
+      <section className="mt-6 rounded-2xl border border-primary-100 bg-cream-50 p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-primary-900/60">
           Compte
         </h2>

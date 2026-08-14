@@ -27,7 +27,7 @@ export function ProfileCompletionCard({
 
   return (
     <Link
-      href="/app/settings"
+      href="/app/settings/profile"
       className="animate-fade-up mt-6 block rounded-2xl bg-gradient-to-br from-primary-700 to-primary-900 p-5 text-cream-50 transition hover:brightness-105"
     >
       <div className="flex items-center gap-3">
