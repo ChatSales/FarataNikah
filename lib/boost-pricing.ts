@@ -1,20 +1,56 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/supabase/types";
+
 export interface BoostTier {
   id: string;
   label: string;
   durationLabel: string;
   hours: number;
   priceFcfa: number;
+  active: boolean;
+}
+
+type Client = SupabaseClient<Database>;
+
+function formatDurationLabel(hours: number): string {
+  if (hours % 24 === 0 && hours > 24) return `${hours / 24} jours`;
+  if (hours === 24) return "24h";
+  return `${hours}h`;
+}
+
+function toBoostTier(row: Database["public"]["Tables"]["pricing_plans"]["Row"]): BoostTier {
+  const hours = row.duration_hours ?? 24;
+  return {
+    id: row.id,
+    label: row.label,
+    durationLabel: formatDurationLabel(hours),
+    hours,
+    priceFcfa: row.price_fcfa,
+    active: row.is_active,
+  };
 }
 
 // plan_id values are prefixed "boost_" so the Moneroo webhook can tell a
 // standalone boost purchase apart from a Premium subscription purchase
 // while sharing the same payment_transactions table/flow.
-export const BOOST_TIERS: BoostTier[] = [
-  { id: "boost_24h", label: "Boost 24h", durationLabel: "24h", hours: 24, priceFcfa: 1500 },
-  { id: "boost_3d", label: "Boost 3 jours", durationLabel: "3 jours", hours: 72, priceFcfa: 3000 },
-  { id: "boost_7d", label: "Boost 7 jours", durationLabel: "7 jours", hours: 168, priceFcfa: 5000 },
-];
+export async function getBoostTiers(supabase: Client): Promise<BoostTier[]> {
+  const { data } = await supabase
+    .from("pricing_plans")
+    .select("*")
+    .eq("type", "boost")
+    .eq("is_active", true)
+    .order("sort_order");
+  return (data ?? []).map(toBoostTier);
+}
 
-export function getBoostTier(id: string): BoostTier | undefined {
-  return BOOST_TIERS.find((t) => t.id === id);
+// Deliberately not filtered by is_active — see getPremiumPlan's comment;
+// same reasoning applies here for webhook reconciliation.
+export async function getBoostTier(supabase: Client, id: string): Promise<BoostTier | undefined> {
+  const { data } = await supabase
+    .from("pricing_plans")
+    .select("*")
+    .eq("id", id)
+    .eq("type", "boost")
+    .maybeSingle();
+  return data ? toBoostTier(data) : undefined;
 }

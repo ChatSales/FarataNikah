@@ -3,16 +3,16 @@
 import { useActionState, useState } from "react";
 import { Sparkles, Zap } from "lucide-react";
 import { createCheckoutAction } from "@/actions/payments";
-import { PREMIUM_PLANS } from "@/lib/premium";
+import type { PremiumPlan } from "@/lib/premium";
 
-function discountPercent(plan: (typeof PREMIUM_PLANS)[number]): number {
+function discountPercent(plan: PremiumPlan): number {
   return Math.round((1 - plan.priceFcfa / plan.originalPriceFcfa) * 100);
 }
 
-export function UpgradeButton() {
+export function UpgradeButton({ plans }: { plans: PremiumPlan[] }) {
   const [state, formAction, pending] = useActionState(createCheckoutAction, null);
   const [planId, setPlanId] = useState(
-    PREMIUM_PLANS.find((p) => p.popular)?.id ?? PREMIUM_PLANS[0].id
+    plans.find((p) => p.popular)?.id ?? plans[0]?.id ?? ""
   );
 
   return (
@@ -20,7 +20,7 @@ export function UpgradeButton() {
       <input type="hidden" name="planId" value={planId} />
 
       <div className="space-y-2.5">
-        {PREMIUM_PLANS.map((plan) => {
+        {plans.map((plan) => {
           const selected = plan.id === planId;
           return (
             <button

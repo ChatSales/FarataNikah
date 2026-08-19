@@ -88,15 +88,60 @@ export default async function AdminStatsPage() {
   ]);
 
   const cards = [
-    { label: "Profils approuvés", value: approvedProfiles ?? 0, icon: Users },
-    { label: "Vérifications en attente", value: pendingVerifications ?? 0, icon: Clock3 },
-    { label: "Profils rejetés", value: rejectedProfiles ?? 0, icon: Users },
-    { label: "Membres Premium", value: premiumMembers ?? 0, icon: Sparkles },
-    { label: "Nouvelles inscriptions (7j)", value: newSignupsThisWeek ?? 0, icon: UserPlus },
-    { label: "Messages envoyés (total)", value: totalMessages ?? 0, icon: MessageCircle },
-    { label: "Signalements messages en attente", value: pendingFlags ?? 0, icon: ShieldAlert },
-    { label: "Signalements profils en attente", value: pendingReports ?? 0, icon: ShieldAlert },
-    { label: "Boosts actifs en ce moment", value: activeBoosts ?? 0, icon: Rocket },
+    {
+      label: "Profils approuvés",
+      value: approvedProfiles ?? 0,
+      icon: Users,
+      accent: "bg-primary-100 text-primary-700",
+    },
+    {
+      label: "Vérifications en attente",
+      value: pendingVerifications ?? 0,
+      icon: Clock3,
+      accent: "bg-gold-400/20 text-gold-700",
+    },
+    {
+      label: "Profils rejetés",
+      value: rejectedProfiles ?? 0,
+      icon: Users,
+      accent: "bg-red-100 text-red-600",
+    },
+    {
+      label: "Membres Premium",
+      value: premiumMembers ?? 0,
+      icon: Sparkles,
+      accent: "bg-gold-400/20 text-gold-700",
+    },
+    {
+      label: "Nouvelles inscriptions (7j)",
+      value: newSignupsThisWeek ?? 0,
+      icon: UserPlus,
+      accent: "bg-primary-100 text-primary-700",
+    },
+    {
+      label: "Messages envoyés (total)",
+      value: totalMessages ?? 0,
+      icon: MessageCircle,
+      accent: "bg-blue-100 text-blue-600",
+    },
+    {
+      label: "Signalements messages en attente",
+      value: pendingFlags ?? 0,
+      icon: ShieldAlert,
+      accent: "bg-red-100 text-red-600",
+    },
+    {
+      label: "Signalements profils en attente",
+      value: pendingReports ?? 0,
+      icon: ShieldAlert,
+      accent: "bg-red-100 text-red-600",
+    },
+    {
+      label: "Boosts actifs en ce moment",
+      value: activeBoosts ?? 0,
+      icon: Rocket,
+      accent: "bg-gold-400/20 text-gold-700",
+    },
   ];
 
   const days30 = lastNDayKeys(30);
@@ -163,9 +208,9 @@ export default async function AdminStatsPage() {
         {cards.map((c) => (
           <div
             key={c.label}
-            className="flex items-center gap-4 rounded-2xl border border-primary-100 bg-cream-50 p-5"
+            className="flex items-center gap-4 rounded-2xl border border-primary-100 bg-cream-50 p-5 transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-700">
+            <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${c.accent}`}>
               <c.icon className="h-5.5 w-5.5" />
             </span>
             <div>
@@ -177,7 +222,7 @@ export default async function AdminStatsPage() {
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6">
+        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6 transition hover:shadow-md">
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary-900/60">
             <TrendingUp className="h-4 w-4" /> Inscriptions — 30 derniers jours
           </h2>
@@ -186,7 +231,7 @@ export default async function AdminStatsPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6">
+        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6 transition hover:shadow-md">
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary-900/60">
             <MessageCircle className="h-4 w-4" /> Messages — 14 derniers jours
           </h2>
@@ -195,7 +240,7 @@ export default async function AdminStatsPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-gold-200 bg-gold-50/60 p-6">
+        <section className="rounded-2xl border border-gold-200 bg-gold-50/60 p-6 transition hover:shadow-md">
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-gold-700">
             <Wallet className="h-4 w-4" /> Revenus (paiements réussis)
           </h2>
@@ -212,7 +257,7 @@ export default async function AdminStatsPage() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6">
+        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6 transition hover:shadow-md">
           <h2 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-primary-900/60">
             <Globe2 className="h-4 w-4" /> Répartition par pays
           </h2>
@@ -225,7 +270,7 @@ export default async function AdminStatsPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6">
+        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6 transition hover:shadow-md">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-primary-900/60">
             Répartition par genre
           </h2>
@@ -238,7 +283,7 @@ export default async function AdminStatsPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6">
+        <section className="rounded-2xl border border-primary-100 bg-cream-50 p-6 transition hover:shadow-md">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-primary-900/60">
             Répartition par madhhab
           </h2>

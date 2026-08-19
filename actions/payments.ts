@@ -14,10 +14,10 @@ export async function createCheckoutAction(
   formData: FormData
 ): Promise<CheckoutActionState> {
   const planId = String(formData.get("planId") ?? "1month");
-  const plan = getPremiumPlan(planId);
-  if (!plan) return { error: "Offre invalide." };
-
   const supabase = await createClient();
+  const plan = await getPremiumPlan(supabase, planId);
+  if (!plan || !plan.active) return { error: "Offre invalide." };
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -75,10 +75,10 @@ export async function createBoostCheckoutAction(
   formData: FormData
 ): Promise<CheckoutActionState> {
   const tierId = String(formData.get("tierId") ?? "");
-  const tier = getBoostTier(tierId);
-  if (!tier) return { error: "Offre invalide." };
-
   const supabase = await createClient();
+  const tier = await getBoostTier(supabase, tierId);
+  if (!tier || !tier.active) return { error: "Offre invalide." };
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

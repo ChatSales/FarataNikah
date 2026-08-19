@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getGatedPrimaryPhotoUrl } from "@/lib/connections";
 import { computeCompatibilityScore, type ScorableProfile } from "@/lib/matching/score";
 import { computeProfileCompletion } from "@/lib/profile-completion";
-import { PREMIUM_PLANS } from "@/lib/premium";
+import { getPremiumPlans } from "@/lib/premium";
 import { HomeBanners } from "@/components/home/home-banners";
 import { ProfileCompletionCard } from "@/components/home/profile-completion-card";
 import { FarataSelection, type SelectionProfile } from "@/components/home/farata-selection";
@@ -135,16 +135,17 @@ export default async function HomePage() {
     })
   );
 
-  const featuredPlan = PREMIUM_PLANS.find((p) => p.popular) ?? PREMIUM_PLANS[0];
-  const discountPercent = Math.round(
-    (1 - featuredPlan.priceFcfa / featuredPlan.originalPriceFcfa) * 100
-  );
+  const premiumPlans = await getPremiumPlans(supabase);
+  const featuredPlan = premiumPlans.find((p) => p.popular) ?? premiumPlans[0];
+  const discountPercent = featuredPlan
+    ? Math.round((1 - featuredPlan.priceFcfa / featuredPlan.originalPriceFcfa) * 100)
+    : 0;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 lg:px-8">
       <HomeBanners
         showPhotoBanner={!hasPhoto}
-        showPremiumBanner={!viewer.is_premium}
+        showPremiumBanner={!viewer.is_premium && Boolean(featuredPlan)}
         premiumDiscountPercent={discountPercent}
       />
 

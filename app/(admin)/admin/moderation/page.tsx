@@ -80,7 +80,7 @@ export default async function AdminModerationQueuePage() {
             return (
               <li
                 key={f.id}
-                className="rounded-xl border border-red-100 bg-red-50/40 p-5"
+                className="rounded-xl border border-red-100 bg-red-50/40 p-5 transition hover:border-red-200 hover:shadow-sm"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -122,7 +122,7 @@ export default async function AdminModerationQueuePage() {
             const reporter = reportProfileById.get(r.reporter_profile_id);
             const reported = reportProfileById.get(r.reported_profile_id);
             return (
-              <li key={r.id} className="rounded-xl border border-red-100 bg-red-50/40 p-5">
+              <li key={r.id} className="rounded-xl border border-red-100 bg-red-50/40 p-5 transition hover:border-red-200 hover:shadow-sm">
                 <p className="flex items-center gap-2 text-sm font-semibold text-primary-900">
                   <Flag className="h-4 w-4 text-red-500" />
                   {reported?.first_name ?? "Profil"} signalé par {reporter?.first_name ?? "un membre"}{" "}

@@ -26,7 +26,8 @@ import { UnblockButton } from "@/components/settings/unblock-button";
 import { BoostPanel } from "@/components/settings/boost-panel";
 import { AdminPlanToggle } from "@/components/settings/admin-plan-toggle";
 import { MetaPixelEvent } from "@/components/analytics/meta-pixel-event";
-import { PREMIUM_MONTHLY_PRICE_FCFA, PREMIUM_PLANS } from "@/lib/premium";
+import { getPremiumPlans } from "@/lib/premium";
+import { getBoostTiers } from "@/lib/boost-pricing";
 import { computeProfileCompletion } from "@/lib/profile-completion";
 
 export default async function SettingsPage({
@@ -49,6 +50,11 @@ export default async function SettingsPage({
     .eq("user_id", user.id)
     .single();
   if (!profile) redirect("/onboarding/basic-info");
+
+  const [premiumPlans, boostTiers] = await Promise.all([
+    getPremiumPlans(supabase),
+    getBoostTiers(supabase),
+  ]);
 
   const { count: photoCount } = await supabase
     .from("profile_photos")
@@ -129,7 +135,11 @@ export default async function SettingsPage({
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    purchasedAmount = lastTransaction?.amount_fcfa ?? PREMIUM_MONTHLY_PRICE_FCFA;
+    purchasedAmount =
+      lastTransaction?.amount_fcfa ??
+      premiumPlans.find((p) => p.popular)?.priceFcfa ??
+      premiumPlans[0]?.priceFcfa ??
+      0;
     purchaseEventId = lastTransaction?.id ?? null;
   }
 
@@ -159,10 +169,10 @@ export default async function SettingsPage({
     : { data: [] };
   const blockedNameById = new Map((blockedProfiles ?? []).map((p) => [p.id, p.first_name]));
 
-  const featuredPlan = PREMIUM_PLANS.find((p) => p.popular) ?? PREMIUM_PLANS[0];
-  const discountPercent = Math.round(
-    (1 - featuredPlan.priceFcfa / featuredPlan.originalPriceFcfa) * 100
-  );
+  const featuredPlan = premiumPlans.find((p) => p.popular) ?? premiumPlans[0];
+  const discountPercent = featuredPlan
+    ? Math.round((1 - featuredPlan.priceFcfa / featuredPlan.originalPriceFcfa) * 100)
+    : 0;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
@@ -253,6 +263,10 @@ export default async function SettingsPage({
               </p>
             )}
           </div>
+        ) : premiumPlans.length === 0 ? (
+          <p className="mt-3 text-sm text-primary-900/70">
+            Aucune offre Premium n&apos;est disponible pour le moment.
+          </p>
         ) : (
           <>
             <p className="mt-3 text-sm text-primary-900/70">
@@ -260,24 +274,26 @@ export default async function SettingsPage({
               {subscription?.status === "expired" &&
                 " Ton abonnement Premium précédent a expiré."}
             </p>
-            <div className="mt-4 flex items-center gap-3 rounded-xl bg-primary-900 px-4 py-3.5 text-cream-50">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-500 text-primary-900">
-                <Crown className="h-4 w-4" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-2 text-sm font-semibold">
-                  Passe Premium
-                  <span className="rounded-full bg-gold-500 px-2 py-0.5 text-[10px] font-bold text-primary-900">
-                    -{discountPercent}%
-                  </span>
-                </p>
-                <p className="text-xs text-cream-50/70">
-                  Demandes illimitées, profil mis en avant, badge Premium
-                </p>
+            {featuredPlan && (
+              <div className="mt-4 flex items-center gap-3 rounded-xl bg-primary-900 px-4 py-3.5 text-cream-50">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold-500 text-primary-900">
+                  <Crown className="h-4 w-4" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-2 text-sm font-semibold">
+                    Passe Premium
+                    <span className="rounded-full bg-gold-500 px-2 py-0.5 text-[10px] font-bold text-primary-900">
+                      -{discountPercent}%
+                    </span>
+                  </p>
+                  <p className="text-xs text-cream-50/70">
+                    Demandes illimitées, profil mis en avant, badge Premium
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
             <div className="mt-4">
-              <UpgradeButton />
+              <UpgradeButton plans={premiumPlans} />
             </div>
           </>
         )}
@@ -290,7 +306,11 @@ export default async function SettingsPage({
           <Rocket className="h-4 w-4" /> Boost
         </h2>
         <div className="mt-3">
-          <BoostPanel boostCredits={profile.boost_credits} boostedUntil={profile.boosted_until} />
+          <BoostPanel
+            boostCredits={profile.boost_credits}
+            boostedUntil={profile.boosted_until}
+            tiers={boostTiers}
+          />
         </div>
       </section>
 

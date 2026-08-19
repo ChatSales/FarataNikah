@@ -10,6 +10,7 @@ const links = [
   { href: "/admin/verification", label: "Vérification" },
   { href: "/admin/moderation", label: "Modération" },
   { href: "/admin/stats", label: "Statistiques" },
+  { href: "/admin/pricing", label: "Tarifs" },
   { href: "/admin/team", label: "Équipe" },
   { href: "/admin/settings", label: "Réglages" },
 ];

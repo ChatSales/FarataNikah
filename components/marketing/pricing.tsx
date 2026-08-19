@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Check, X } from "lucide-react";
 import { Reveal } from "@/components/marketing/reveal";
+import { createPublicClient } from "@/lib/supabase/public";
+import { getPremiumPlans } from "@/lib/premium";
 
 const freeIncluded = [
   "Création de profil complète",
@@ -46,7 +48,14 @@ const premiumIncluded = [
   "Support prioritaire 7 j/7",
 ];
 
-export function Pricing() {
+export async function Pricing() {
+  const supabase = createPublicClient();
+  const plans = await getPremiumPlans(supabase);
+  // Assumes the plan flagged "popular" in the admin pricing editor is the
+  // monthly one — the copy below ("FCFA / mois") is written around that.
+  // Retagging a differently-sized plan as popular would need a copy tweak.
+  const featuredPlan = plans.find((p) => p.popular) ?? plans[0];
+
   return (
     <section id="tarifs" className="py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -109,13 +118,23 @@ export function Pricing() {
             <p className="mt-1 text-sm text-primary-200">
               Pour aller plus loin dans ta recherche
             </p>
-            <p className="mt-6 flex items-baseline gap-2">
-              <span className="text-lg text-primary-300 line-through">9 900 FCFA</span>
-            </p>
-            <p className="flex items-baseline gap-2">
-              <span className="text-4xl font-bold text-gold-400">5 900</span>
-              <span className="text-primary-200">FCFA / mois</span>
-            </p>
+            {featuredPlan ? (
+              <>
+                <p className="mt-6 flex items-baseline gap-2">
+                  <span className="text-lg text-primary-300 line-through">
+                    {featuredPlan.originalPriceFcfa.toLocaleString("fr-FR")} FCFA
+                  </span>
+                </p>
+                <p className="flex items-baseline gap-2">
+                  <span className="text-4xl font-bold text-gold-400">
+                    {featuredPlan.priceFcfa.toLocaleString("fr-FR")}
+                  </span>
+                  <span className="text-primary-200">FCFA / mois</span>
+                </p>
+              </>
+            ) : (
+              <p className="mt-6 text-sm text-primary-300">Bientôt disponible</p>
+            )}
 
             <Link
               href="/signup?plan=premium"
@@ -133,9 +152,12 @@ export function Pricing() {
               ))}
             </ul>
 
-            <p className="mt-6 text-xs text-primary-300">
-              * Tarif de lancement limité. Prix normal : 9 900 FCFA / mois
-            </p>
+            {featuredPlan && (
+              <p className="mt-6 text-xs text-primary-300">
+                * Tarif de lancement limité. Prix normal :{" "}
+                {featuredPlan.originalPriceFcfa.toLocaleString("fr-FR")} FCFA / mois
+              </p>
+            )}
           </div>
           </Reveal>
         </div>

@@ -1,5 +1,10 @@
-// Matches the pricing shown on the marketing page and components/marketing/pricing.tsx.
-export const PREMIUM_MONTHLY_PRICE_FCFA = 5900;
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/supabase/types";
+
+// Fallback only — used when a transaction's real plan can't be looked up
+// (e.g. a plan was deleted between checkout and webhook). Real prices and
+// durations always come from the pricing_plans table so admin edits take
+// effect immediately, with no deploy, on both the app and the landing page.
 export const PREMIUM_PERIOD_DAYS = 30;
 
 export interface PremiumPlan {
@@ -10,52 +15,57 @@ export interface PremiumPlan {
   originalPriceFcfa: number;
   monthlyEquivalentFcfa: number;
   boosts: number;
-  popular?: boolean;
+  popular: boolean;
+  active: boolean;
 }
 
-export const PREMIUM_PLANS: PremiumPlan[] = [
-  {
-    id: "15days",
-    label: "Premium 15 Jours",
-    days: 15,
-    priceFcfa: 3900,
-    originalPriceFcfa: 7800,
-    monthlyEquivalentFcfa: 7800,
-    boosts: 1,
-  },
-  {
-    id: "1month",
-    label: "Premium 1 Mois",
-    days: 30,
-    priceFcfa: PREMIUM_MONTHLY_PRICE_FCFA,
-    originalPriceFcfa: 9900,
-    monthlyEquivalentFcfa: PREMIUM_MONTHLY_PRICE_FCFA,
-    boosts: 3,
-    popular: true,
-  },
-  {
-    id: "3months",
-    label: "Premium 3 Mois",
-    days: 90,
-    priceFcfa: 9900,
-    originalPriceFcfa: 14700,
-    monthlyEquivalentFcfa: 3300,
-    boosts: 3,
-  },
-  {
-    id: "6months",
-    label: "Premium 6 Mois",
-    days: 180,
-    priceFcfa: 14900,
-    originalPriceFcfa: 29400,
-    monthlyEquivalentFcfa: 2483,
-    boosts: 6,
-  },
-];
+type Client = SupabaseClient<Database>;
 
-export function getPremiumPlan(planId: string): PremiumPlan | undefined {
-  return PREMIUM_PLANS.find((p) => p.id === planId);
+function toPremiumPlan(row: Database["public"]["Tables"]["pricing_plans"]["Row"]): PremiumPlan {
+  const days = row.duration_days ?? PREMIUM_PERIOD_DAYS;
+  return {
+    id: row.id,
+    label: row.label,
+    days,
+    priceFcfa: row.price_fcfa,
+    originalPriceFcfa: row.original_price_fcfa ?? row.price_fcfa,
+    monthlyEquivalentFcfa: Math.round((row.price_fcfa / days) * 30),
+    boosts: row.boosts_included,
+    popular: row.is_popular,
+    active: row.is_active,
+  };
 }
 
-// How long a single boost keeps a profile pinned to the top of Discover.
+// For display/checkout — only ever shows plans currently on sale.
+export async function getPremiumPlans(supabase: Client): Promise<PremiumPlan[]> {
+  const { data } = await supabase
+    .from("pricing_plans")
+    .select("*")
+    .eq("type", "premium")
+    .eq("is_active", true)
+    .order("sort_order");
+  return (data ?? []).map(toPremiumPlan);
+}
+
+// Deliberately not filtered by is_active: also used by the Moneroo webhook
+// to reconcile a transaction that was legitimately created while the plan
+// was still active — deactivating a plan later must stop new checkouts,
+// not break payments already in flight. Callers that are about to start a
+// *new* checkout should check the returned `active` flag themselves.
+export async function getPremiumPlan(
+  supabase: Client,
+  planId: string
+): Promise<PremiumPlan | undefined> {
+  const { data } = await supabase
+    .from("pricing_plans")
+    .select("*")
+    .eq("id", planId)
+    .eq("type", "premium")
+    .maybeSingle();
+  return data ? toPremiumPlan(data) : undefined;
+}
+
+// How long a single boost (from a Premium-included credit) keeps a profile
+// pinned to the top of Discover — distinct from the purchasable boost tiers
+// in lib/boost-pricing.ts, which have their own explicit durations.
 export const BOOST_DURATION_MINUTES = 30;

@@ -44,6 +44,7 @@ export type NotificationType =
   | "profile_approved"
   | "profile_rejected"
   | "premium_activated";
+export type PricingPlanType = "premium" | "boost";
 
 export interface Database {
   public: {
@@ -429,6 +430,30 @@ export interface Database {
         };
         Insert: Partial<Database["public"]["Tables"]["app_settings"]["Row"]>;
         Update: Partial<Database["public"]["Tables"]["app_settings"]["Row"]>;
+        Relationships: [];
+      };
+      pricing_plans: {
+        Row: {
+          id: string;
+          type: PricingPlanType;
+          label: string;
+          price_fcfa: number;
+          original_price_fcfa: number | null;
+          duration_days: number | null;
+          duration_hours: number | null;
+          boosts_included: number;
+          is_popular: boolean;
+          is_active: boolean;
+          sort_order: number;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["pricing_plans"]["Row"]> & {
+          id: string;
+          type: PricingPlanType;
+          label: string;
+          price_fcfa: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["pricing_plans"]["Row"]>;
         Relationships: [];
       };
     };

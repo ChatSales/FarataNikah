@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { Rocket } from "lucide-react";
 import { activateBoostAction } from "@/actions/payments";
 import { BoostPurchaseModal } from "@/components/settings/boost-purchase-modal";
+import type { BoostTier } from "@/lib/boost-pricing";
 
 function formatRemaining(msLeft: number): string {
   const totalSeconds = Math.max(0, Math.floor(msLeft / 1000));
@@ -15,9 +16,11 @@ function formatRemaining(msLeft: number): string {
 export function BoostPanel({
   boostCredits,
   boostedUntil,
+  tiers,
 }: {
   boostCredits: number;
   boostedUntil: string | null;
+  tiers: BoostTier[];
 }) {
   const [state, formAction, pending] = useActionState(activateBoostAction, null);
   const activeUntil =
@@ -46,7 +49,7 @@ export function BoostPanel({
             encore {formatRemaining(activeUntil.getTime() - now)}
           </p>
           <div className="mt-3">
-            <BoostPurchaseModal triggerLabel="Prolonger avec un Boost" />
+            <BoostPurchaseModal triggerLabel="Prolonger avec un Boost" tiers={tiers} />
           </div>
         </div>
       ) : (
@@ -74,7 +77,7 @@ export function BoostPanel({
                 </button>
               </form>
             )}
-            <BoostPurchaseModal triggerLabel="Acheter un Boost" />
+            <BoostPurchaseModal triggerLabel="Acheter un Boost" tiers={tiers} />
           </div>
         </>
       )}

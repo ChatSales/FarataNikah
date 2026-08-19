@@ -3,11 +3,17 @@
 import { useActionState, useState } from "react";
 import { Rocket, X, ChevronLeft, Clock, Loader2 } from "lucide-react";
 import { createBoostCheckoutAction } from "@/actions/payments";
-import { BOOST_TIERS } from "@/lib/boost-pricing";
+import type { BoostTier } from "@/lib/boost-pricing";
 
 type Step = "closed" | "promo" | "picker";
 
-export function BoostPurchaseModal({ triggerLabel }: { triggerLabel: string }) {
+export function BoostPurchaseModal({
+  triggerLabel,
+  tiers,
+}: {
+  triggerLabel: string;
+  tiers: BoostTier[];
+}) {
   const [step, setStep] = useState<Step>("closed");
   const [state, formAction, pending] = useActionState(createBoostCheckoutAction, null);
 
@@ -88,7 +94,7 @@ export function BoostPurchaseModal({ triggerLabel }: { triggerLabel: string }) {
             </div>
 
             <form action={formAction} className="mt-5 space-y-2.5">
-              {BOOST_TIERS.map((tier) => (
+              {tiers.map((tier) => (
                 <button
                   key={tier.id}
                   type="submit"

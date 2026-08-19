@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ received: true, alreadyProcessed: true });
   }
 
-  const boostTier = transaction.plan_id ? getBoostTier(transaction.plan_id) : undefined;
+  const boostTier = transaction.plan_id
+    ? await getBoostTier(supabase, transaction.plan_id)
+    : undefined;
 
   if (payload.event === "payment.success" && boostTier) {
     const { data: currentProfile } = await supabase
@@ -85,7 +87,9 @@ export async function POST(request: NextRequest) {
   }
 
   if (payload.event === "payment.success") {
-    const plan = transaction.plan_id ? getPremiumPlan(transaction.plan_id) : undefined;
+    const plan = transaction.plan_id
+      ? await getPremiumPlan(supabase, transaction.plan_id)
+      : undefined;
     const periodDays = plan?.days ?? PREMIUM_PERIOD_DAYS;
     const periodStart = new Date();
     const periodEnd = new Date(periodStart);

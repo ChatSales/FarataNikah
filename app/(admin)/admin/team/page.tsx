@@ -50,7 +50,7 @@ export default async function AdminTeamPage() {
           return (
             <li
               key={a.id}
-              className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 px-4 py-3"
+              className="flex items-center justify-between rounded-xl border border-primary-100 bg-cream-50 px-4 py-3 transition hover:border-primary-200 hover:shadow-sm"
             >
               <div>
                 <p className="text-sm font-medium text-primary-900">

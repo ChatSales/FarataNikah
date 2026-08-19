@@ -299,3 +299,47 @@ export async function saveMetaSettingsAction(
   revalidatePath("/", "layout");
   return { success: true };
 }
+
+export type PricingActionState = { error: string } | { success: true } | null;
+
+// Prices/discounts/active-state/popular-flag live in pricing_plans, read
+// directly by the landing page, Settings, and the checkout actions — no
+// redeploy needed for a price change to take effect anywhere.
+export async function updatePricingPlanAction(
+  _prevState: PricingActionState,
+  formData: FormData
+): Promise<PricingActionState> {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return { error: "Offre introuvable." };
+
+  const priceFcfa = Number(formData.get("price_fcfa"));
+  if (!Number.isFinite(priceFcfa) || priceFcfa < 0) {
+    return { error: "Prix invalide." };
+  }
+
+  const rawOriginal = String(formData.get("original_price_fcfa") ?? "").trim();
+  const originalPriceFcfa = rawOriginal === "" ? null : Number(rawOriginal);
+  if (originalPriceFcfa !== null && (!Number.isFinite(originalPriceFcfa) || originalPriceFcfa < 0)) {
+    return { error: "Prix barré invalide." };
+  }
+
+  const supabase = await createClient();
+  await requireAdmin(supabase);
+
+  const { error } = await supabase
+    .from("pricing_plans")
+    .update({
+      price_fcfa: priceFcfa,
+      original_price_fcfa: originalPriceFcfa,
+      is_active: formData.get("is_active") === "on",
+      is_popular: formData.get("is_popular") === "on",
+    })
+    .eq("id", id);
+  if (error) return { error: "Impossible d'enregistrer ce tarif." };
+
+  revalidatePath("/admin/pricing");
+  revalidatePath("/app/settings");
+  revalidatePath("/app/home");
+  revalidatePath("/", "layout");
+  return { success: true };
+}
