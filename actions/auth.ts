@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { sendMetaServerEvent } from "@/lib/meta-capi";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export type AuthActionState = { error: string } | null;
 
@@ -71,6 +72,12 @@ export async function signUpAction(
     return { error: "Le mot de passe doit contenir au moins 8 caractères." };
   }
 
+  const ip = await getClientIp();
+  const allowed = await checkRateLimit(`signup:${ip}`, 5, 60);
+  if (!allowed) {
+    return { error: "Trop de tentatives d'inscription. Réessaie dans une heure." };
+  }
+
   // CGU acceptance is recorded once, at onboarding/basic-info — the one
   // mandatory first step shared by both email and Google signup.
   const supabase = await createClient();
@@ -111,6 +118,15 @@ export async function signInAction(
     return { error: "Merci de renseigner un email et un mot de passe." };
   }
 
+  const ip = await getClientIp();
+  // Keyed by IP + email together so one bad actor spraying many emails
+  // from one IP is capped, without one shared IP (e.g. a campus/office
+  // NAT) locking out everyone behind it over a single mistyped password.
+  const allowed = await checkRateLimit(`login:${ip}:${email.toLowerCase()}`, 10, 15);
+  if (!allowed) {
+    return { error: "Trop de tentatives de connexion. Réessaie dans quelques minutes." };
+  }
+
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -136,6 +152,17 @@ export async function requestPasswordResetAction(
   const email = String(formData.get("email") ?? "").trim();
   if (!email) {
     return { error: "Merci de renseigner ton email." };
+  }
+
+  const ip = await getClientIp();
+  // Capped low and by IP alone (not IP+email) — this endpoint sends an
+  // email to whatever address is typed in, so it's the classic vector for
+  // spamming a stranger's inbox with reset links; nothing here should let
+  // one visitor fire more than a few per hour regardless of which emails
+  // they target.
+  const allowed = await checkRateLimit(`pwreset:${ip}`, 3, 60);
+  if (!allowed) {
+    return { error: "Trop de demandes. Réessaie dans une heure." };
   }
 
   const supabase = await createClient();

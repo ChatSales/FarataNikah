@@ -456,6 +456,18 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["pricing_plans"]["Row"]>;
         Relationships: [];
       };
+      rate_limit_hits: {
+        Row: {
+          id: number;
+          bucket_key: string;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["rate_limit_hits"]["Row"]> & {
+          bucket_key: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["rate_limit_hits"]["Row"]>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
