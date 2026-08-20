@@ -29,7 +29,7 @@ export async function sendEmail(params: SendEmailParams): Promise<void> {
         "api-key": apiKey,
       },
       body: JSON.stringify({
-        sender: { name: "FarataNikah", email: "no-reply@faratanikah.com" },
+        sender: { name: "FarataNikah", email: "faratanikah@gmail.com" },
         to: [{ email: params.to, name: params.toName }],
         subject: params.subject,
         htmlContent: params.htmlContent,
