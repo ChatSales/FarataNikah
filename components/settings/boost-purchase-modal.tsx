@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { Rocket, X, ChevronLeft, Clock, Loader2 } from "lucide-react";
-import { createBoostCheckoutAction } from "@/actions/payments";
+import { createBoostCheckoutAction, dismissBoostPromoAction } from "@/actions/payments";
 import type { BoostTier } from "@/lib/boost-pricing";
 
 type Step = "closed" | "promo" | "picker";
@@ -16,6 +16,11 @@ export function BoostPurchaseModal({
 }) {
   const [step, setStep] = useState<Step>("closed");
   const [state, formAction, pending] = useActionState(createBoostCheckoutAction, null);
+
+  function dismissPromo() {
+    setStep("closed");
+    void dismissBoostPromoAction();
+  }
 
   return (
     <>
@@ -36,7 +41,7 @@ export function BoostPurchaseModal({
           <div className="animate-scale-in relative w-full max-w-sm rounded-2xl bg-cream-50 p-6 text-center shadow-xl">
             <button
               type="button"
-              onClick={() => setStep("closed")}
+              onClick={dismissPromo}
               aria-label="Fermer"
               className="absolute right-4 top-4 text-primary-900/40 hover:text-primary-900"
             >
@@ -66,7 +71,7 @@ export function BoostPurchaseModal({
             </button>
             <button
               type="button"
-              onClick={() => setStep("closed")}
+              onClick={dismissPromo}
               className="mt-2 w-full rounded-full py-2.5 text-sm font-medium text-primary-900/60 transition hover:bg-primary-50"
             >
               Plus tard

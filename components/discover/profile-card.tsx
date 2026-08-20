@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { UserRound, MapPin, Send, Rocket, Loader2 } from "lucide-react";
 import { sendContactRequestAction } from "@/actions/contact-requests";
+import { ContactLimitModal } from "@/components/discover/contact-limit-modal";
 
 export interface DiscoverProfile {
   id: string;
@@ -97,6 +98,7 @@ export function ProfileCard({ profile }: { profile: DiscoverProfile }) {
           )}
         </div>
       </div>
+      <ContactLimitModal signal={state && "limitReached" in state ? state : null} />
     </div>
   );
 }

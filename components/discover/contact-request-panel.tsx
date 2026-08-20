@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { Send, Zap } from "lucide-react";
 import { sendContactRequestAction } from "@/actions/contact-requests";
 import { MessageFlashUpsell } from "@/components/discover/message-flash-upsell";
+import { ContactLimitModal } from "@/components/discover/contact-limit-modal";
 
 export function ContactRequestPanel({
   recipientProfileId,
@@ -86,6 +87,7 @@ export function ContactRequestPanel({
           <MessageFlashUpsell />
         )}
       </div>
+      <ContactLimitModal signal={state && "limitReached" in state ? state : null} />
     </form>
   );
 }

@@ -43,7 +43,8 @@ export type NotificationType =
   | "contact_request_accepted"
   | "profile_approved"
   | "profile_rejected"
-  | "premium_activated";
+  | "premium_activated"
+  | "boost_reminder";
 export type PricingPlanType = "premium" | "boost";
 
 export interface Database {
@@ -82,6 +83,7 @@ export interface Database {
           premium_until: string | null;
           boost_credits: number;
           boosted_until: string | null;
+          boost_promo_dismissed_at: string | null;
           terms_accepted_at: string | null;
           last_active_at: string;
           created_at: string;

@@ -6,7 +6,11 @@ import { createClient } from "@/lib/supabase/server";
 import { FREE_DAILY_CONTACT_REQUESTS } from "@/lib/usage-limits";
 import { createNotification } from "@/lib/notifications";
 
-export type ContactRequestActionState = { error: string } | { success: true } | null;
+export type ContactRequestActionState =
+  | { error: string }
+  | { limitReached: true }
+  | { success: true }
+  | null;
 
 // Contact requests (and accepting them) stay gated to approved profiles —
 // pending members can browse per the M7 access change, but shouldn't be
@@ -92,9 +96,7 @@ export async function sendContactRequestAction(
     );
     if (counterError) return { error: "Une erreur est survenue." };
     if (!allowed) {
-      return {
-        error: `Limite quotidienne atteinte (${FREE_DAILY_CONTACT_REQUESTS} demandes/jour en gratuit). Passe Premium pour des demandes illimitées.`,
-      };
+      return { limitReached: true };
     }
   }
 

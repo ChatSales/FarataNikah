@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   XCircle,
   Crown,
+  Rocket,
   Bell,
 } from "lucide-react";
 import { markNotificationReadAction } from "@/actions/notifications";
@@ -21,6 +22,7 @@ const CATEGORY_BY_TYPE: Record<NotificationType, Category> = {
   profile_approved: "profile",
   profile_rejected: "profile",
   premium_activated: "premium",
+  boost_reminder: "premium",
 };
 
 const TABS: { key: "all" | Category; label: string }[] = [
@@ -38,6 +40,7 @@ const ICON_BY_TYPE: Record<NotificationType, React.ComponentType<{ className?: s
   profile_approved: CheckCircle2,
   profile_rejected: XCircle,
   premium_activated: Crown,
+  boost_reminder: Rocket,
 };
 
 function formatRelativeTime(isoDate: string): string {

@@ -9,6 +9,24 @@ import { getBoostTier } from "@/lib/boost-pricing";
 
 export type CheckoutActionState = { error: string } | null;
 
+// Fire-and-forget: records that the member saw the Boost promo and passed
+// on it, so the boost-reminder cron can follow up in a few days instead
+// of losing the lead the moment they click "Plus tard". Silently no-ops
+// on any failure — this is a nice-to-have marketing signal, never worth
+// surfacing an error over.
+export async function dismissBoostPromoAction() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase
+    .from("profiles")
+    .update({ boost_promo_dismissed_at: new Date().toISOString() })
+    .eq("user_id", user.id);
+}
+
 export async function createCheckoutAction(
   _prevState: CheckoutActionState,
   formData: FormData

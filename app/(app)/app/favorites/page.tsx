@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Heart, Lock } from "lucide-react";
+import { Heart, Lock, UserRound } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export default async function FavoritesPage() {
   const supabase = await createClient();
@@ -22,6 +23,17 @@ export default async function FavoritesPage() {
     .select("favorited_profile_id, created_at")
     .eq("profile_id", viewer.id)
     .order("created_at", { ascending: false });
+
+  // Count is fetched regardless of plan (a number, no identifying data) so
+  // free members see a real teaser instead of a blind paywall — the row-
+  // level policy for "incoming" favorites is Premium-gated (see migration
+  // 0004), so a free member's own RLS-scoped client can't even count
+  // these rows; the service-role client is what stands in here, same as
+  // any other cross-profile read elsewhere in the app.
+  const { count: incomingCount } = await createAdminClient()
+    .from("favorites")
+    .select("id", { count: "exact", head: true })
+    .eq("favorited_profile_id", viewer.id);
 
   const { data: incoming } = viewer.is_premium
     ? await supabase
@@ -91,15 +103,38 @@ export default async function FavoritesPage() {
         </h2>
 
         {!viewer.is_premium ? (
-          <div className="mt-3 flex items-center gap-3 rounded-xl border border-gold-400 bg-gold-300/10 p-4">
-            <Lock className="h-5 w-5 shrink-0 text-gold-600" />
-            <p className="text-sm text-primary-900/70">
-              Fonctionnalité réservée aux membres Premium.{" "}
-              <Link href="/app/settings" className="font-semibold text-gold-600 underline">
-                Découvrir Premium
-              </Link>
+          (incomingCount ?? 0) === 0 ? (
+            <p className="mt-3 text-sm text-primary-900/50">
+              Personne ne t&apos;a encore ajouté en favori.
             </p>
-          </div>
+          ) : (
+            <div className="mt-3 overflow-hidden rounded-xl border border-gold-400 bg-gold-300/10">
+              <div className="flex items-center gap-3 p-4">
+                <div className="flex -space-x-2">
+                  {Array.from({ length: Math.min(incomingCount ?? 0, 3) }).map((_, i) => (
+                    <span
+                      key={i}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-cream-50 bg-primary-200 text-primary-500 blur-[2px]"
+                    >
+                      <UserRound className="h-4 w-4" />
+                    </span>
+                  ))}
+                </div>
+                <p className="text-sm text-primary-900">
+                  <span className="font-semibold">
+                    {incomingCount} personne{(incomingCount ?? 0) > 1 ? "s" : ""}
+                  </span>{" "}
+                  t&apos;{(incomingCount ?? 0) > 1 ? "ont" : "a"} ajouté en favori.
+                </p>
+              </div>
+              <Link
+                href="/app/settings"
+                className="flex items-center justify-center gap-2 border-t border-gold-400/40 bg-gold-400/10 py-2.5 text-sm font-semibold text-gold-700 transition hover:bg-gold-400/20"
+              >
+                <Lock className="h-3.5 w-3.5" /> Découvrir qui, avec Premium
+              </Link>
+            </div>
+          )
         ) : !incoming || incoming.length === 0 ? (
           <p className="mt-3 text-sm text-primary-900/50">
             Personne ne t&apos;a encore ajouté en favori.
