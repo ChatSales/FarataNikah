@@ -2,45 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Quote, ChevronLeft, ChevronRight } from "lucide-react";
-
-// Illustrative quotes reflecting the kind of experience the platform is
-// designed to produce — not attributed to real, identifiable members.
-const stories = [
-  {
-    quote:
-      "Après plusieurs mois d'échanges sérieux, nous nous sommes mariés il y a trois semaines. La vérification manuelle des profils m'a vraiment rassurée dès le début.",
-    name: "Aminata K.",
-    city: "Abidjan",
-  },
-  {
-    quote:
-      "Coach Amina m'a aidé à mieux formuler ce que je recherchais vraiment pour un mariage. Ça a changé ma façon d'aborder les échanges.",
-    name: "Moussa D.",
-    city: "Dakar",
-  },
-  {
-    quote:
-      "J'apprécie qu'on ne puisse pas juste discuter dans le vide — chaque demande de contact a un vrai objectif de mariage derrière.",
-    name: "Fatou S.",
-    city: "Bamako",
-  },
-  {
-    quote:
-      "Le mode anonyme m'a permis de rester prudente au début, le temps de savoir si je pouvais faire confiance à la personne.",
-    name: "Khadidiatou B.",
-    city: "Conakry",
-  },
-  {
-    quote:
-      "Trois mois après mon inscription, j'ai rencontré celle qui est aujourd'hui mon épouse. Le processus de vérification donne vraiment confiance.",
-    name: "Ibrahim T.",
-    city: "Ouagadougou",
-  },
-];
+import type { Story } from "@/content/testimonials";
 
 const AUTOPLAY_MS = 6000;
 
-export function TestimonialsCarousel() {
+export function TestimonialsCarousel({ stories }: { stories: Story[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const story = stories[index];
@@ -118,7 +84,7 @@ export function TestimonialsCarousel() {
         <div className="mt-6 flex items-center justify-center gap-2">
           {stories.map((s, i) => (
             <button
-              key={s.name}
+              key={`${s.name}-${i}`}
               type="button"
               onClick={() => jumpTo(i)}
               aria-label={`Voir le témoignage ${i + 1}`}

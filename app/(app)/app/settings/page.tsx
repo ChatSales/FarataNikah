@@ -362,6 +362,22 @@ export default async function SettingsPage({
           </div>
           <ChevronRight className="h-4 w-4 text-primary-400" />
         </Link>
+
+        <Link
+          href="/app/settings/testimonial"
+          className="flex items-center justify-between rounded-2xl border border-primary-100 bg-cream-50 p-4 transition hover:border-primary-200 hover:shadow-sm"
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+              <Heart className="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-primary-900">Partager mon témoignage</p>
+              <p className="text-xs text-primary-900/55">Aide d&apos;autres membres à franchir le pas</p>
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-primary-400" />
+        </Link>
       </div>
 
       {blocks && blocks.length > 0 && (

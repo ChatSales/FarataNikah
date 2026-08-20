@@ -4,6 +4,7 @@ import { HeartHandshake, Clock3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppNav } from "@/components/app-shell/app-nav";
 import { CoachFab } from "@/components/app-shell/coach-fab";
+import { FirstLoginTour } from "@/components/app-shell/first-login-tour";
 
 // Belt-and-suspenders alongside proxy.ts: redirect() inside a Server Action
 // (e.g. signInAction) resolves the target route's RSC payload server-side
@@ -27,7 +28,7 @@ export default async function AppLayout({
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id, verification_status")
+    .select("id, verification_status, last_active_at")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -36,6 +37,16 @@ export default async function AppLayout({
     redirect("/onboarding/pending");
   }
   const isPending = profile.verification_status === "pending";
+
+  // Throttled to once/hour so this doesn't add a write to every single
+  // page load — last_active_at only needs to be roughly current for the
+  // win-back cron's 14-day inactivity window, not to-the-second accurate.
+  if (Date.now() - new Date(profile.last_active_at).getTime() > 60 * 60 * 1000) {
+    await supabase
+      .from("profiles")
+      .update({ last_active_at: new Date().toISOString() })
+      .eq("id", profile.id);
+  }
 
   const { data: adminRow } = await supabase
     .from("admin_users")
@@ -73,6 +84,7 @@ export default async function AppLayout({
       )}
       <main className="flex-1">{children}</main>
       <CoachFab />
+      <FirstLoginTour />
     </div>
   );
 }

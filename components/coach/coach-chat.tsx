@@ -8,6 +8,12 @@ interface ChatMessage {
   content: string;
 }
 
+const starterQuestions = [
+  "Comment rédiger une bio qui donne envie ?",
+  "Quels critères sont vraiment importants pour un mariage ?",
+  "Comment aborder une première demande de contact ?",
+];
+
 export function CoachChat({
   initialMessages,
   isPremium,
@@ -25,9 +31,7 @@ export function CoachChat({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const text = input.trim();
+  async function sendMessage(text: string) {
     if (!text || pending) return;
 
     setError(null);
@@ -85,6 +89,18 @@ export function CoachChat({
                 Plan gratuit : 3 questions par jour.
               </p>
             )}
+            <div className="mt-5 flex flex-col items-center gap-2">
+              {starterQuestions.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => sendMessage(q)}
+                  className="w-full max-w-sm rounded-full border border-primary-200 bg-cream-50 px-4 py-2 text-left text-xs font-medium text-primary-800 transition hover:border-primary-400 hover:bg-primary-50"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
           </div>
         )}
         {messages.map((m, i) => (
@@ -108,7 +124,13 @@ export function CoachChat({
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="border-t border-primary-100 p-4">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendMessage(input.trim());
+        }}
+        className="border-t border-primary-100 p-4"
+      >
         <div className="mx-auto flex max-w-2xl items-end gap-2">
           <textarea
             value={input}
@@ -116,7 +138,7 @@ export function CoachChat({
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                handleSubmit(e);
+                sendMessage(input.trim());
               }
             }}
             rows={1}

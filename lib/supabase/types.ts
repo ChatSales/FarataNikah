@@ -44,8 +44,11 @@ export type NotificationType =
   | "profile_approved"
   | "profile_rejected"
   | "premium_activated"
-  | "boost_reminder";
+  | "boost_reminder"
+  | "completion_reward"
+  | "winback_reminder";
 export type PricingPlanType = "premium" | "boost";
+export type TestimonialStatus = "pending_review" | "approved" | "rejected";
 
 export interface Database {
   public: {
@@ -84,6 +87,7 @@ export interface Database {
           boost_credits: number;
           boosted_until: string | null;
           boost_promo_dismissed_at: string | null;
+          completion_reward_claimed: boolean;
           terms_accepted_at: string | null;
           last_active_at: string;
           created_at: string;
@@ -468,6 +472,22 @@ export interface Database {
           bucket_key: string;
         };
         Update: Partial<Database["public"]["Tables"]["rate_limit_hits"]["Row"]>;
+        Relationships: [];
+      };
+      testimonials: {
+        Row: {
+          id: string;
+          profile_id: string;
+          quote: string;
+          status: TestimonialStatus;
+          reviewed_by: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["testimonials"]["Row"]> & {
+          profile_id: string;
+          quote: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["testimonials"]["Row"]>;
         Relationships: [];
       };
     };

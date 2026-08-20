@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import type { Madhhab } from "@/lib/supabase/types";
+import { maybeGrantCompletionReward } from "@/lib/completion-reward";
 
 export type ProfileActionState = { error: string } | null;
 
@@ -270,6 +271,15 @@ export async function updateProfileDetailsAction(
     return { error: "Impossible d'enregistrer : " + error.message };
   }
 
+  const { data: updatedProfile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .single();
+  if (updatedProfile) {
+    await maybeGrantCompletionReward(supabase, updatedProfile.id);
+  }
+
   revalidatePath("/app/home");
   revalidatePath("/app/settings");
   revalidatePath("/app/settings/profile");
@@ -303,6 +313,8 @@ export async function addProfilePhotoAction(storagePath: string) {
   });
 
   if (error) throw new Error(error.message);
+
+  await maybeGrantCompletionReward(supabase, profile.id);
 }
 
 const privacySchema = z.object({

@@ -343,3 +343,26 @@ export async function updatePricingPlanAction(
   revalidatePath("/", "layout");
   return { success: true };
 }
+
+async function setTestimonialStatus(testimonialId: string, status: "approved" | "rejected") {
+  const supabase = await createClient();
+  const { adminId } = await requireAdmin(supabase);
+
+  await supabase
+    .from("testimonials")
+    .update({ status, reviewed_by: adminId })
+    .eq("id", testimonialId);
+
+  revalidatePath("/admin/testimonials");
+  revalidatePath("/", "layout");
+}
+
+export async function approveTestimonialAction(formData: FormData) {
+  const testimonialId = String(formData.get("testimonialId") ?? "");
+  await setTestimonialStatus(testimonialId, "approved");
+}
+
+export async function rejectTestimonialAction(formData: FormData) {
+  const testimonialId = String(formData.get("testimonialId") ?? "");
+  await setTestimonialStatus(testimonialId, "rejected");
+}
