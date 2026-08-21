@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HeartHandshake } from "lucide-react";
+import Image from "next/image";
 import { StepProgress } from "@/components/onboarding/step-progress";
 
 export default function OnboardingLayout({
@@ -14,9 +14,7 @@ export default function OnboardingLayout({
           href="/"
           className="mb-8 flex items-center justify-center gap-2 font-semibold text-primary-800"
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-600 text-cream-50">
-            <HeartHandshake className="h-5 w-5" />
-          </span>
+          <Image src="/farata-icon.png" alt="" width={40} height={40} className="h-9 w-9" priority />
           <span className="text-xl tracking-tight">FarataNikah</span>
         </Link>
 

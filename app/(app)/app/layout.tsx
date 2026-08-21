@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
-import { HeartHandshake, Clock3 } from "lucide-react";
+import { Clock3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { AppNav } from "@/components/app-shell/app-nav";
 import { CoachFab } from "@/components/app-shell/coach-fab";
@@ -66,9 +67,7 @@ export default async function AppLayout({
       <header className="sticky top-0 z-50 border-b border-primary-100 bg-cream-50/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/app/home" className="flex items-center gap-2 font-semibold text-primary-800">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-cream-50">
-              <HeartHandshake className="h-4.5 w-4.5" />
-            </span>
+            <Image src="/farata-icon.png" alt="" width={36} height={36} className="h-8 w-8" priority />
             <span className="text-lg tracking-tight">FarataNikah</span>
           </Link>
 

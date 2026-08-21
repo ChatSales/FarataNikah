@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { HeartHandshake, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { ShieldCheck } from "lucide-react";
 
 const navigation = [{ href: "/", label: "Accueil" }];
 
@@ -18,8 +19,8 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 font-semibold text-cream-50">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gold-500 text-primary-900">
-                <HeartHandshake className="h-4.5 w-4.5" />
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cream-50 p-1">
+                <Image src="/farata-icon.png" alt="" width={28} height={28} />
               </span>
               <span className="text-lg tracking-tight">FarataNikah</span>
             </Link>
