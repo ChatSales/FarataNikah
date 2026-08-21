@@ -26,7 +26,7 @@ import { useClickOutside } from "@/lib/hooks/use-click-outside";
 
 const primaryLinks = [
   { href: "/app/home", label: "Accueil", icon: Home },
-  { href: "/app/discover", label: "Découvrir", icon: Compass },
+  { href: "/app/discover", label: "Découvrir", icon: Compass, dataTour: "nav-discover" },
   { href: "/app/visitors", label: "Visiteurs", icon: Eye },
   { href: "/app/favorites", label: "Favoris", icon: Heart },
   { href: "/app/requests", label: "Demandes", icon: UserPlus },
@@ -39,6 +39,7 @@ function NavIcon({
   active,
   gold,
   badge,
+  dataTour,
 }: {
   href: string;
   label: string;
@@ -46,10 +47,12 @@ function NavIcon({
   active: boolean;
   gold?: boolean;
   badge?: number;
+  dataTour?: string;
 }) {
   return (
     <Link
       href={href}
+      data-tour={dataTour}
       className={`relative flex flex-col items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-medium transition ${
         gold
           ? "text-gold-600 hover:bg-gold-400/10 hover:text-gold-700"
@@ -104,7 +107,7 @@ export function AppNav({
 
       <div className="hidden items-center gap-2 lg:flex">
         <div className="mx-1 h-6 w-px bg-primary-100" />
-        <NavIcon href="/app/settings" label="Boost" icon={Rocket} active={false} />
+        <NavIcon href="/app/settings" label="Boost" icon={Rocket} active={false} dataTour="nav-boost" />
         <NavIcon
           href="/app/messages"
           label="Messages"
@@ -117,6 +120,7 @@ export function AppNav({
           icon={Bell}
           active={pathname.startsWith("/app/notifications")}
           badge={unreadNotificationCount}
+          dataTour="nav-notifications"
         />
 
         <div ref={profileMenuRef} className="relative ml-1">
@@ -174,6 +178,7 @@ export function AppNav({
         <Link
           href="/app/notifications"
           aria-label="Notifications"
+          data-tour="nav-notifications"
           className="relative flex h-9 w-9 items-center justify-center rounded-full border border-primary-200 text-primary-700 transition hover:bg-primary-50"
         >
           <Bell className="h-4 w-4" />
