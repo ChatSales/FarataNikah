@@ -128,10 +128,14 @@ export default async function SettingsPage({
 
   let purchasedAmount: number | null = null;
   let purchaseEventId: string | null = null;
+  // Meta's Purchase event tracks the free -> Premium conversion specifically
+  // — Boost top-ups aren't the ad-campaign goal, so they're deliberately
+  // excluded here (and in the webhook's server-side leg).
+  let isPremiumPurchase = false;
   if (checkout === "return") {
     const { data: lastTransaction } = await supabase
       .from("payment_transactions")
-      .select("id, amount_fcfa, status")
+      .select("id, amount_fcfa, status, plan_id")
       .eq("profile_id", profile.id)
       .order("created_at", { ascending: false })
       .limit(1)
@@ -142,6 +146,15 @@ export default async function SettingsPage({
       premiumPlans[0]?.priceFcfa ??
       0;
     purchaseEventId = lastTransaction?.id ?? null;
+
+    if (lastTransaction?.plan_id) {
+      const { data: planRow } = await supabase
+        .from("pricing_plans")
+        .select("type")
+        .eq("id", lastTransaction.plan_id)
+        .maybeSingle();
+      isPremiumPurchase = planRow?.type === "premium";
+    }
   }
 
   const { data: subscription } = await supabase
@@ -177,7 +190,7 @@ export default async function SettingsPage({
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">
-      {checkout === "return" && purchasedAmount !== null && (
+      {checkout === "return" && isPremiumPurchase && purchasedAmount !== null && (
         <MetaPixelEvent
           event="Purchase"
           params={{ value: purchasedAmount, currency: "XOF" }}

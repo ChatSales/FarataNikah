@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   if (payload.event === "payment.success" && boostTier) {
     const { data: currentProfile } = await supabase
       .from("profiles")
-      .select("boosted_until, email")
+      .select("boosted_until")
       .eq("id", transaction.profile_id)
       .single();
 
@@ -76,13 +76,9 @@ export async function POST(request: NextRequest) {
       .update({ status: "succeeded", raw_payload: rawPayload })
       .eq("id", transaction.id);
 
-    await sendMetaServerEvent({
-      eventName: "Purchase",
-      eventId: transaction.id,
-      email: currentProfile?.email,
-      customData: { value: transaction.amount_fcfa, currency: "XOF" },
-    });
-
+    // No Meta Purchase event here — that's reserved for the free -> Premium
+    // conversion (below), not Boost top-ups, which aren't the ad-campaign
+    // goal being optimized for.
     return NextResponse.json({ received: true });
   }
 
