@@ -31,7 +31,7 @@ export default async function AdminSettingsPage() {
   const adminClient = createAdminClient();
   const { data: tokenRow } = await adminClient
     .from("app_settings")
-    .select("meta_access_token")
+    .select("meta_access_token, meta_test_event_code")
     .eq("id", true)
     .maybeSingle();
   const hasAccessToken = Boolean(tokenRow?.meta_access_token);
@@ -54,6 +54,7 @@ export default async function AdminSettingsPage() {
           <MetaPixelForm
             currentPixelId={settings?.meta_pixel_id ?? null}
             hasAccessToken={hasAccessToken}
+            currentTestEventCode={tokenRow?.meta_test_event_code ?? null}
           />
         </div>
       </section>

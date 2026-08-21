@@ -6,9 +6,11 @@ import { saveMetaSettingsAction } from "@/actions/admin";
 export function MetaPixelForm({
   currentPixelId,
   hasAccessToken,
+  currentTestEventCode,
 }: {
   currentPixelId: string | null;
   hasAccessToken: boolean;
+  currentTestEventCode: string | null;
 }) {
   const [state, formAction, pending] = useActionState(saveMetaSettingsAction, null);
   const [clearToken, setClearToken] = useState(false);
@@ -66,6 +68,26 @@ export function MetaPixelForm({
             Retirer le token enregistré
           </label>
         )}
+      </div>
+
+      <div>
+        <label htmlFor="metaTestEventCode" className="block text-sm font-medium text-primary-900">
+          Code de test (optionnel)
+        </label>
+        <input
+          id="metaTestEventCode"
+          name="metaTestEventCode"
+          type="text"
+          defaultValue={currentTestEventCode ?? ""}
+          placeholder="Ex : TEST12345"
+          className="mt-1.5 w-full rounded-lg border border-primary-200 bg-cream-50 px-3.5 py-2.5 text-sm text-primary-900 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
+        />
+        <p className="mt-1.5 text-xs text-primary-900/50">
+          Colle ici le code affiché dans Meta Events Manager → Tester les événements
+          pour voir les événements serveur arriver en direct pendant que tu vérifies
+          la config. Retire-le une fois la vérification faite — sinon les vrais
+          événements ne remontent plus que dans cet onglet de test.
+        </p>
       </div>
 
       {state && "error" in state && (

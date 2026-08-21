@@ -70,7 +70,7 @@ async function setVerificationStatus(
           profileId,
           type: "profile_approved",
           title: "Profil validé !",
-          body: "Ton profil est maintenant visible par les autres membres.",
+          body: "Ton profil est maintenant visible par les autres membres. Invite tes proches depuis Paramètres > Parrainage et gagne un boost gratuit.",
           link: "/app/home",
         }
       : {
@@ -305,12 +305,18 @@ export async function saveMetaSettingsAction(
 
   const rawToken = String(formData.get("metaAccessToken") ?? "").trim();
   const clearToken = formData.get("clearMetaAccessToken") === "on";
+  const rawTestEventCode = String(formData.get("metaTestEventCode") ?? "").trim();
 
   const supabase = await createClient();
   await requireAdmin(supabase);
 
-  const update: { meta_pixel_id: string | null; meta_access_token?: string | null } = {
+  const update: {
+    meta_pixel_id: string | null;
+    meta_access_token?: string | null;
+    meta_test_event_code: string | null;
+  } = {
     meta_pixel_id: rawPixelId || null,
+    meta_test_event_code: rawTestEventCode || null,
   };
   // Blank input leaves an already-saved token untouched (it's never sent
   // back to the browser to prefill, so "blank" can't mean "the real value

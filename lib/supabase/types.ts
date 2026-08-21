@@ -436,6 +436,7 @@ export interface Database {
           id: boolean;
           meta_pixel_id: string | null;
           meta_access_token: string | null;
+          meta_test_event_code: string | null;
           updated_at: string;
         };
         Insert: Partial<Database["public"]["Tables"]["app_settings"]["Row"]>;

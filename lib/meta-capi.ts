@@ -30,7 +30,7 @@ export async function sendMetaServerEvent(params: MetaServerEventParams): Promis
   const admin = createAdminClient();
   const { data: settings } = await admin
     .from("app_settings")
-    .select("meta_pixel_id, meta_access_token")
+    .select("meta_pixel_id, meta_access_token, meta_test_event_code")
     .eq("id", true)
     .maybeSingle();
 
@@ -58,6 +58,13 @@ export async function sendMetaServerEvent(params: MetaServerEventParams): Promis
         custom_data: params.customData,
       },
     ],
+    // Set from /admin/settings while verifying in Events Manager -> Test
+    // Events — events tagged with this show up there in real time instead
+    // of only in the (delayed, aggregate) main events view. Leave blank in
+    // normal operation.
+    ...(settings?.meta_test_event_code
+      ? { test_event_code: settings.meta_test_event_code }
+      : {}),
   };
 
   try {
