@@ -92,6 +92,7 @@ export interface Database {
           referral_code: string;
           referred_by: string | null;
           referral_reward_claimed: boolean;
+          is_demo: boolean;
           terms_accepted_at: string | null;
           last_active_at: string;
           created_at: string;
