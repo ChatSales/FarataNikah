@@ -4,8 +4,6 @@ import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
-  Menu,
-  X,
   Home,
   Compass,
   Eye,
@@ -84,12 +82,9 @@ export function AppNav({
   unreadNotificationCount: number;
 }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const drawerRef = useRef<HTMLDivElement>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside(drawerRef, () => setOpen(false), open);
   useClickOutside(profileMenuRef, () => setProfileMenuOpen(false), profileMenuOpen);
 
   return (
@@ -186,95 +181,22 @@ export function AppNav({
         </div>
       </div>
 
-      <div className="flex items-center gap-1 lg:hidden">
-        <Link
-          href="/app/notifications"
-          aria-label="Notifications"
-          data-tour="nav-notifications"
-          className="relative flex h-9 w-9 items-center justify-center rounded-full border border-primary-200 text-primary-700 transition hover:bg-primary-50"
-        >
-          <Bell className="h-4 w-4" />
-          {unreadNotificationCount > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
-              {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
-            </span>
-          )}
-        </Link>
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-          aria-expanded={open}
-          className="rounded-md p-2 text-primary-800"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-
-      {open && (
-        <div
-          ref={drawerRef}
-          className="animate-dropdown absolute inset-x-0 top-16 z-40 border-b border-primary-100 bg-cream-50 px-4 py-4 shadow-lg sm:px-6 lg:hidden"
-        >
-          <div className="flex flex-col gap-1">
-            {primaryLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary-900/70 transition hover:bg-primary-50 hover:text-primary-700"
-              >
-                <link.icon className="h-4 w-4" /> {link.label}
-              </Link>
-            ))}
-            <Link
-              href="/app/messages"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary-900/70 transition hover:bg-primary-50 hover:text-primary-700"
-            >
-              <MessageCircle className="h-4 w-4" /> Messages
-            </Link>
-            <Link
-              href="/app/premium"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-gold-600 transition hover:bg-gold-400/10"
-            >
-              <Crown className="h-4 w-4" /> Premium
-            </Link>
-            <Link
-              href="/app/coach"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary-900/70 transition hover:bg-primary-50 hover:text-primary-700"
-            >
-              <Sparkles className="h-4 w-4" /> Coach Amina
-            </Link>
-            <Link
-              href="/app/settings"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-primary-900/70 transition hover:bg-primary-50 hover:text-primary-700"
-            >
-              <Settings className="h-4 w-4" /> Paramètres
-            </Link>
-            {isAdmin && (
-              <Link
-                href="/admin/verification"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-gold-700 transition hover:bg-gold-400/10"
-              >
-                <ShieldCheck className="h-4 w-4" /> Admin
-              </Link>
-            )}
-          </div>
-          <form action={signOutAction} className="mt-3 border-t border-primary-100 pt-3">
-            <button
-              type="submit"
-              className="w-full rounded-full border border-primary-200 px-4 py-2.5 text-sm font-medium text-primary-800 hover:bg-primary-50"
-            >
-              Se déconnecter
-            </button>
-          </form>
-        </div>
-      )}
+      {/* Mobile navigation (tabs + "more" drawer) lives in MobileBottomNav,
+          fixed to the bottom of the viewport — the header only keeps a
+          quick-glance notifications bell here. */}
+      <Link
+        href="/app/notifications"
+        aria-label="Notifications"
+        data-tour="nav-notifications"
+        className="relative flex h-9 w-9 items-center justify-center rounded-full border border-primary-200 text-primary-700 transition hover:bg-primary-50 lg:hidden"
+      >
+        <Bell className="h-4 w-4" />
+        {unreadNotificationCount > 0 && (
+          <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white">
+            {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
+          </span>
+        )}
+      </Link>
     </>
   );
 }

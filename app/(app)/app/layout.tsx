@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AppNav } from "@/components/app-shell/app-nav";
 import { CoachFab } from "@/components/app-shell/coach-fab";
 import { FirstLoginTour } from "@/components/app-shell/first-login-tour";
+import { MobileBottomNav } from "@/components/app-shell/mobile-bottom-nav";
 
 // Belt-and-suspenders alongside proxy.ts: redirect() inside a Server Action
 // (e.g. signInAction) resolves the target route's RSC payload server-side
@@ -62,6 +63,26 @@ export default async function AppLayout({
     .eq("profile_id", profile.id)
     .eq("is_read", false);
 
+  const { count: pendingRequestsCount } = await supabase
+    .from("contact_requests")
+    .select("id", { count: "exact", head: true })
+    .eq("recipient_profile_id", profile.id)
+    .eq("status", "pending");
+
+  const { data: conversationsForBadge } = await supabase
+    .from("conversations")
+    .select("id")
+    .or(`profile_a_id.eq.${profile.id},profile_b_id.eq.${profile.id}`);
+  const conversationIdsForBadge = (conversationsForBadge ?? []).map((c) => c.id);
+  const { count: unreadMessagesCount } = conversationIdsForBadge.length
+    ? await supabase
+        .from("messages")
+        .select("id", { count: "exact", head: true })
+        .in("conversation_id", conversationIdsForBadge)
+        .neq("sender_profile_id", profile.id)
+        .eq("is_read", false)
+    : { count: 0 };
+
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
       <header className="sticky top-0 z-50 border-b border-primary-100 bg-cream-50/90 backdrop-blur">
@@ -81,9 +102,14 @@ export default async function AppLayout({
           profils, mais la messagerie s&apos;ouvrira une fois ton profil validé.
         </div>
       )}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-20 lg:pb-0">{children}</main>
       <CoachFab />
       <FirstLoginTour />
+      <MobileBottomNav
+        isAdmin={isAdmin}
+        pendingRequestsCount={pendingRequestsCount ?? 0}
+        unreadMessagesCount={unreadMessagesCount ?? 0}
+      />
     </div>
   );
 }
