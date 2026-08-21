@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
-import Link from "next/link";
 import { MoreVertical, Ban, Flag, X, Loader2 } from "lucide-react";
 import { blockProfileAction, reportProfileAction } from "@/actions/blocking";
 import { useClickOutside } from "@/lib/hooks/use-click-outside";
@@ -18,22 +17,12 @@ const reportReasons: { value: string; label: string }[] = [
 export function BlockReportMenu({ profileId }: { profileId: string }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  // A successful block redirects away from this page entirely (see
+  // blockProfileAction) — no in-place success state to render here.
   const [blockState, blockAction, blockPending] = useActionState(blockProfileAction, null);
   const [reportState, reportAction, reportPending] = useActionState(reportProfileAction, null);
   const menuRef = useRef<HTMLDivElement>(null);
   useClickOutside(menuRef, () => setMenuOpen(false), menuOpen);
-
-  if (blockState && "success" in blockState) {
-    return (
-      <p className="rounded-xl bg-primary-100 px-4 py-3 text-sm font-medium text-primary-800">
-        Ce profil a été bloqué. Retrouve tes blocages depuis{" "}
-        <Link href="/app/settings" className="underline">
-          Paramètres
-        </Link>
-        .
-      </p>
-    );
-  }
 
   return (
     <div ref={menuRef} className="relative">
@@ -77,6 +66,12 @@ export function BlockReportMenu({ profileId }: { profileId: string }) {
             <Flag className="h-4 w-4" /> Signaler
           </button>
         </div>
+      )}
+
+      {blockState && "error" in blockState && (
+        <p className="absolute right-0 top-12 z-20 w-48 rounded-xl border border-red-100 bg-red-50 px-4 py-2.5 text-xs text-red-600 shadow-lg">
+          {blockState.error}
+        </p>
       )}
 
       {reportOpen && (

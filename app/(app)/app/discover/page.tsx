@@ -37,6 +37,7 @@ export default async function DiscoverPage({
     profession?: string;
     education?: string;
     practiceLevel?: string;
+    blocked?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -216,6 +217,12 @@ export default async function DiscoverPage({
       <p className="mt-1 text-sm text-primary-900/60">
         Profils vérifiés, compatibles avec tes critères.
       </p>
+
+      {params.blocked === "1" && (
+        <p className="mt-4 rounded-xl bg-primary-100 px-4 py-3 text-sm font-medium text-primary-800">
+          Ce profil a été bloqué. Retrouve tes blocages depuis Paramètres.
+        </p>
+      )}
 
       <div className="mt-6">
         <FiltersBar

@@ -57,9 +57,13 @@ export async function blockProfileAction(
 
   revalidatePath("/app/discover");
   revalidatePath("/app/home");
-  revalidatePath(`/app/profile/${targetProfileId}`);
   revalidatePath("/app/messages");
-  return { success: true };
+
+  // blockProfileAction only ever runs from the profile detail page — once
+  // blocked, that page's own data fetch stops seeing the profile (RLS)
+  // and would 404 on the automatic post-action re-render, so leave it
+  // outright instead of returning success and hoping the page survives.
+  redirect("/app/discover?blocked=1");
 }
 
 export async function unblockProfileAction(
