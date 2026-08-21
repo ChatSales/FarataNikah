@@ -2,10 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { Madhhab } from "@/lib/supabase/types";
 import { maybeGrantCompletionReward } from "@/lib/completion-reward";
+
+const REFERRAL_COOKIE = "farata_ref";
 
 export type ProfileActionState = { error: string } | null;
 
@@ -69,11 +73,31 @@ export async function saveBasicInfoAction(
     return { error: parsed.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
+  // Referral attribution only happens once, at true first creation — a
+  // returning user editing this step again shouldn't have their referrer
+  // re-resolved (or overwritten) from a stale cookie.
+  let referredBy: string | null = null;
+  if (!existing) {
+    const cookieStore = await cookies();
+    const refCode = cookieStore.get(REFERRAL_COOKIE)?.value;
+    if (refCode) {
+      const admin = createAdminClient();
+      const { data: referrer } = await admin
+        .from("profiles")
+        .select("id")
+        .eq("referral_code", refCode)
+        .maybeSingle();
+      referredBy = referrer?.id ?? null;
+      cookieStore.delete(REFERRAL_COOKIE);
+    }
+  }
+
   const { error } = await supabase.from("profiles").upsert(
     {
       user_id: user.id,
       email: user.email!,
       terms_accepted_at: existing?.terms_accepted_at ?? new Date().toISOString(),
+      ...(referredBy ? { referred_by: referredBy } : {}),
       ...parsed.data,
     },
     { onConflict: "user_id" }

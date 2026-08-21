@@ -11,6 +11,7 @@ import {
   PartyPopper,
   Heart,
   Bell,
+  Gift,
 } from "lucide-react";
 import { markNotificationReadAction } from "@/actions/notifications";
 import type { NotificationItem } from "@/actions/notifications";
@@ -27,6 +28,7 @@ const CATEGORY_BY_TYPE: Record<NotificationType, Category> = {
   boost_reminder: "premium",
   completion_reward: "profile",
   winback_reminder: "profile",
+  referral_reward: "profile",
 };
 
 const TABS: { key: "all" | Category; label: string }[] = [
@@ -47,6 +49,7 @@ const ICON_BY_TYPE: Record<NotificationType, React.ComponentType<{ className?: s
   boost_reminder: Rocket,
   completion_reward: PartyPopper,
   winback_reminder: Heart,
+  referral_reward: Gift,
 };
 
 function formatRelativeTime(isoDate: string): string {

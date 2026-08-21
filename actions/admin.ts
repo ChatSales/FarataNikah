@@ -35,7 +35,7 @@ async function setVerificationStatus(
 
   const { data: current } = await supabase
     .from("profiles")
-    .select("verification_status")
+    .select("verification_status, referred_by, referral_reward_claimed")
     .eq("id", profileId)
     .single();
 
@@ -81,6 +81,36 @@ async function setVerificationStatus(
           link: "/onboarding/pending",
         }
   );
+
+  // Referral reward: a one-time Boost credit to whoever referred this
+  // profile, paid out only once their referee clears manual verification —
+  // gating on approval (not signup) keeps the reward resistant to
+  // throwaway/fake-account abuse of a referral link.
+  if (status === "approved" && current?.referred_by && !current.referral_reward_claimed) {
+    const admin = createAdminClient();
+    const { data: referrer } = await admin
+      .from("profiles")
+      .select("boost_credits")
+      .eq("id", current.referred_by)
+      .maybeSingle();
+    if (referrer) {
+      await admin
+        .from("profiles")
+        .update({ boost_credits: referrer.boost_credits + 1 })
+        .eq("id", current.referred_by);
+      await admin
+        .from("profiles")
+        .update({ referral_reward_claimed: true })
+        .eq("id", profileId);
+      await createNotification({
+        profileId: current.referred_by,
+        type: "referral_reward",
+        title: "Ton parrainage a porté ses fruits !",
+        body: "Une personne que tu as invitée vient de rejoindre FarataNikah — un boost gratuit t'a été offert.",
+        link: "/app/settings/parrainage",
+      });
+    }
+  }
 
   revalidatePath("/admin/verification");
   redirect("/admin/verification");

@@ -18,6 +18,7 @@ import {
   Lock,
   ChevronRight,
   Crown,
+  Gift,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { UpgradeButton } from "@/components/settings/upgrade-button";
@@ -315,6 +316,22 @@ export default async function SettingsPage({
       </section>
 
       <div className="mt-6 space-y-2.5">
+        <Link
+          href="/app/settings/parrainage"
+          className="flex items-center justify-between rounded-2xl border border-primary-100 bg-cream-50 p-4 transition hover:border-primary-200 hover:shadow-sm"
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+              <Gift className="h-4.5 w-4.5" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold text-primary-900">Parrainage</p>
+              <p className="text-xs text-primary-900/55">Invite tes proches, gagne des boosts</p>
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-primary-400" />
+        </Link>
+
         <Link
           href="/app/settings/profile#privacy"
           className="flex items-center justify-between rounded-2xl border border-primary-100 bg-cream-50 p-4 transition hover:border-primary-200 hover:shadow-sm"

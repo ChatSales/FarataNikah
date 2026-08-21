@@ -46,7 +46,8 @@ export type NotificationType =
   | "premium_activated"
   | "boost_reminder"
   | "completion_reward"
-  | "winback_reminder";
+  | "winback_reminder"
+  | "referral_reward";
 export type PricingPlanType = "premium" | "boost";
 export type TestimonialStatus = "pending_review" | "approved" | "rejected";
 
@@ -88,6 +89,9 @@ export interface Database {
           boosted_until: string | null;
           boost_promo_dismissed_at: string | null;
           completion_reward_claimed: boolean;
+          referral_code: string;
+          referred_by: string | null;
+          referral_reward_claimed: boolean;
           terms_accepted_at: string | null;
           last_active_at: string;
           created_at: string;
