@@ -82,7 +82,7 @@ export default async function VisitorsPage() {
               </p>
             </div>
             <Link
-              href="/app/settings"
+              href="/app/premium"
               className="flex items-center justify-center gap-2 border-t border-gold-400/40 bg-gold-400/10 py-2.5 text-sm font-semibold text-gold-700 transition hover:bg-gold-400/20"
             >
               <Lock className="h-3.5 w-3.5" /> Découvrir qui, avec Premium

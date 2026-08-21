@@ -214,7 +214,7 @@ export async function toggleOwnPremiumAction(
     .eq("id", profile.id);
   if (error) return { error: "Impossible de changer de plan." };
 
-  revalidatePath("/app/settings");
+  revalidatePath("/app/premium");
   revalidatePath("/app/discover");
   return { success: true };
 }

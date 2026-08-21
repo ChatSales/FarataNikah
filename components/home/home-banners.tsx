@@ -86,7 +86,7 @@ export function HomeBanners({
                 </p>
               </div>
               <Link
-                href="/app/settings"
+                href="/app/premium"
                 className="flex shrink-0 items-center gap-1 rounded-full bg-gold-500 px-4 py-2 text-xs font-semibold text-primary-900 transition hover:bg-gold-400"
               >
                 Découvrir

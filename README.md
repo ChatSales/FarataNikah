@@ -88,7 +88,7 @@ Ouvre [http://localhost:3000](http://localhost:3000).
    un admin via `/admin/verification`
 4. Une fois approuvé : `/app/discover`, `/app/requests`, `/app/messages`,
    `/app/favorites`, `/app/visitors` (Premium), `/app/coach`
-5. `/app/settings` → passer Premium (redirige vers le checkout Moneroo)
+5. `/app/premium` → passer Premium / acheter un Boost (redirige vers le checkout Moneroo)
 
 ## Structure
 

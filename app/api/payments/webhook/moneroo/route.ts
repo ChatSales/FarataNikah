@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
       .eq("id", transaction.profile_id);
 
     // Only leg of Purchase tracking that fires on an actually confirmed
-    // payment — the client Pixel event (app/(app)/app/settings/page.tsx)
+    // payment — the client Pixel event (app/(app)/app/premium/page.tsx)
     // fires as soon as the browser returns from Moneroo, before this
     // webhook may have run, so it can't tell a real success from a
     // same-URL failure on its own. Shared event_id = transaction.id so
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
       body: plan
         ? `Ton plan ${plan.label} est activé jusqu'au ${periodEnd.toLocaleDateString("fr-FR")}.`
         : `Ton abonnement Premium est activé jusqu'au ${periodEnd.toLocaleDateString("fr-FR")}.`,
-      link: "/app/settings",
+      link: "/app/premium",
     });
   } else if (payload.event === "payment.failed" || payload.event === "payment.cancelled") {
     await supabase

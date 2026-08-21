@@ -110,7 +110,7 @@ export function CompatibilityAnalysisModal({
                     ))}
                   </ul>
                   <Link
-                    href="/app/settings"
+                    href="/app/premium"
                     className="mt-6 block rounded-full bg-gold-500 px-5 py-3 text-center text-sm font-semibold text-primary-900 transition hover:bg-gold-400"
                   >
                     Passer Premium

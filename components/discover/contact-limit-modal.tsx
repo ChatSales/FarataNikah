@@ -66,7 +66,7 @@ export function ContactLimitModal({ signal }: { signal: unknown }) {
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row-reverse">
           <Link
-            href="/app/settings"
+            href="/app/premium"
             className="flex-1 rounded-full bg-gold-500 px-5 py-2.5 text-sm font-semibold text-primary-900 transition hover:bg-gold-400"
           >
             Passer Premium

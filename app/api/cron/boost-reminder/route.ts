@@ -34,7 +34,7 @@ async function sendBoostReminders(supabase: ReturnType<typeof createAdminClient>
         type: "boost_reminder",
         title: "Ton profil t'attend",
         body: "Booste ta visibilité pour être vu en priorité dans Découvrir.",
-        link: "/app/settings",
+        link: "/app/premium",
       });
       sent++;
     }

@@ -138,7 +138,7 @@ export default async function MessagesListPage({
 
       {tab !== "archived" && (
         <Link
-          href={profile.is_premium ? "/app/messages" : "/app/settings"}
+          href={profile.is_premium ? "/app/messages" : "/app/premium"}
           className="mt-6 flex items-center gap-3 rounded-2xl bg-gradient-to-r from-gold-500 to-gold-400 px-5 py-4 text-cream-50 shadow-md transition hover:from-gold-600 hover:to-gold-500"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cream-50/20">

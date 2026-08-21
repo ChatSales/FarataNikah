@@ -102,12 +102,24 @@ export function AppNav({
             active={pathname.startsWith(link.href)}
           />
         ))}
-        <NavIcon href="/app/settings" label="Premium" icon={Crown} active={false} gold />
+        <NavIcon
+          href="/app/premium"
+          label="Premium"
+          icon={Crown}
+          active={pathname.startsWith("/app/premium")}
+          gold
+        />
       </nav>
 
       <div className="hidden items-center gap-2 lg:flex">
         <div className="mx-1 h-6 w-px bg-primary-100" />
-        <NavIcon href="/app/settings" label="Boost" icon={Rocket} active={false} dataTour="nav-boost" />
+        <NavIcon
+          href="/app/premium"
+          label="Boost"
+          icon={Rocket}
+          active={pathname.startsWith("/app/premium")}
+          dataTour="nav-boost"
+        />
         <NavIcon
           href="/app/messages"
           label="Messages"
@@ -223,7 +235,7 @@ export function AppNav({
               <MessageCircle className="h-4 w-4" /> Messages
             </Link>
             <Link
-              href="/app/settings"
+              href="/app/premium"
               onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-gold-600 transition hover:bg-gold-400/10"
             >

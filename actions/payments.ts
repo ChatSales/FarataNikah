@@ -62,7 +62,7 @@ export async function createCheckoutAction(
       // requires a non-empty last_name but doesn't otherwise validate it.
       customerFirstName: profile.first_name,
       customerLastName: profile.first_name,
-      returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings?checkout=return`,
+      returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/premium?checkout=return`,
       metadata: { profile_id: profile.id, plan_id: plan.id },
     });
   } catch (err) {
@@ -118,7 +118,7 @@ export async function createBoostCheckoutAction(
       customerEmail: profile.email,
       customerFirstName: profile.first_name,
       customerLastName: profile.first_name,
-      returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/settings?checkout=return`,
+      returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/app/premium?checkout=return`,
       metadata: { profile_id: profile.id, plan_id: tier.id },
     });
   } catch (err) {
@@ -179,6 +179,6 @@ export async function activateBoostAction(
     .eq("id", profile.id);
   if (error) return { error: "Impossible d'activer le boost." };
 
-  revalidatePath("/app/settings");
+  revalidatePath("/app/premium");
   return { success: true };
 }

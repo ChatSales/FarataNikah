@@ -53,6 +53,6 @@ export async function maybeGrantCompletionReward(
     type: "completion_reward",
     title: "Profil complété à 100% !",
     body: "Bravo — un boost gratuit vient d'être ajouté à ton compte.",
-    link: "/app/settings",
+    link: "/app/premium",
   });
 }
