@@ -7,6 +7,7 @@ import { sendMetaServerEvent } from "@/lib/meta-capi";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export type AuthActionState = { error: string } | null;
+export type SignUpActionState = { error: string } | { needsConfirmation: true } | null;
 
 async function requestMeta() {
   const h = await headers();
@@ -59,9 +60,9 @@ export async function resolvePostLoginPath(
 }
 
 export async function signUpAction(
-  _prevState: AuthActionState,
+  _prevState: SignUpActionState,
   formData: FormData
-): Promise<AuthActionState> {
+): Promise<SignUpActionState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
 
@@ -81,7 +82,7 @@ export async function signUpAction(
   // CGU acceptance is recorded once, at onboarding/basic-info — the one
   // mandatory first step shared by both email and Google signup.
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -91,6 +92,15 @@ export async function signUpAction(
 
   if (error) {
     return { error: "Impossible de créer le compte : " + error.message };
+  }
+
+  // With email confirmation enabled (the case here), signUp() succeeds but
+  // returns no session until the user clicks the emailed link — redirecting
+  // into a protected onboarding route right now would just bounce them
+  // straight back to /login. /auth/confirm establishes the session and
+  // continues to onboarding/basic-info itself once they do click it.
+  if (!data.session) {
+    return { needsConfirmation: true };
   }
 
   const eventId = crypto.randomUUID();

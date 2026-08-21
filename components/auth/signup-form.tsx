@@ -2,12 +2,29 @@
 
 import { useActionState } from "react";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
+import { Loader2, MailCheck } from "lucide-react";
 import { signUpAction } from "@/actions/auth";
 import { GoogleButton } from "@/components/auth/google-button";
 
 export function SignupForm() {
   const [state, formAction, pending] = useActionState(signUpAction, null);
+
+  if (state && "needsConfirmation" in state) {
+    return (
+      <div className="rounded-2xl border border-primary-100 bg-primary-50/60 p-6 text-center">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary-600">
+          <MailCheck className="h-6 w-6" />
+        </span>
+        <h2 className="mt-3 text-base font-semibold text-primary-900">
+          Vérifie ta boîte mail
+        </h2>
+        <p className="mt-2 text-sm text-primary-900/65">
+          On t&apos;a envoyé un lien de confirmation. Clique dessus pour
+          activer ton compte et continuer ton inscription.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
