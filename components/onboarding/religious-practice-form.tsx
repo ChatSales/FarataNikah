@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { saveReligiousPracticeAction } from "@/actions/profile";
 
 const madhhabs = [
@@ -165,13 +166,21 @@ export function ReligiousPracticeForm() {
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full rounded-full bg-primary-600 py-3 text-sm font-semibold text-cream-50 transition hover:bg-primary-700 disabled:opacity-60"
-      >
-        {pending ? "Enregistrement..." : "Continuer"}
-      </button>
+      <div className="flex gap-3">
+        <Link
+          href="/onboarding/basic-info"
+          className="flex flex-1 items-center justify-center rounded-full border border-primary-200 py-3 text-sm font-semibold text-primary-700 transition hover:bg-primary-50"
+        >
+          Retour
+        </Link>
+        <button
+          type="submit"
+          disabled={pending}
+          className="flex-1 rounded-full bg-primary-600 py-3 text-sm font-semibold text-cream-50 transition hover:bg-primary-700 disabled:opacity-60"
+        >
+          {pending ? "Enregistrement..." : "Continuer"}
+        </button>
+      </div>
     </form>
   );
 }

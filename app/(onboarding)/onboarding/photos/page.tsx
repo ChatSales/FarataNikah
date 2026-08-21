@@ -52,16 +52,24 @@ export default async function PhotosStepPage() {
         <PhotosUploader userId={user.id} existingPhotos={existingPhotos} />
       </div>
 
-      <Link
-        href="/onboarding/privacy"
-        className={`mt-8 block rounded-full py-3 text-center text-sm font-semibold transition ${
-          existingPhotos.length > 0
-            ? "bg-primary-600 text-cream-50 hover:bg-primary-700"
-            : "pointer-events-none bg-primary-100 text-primary-400"
-        }`}
-      >
-        Continuer
-      </Link>
+      <div className="mt-8 flex gap-3">
+        <Link
+          href="/onboarding/religious-practice"
+          className="flex flex-1 items-center justify-center rounded-full border border-primary-200 py-3 text-sm font-semibold text-primary-700 transition hover:bg-primary-50"
+        >
+          Retour
+        </Link>
+        <Link
+          href="/onboarding/privacy"
+          className={`flex-1 rounded-full py-3 text-center text-sm font-semibold transition ${
+            existingPhotos.length > 0
+              ? "bg-primary-600 text-cream-50 hover:bg-primary-700"
+              : "pointer-events-none bg-primary-100 text-primary-400"
+          }`}
+        >
+          Continuer
+        </Link>
+      </div>
     </>
   );
 }
