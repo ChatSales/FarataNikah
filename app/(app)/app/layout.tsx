@@ -63,7 +63,7 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
-      <header className="relative border-b border-primary-100 bg-cream-50">
+      <header className="sticky top-0 z-50 border-b border-primary-100 bg-cream-50/90 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/app/home" className="flex items-center gap-2 font-semibold text-primary-800">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-cream-50">

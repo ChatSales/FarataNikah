@@ -24,7 +24,7 @@ export default async function AdminLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-cream-50">
-      <header className="relative border-b border-primary-100 bg-primary-900 text-cream-50">
+      <header className="sticky top-0 z-50 border-b border-primary-100 bg-primary-900 text-cream-50">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/admin/verification" className="flex items-center gap-2 font-semibold">
             <ShieldCheck className="h-5 w-5 text-gold-400" />
