@@ -17,13 +17,31 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const title = "FarataNikah — La plateforme de mariage halal pour musulmans d'Afrique";
+const description =
+  "FarataNikah connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Amina.";
+
 export const metadata: Metadata = {
   title: {
-    default: "FarataNikah — La plateforme de mariage halal pour musulmans d'Afrique",
+    default: title,
     template: "%s | FarataNikah",
   },
-  description:
-    "FarataNikah connecte des musulmans sérieux en vue du mariage, partout en Afrique et en conformité avec les valeurs islamiques. Profils vérifiés, messagerie modérée, coach IA Amina.",
+  description,
+  openGraph: {
+    title,
+    description,
+    url: process.env.NEXT_PUBLIC_APP_URL,
+    siteName: "FarataNikah",
+    locale: "fr_FR",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "FarataNikah" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/og-image.png"],
+  },
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
